@@ -4,7 +4,7 @@ import (
 	"fmt"
 	//"html/template"
 	"net/http"
-	"github.com/httprouter-master" //https://github.com/julienschmidt/httprouter
+	"github.com/julienschmidt/httprouter" //https://github.com/julienschmidt/httprouter
 
 )
 
@@ -60,11 +60,6 @@ func loadWebsite(filename string) string{
 func (dhtNode *DHTNode) startWebserver() {
     router := httprouter.New()
     router.GET("/", dhtNode.IndexHandler)
-    router.GET("/storage", dhtNode.GetHandler)
-    router.POST("/storage", dhtNode.PostHandler)
-    router.PUT("/storage/:KEY", dhtNode.PutHandler)
-    router.DELETE("/storage/:KEY", dhtNode.DeleteHandler)
-
     log.Fatal(http.ListenAndServe(dhtNode.contact.ip+":"+dhtNode.contact.port, router))
 }
 
