@@ -24,7 +24,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	t, _ := template.New("webpage").Parse(style + script + htmlStr)
 
     t.Execute(w, p)*/
-    fmt.Fprint("hello world", w)
+    fmt.Fprintf(w, "hello world")
 }
 
 
@@ -35,6 +35,6 @@ func IndexHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 func startWebserver() {
     router := httprouter.New()
     router.GET("/", IndexHandler)
-    log.Fatal(http.ListenAndServe(localhost+":1025", router))
+    log.Fatal(http.ListenAndServe("localhost:1025", router))
 }
 
