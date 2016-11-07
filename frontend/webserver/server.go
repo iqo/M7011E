@@ -1,4 +1,4 @@
-package dht
+package main
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ type Page struct {
 /*****************************************
 *** Adds content on website            ***
 *****************************************/
-func (dhtNode *DHTNode) IndexHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func IndexHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	
     /*p := &Page{Address: dhtNode.transport.bindAddress}
 
@@ -57,9 +57,9 @@ func loadWebsite(filename string) string{
 *** Starts the http-server with the    ***
 *** different commands (get, post etc) ***
 *****************************************/
-func (dhtNode *DHTNode) startWebserver() {
+func startWebserver() {
     router := httprouter.New()
     router.GET("/", dhtNode.IndexHandler)
-    log.Fatal(http.ListenAndServe(dhtNode.contact.ip+":"+dhtNode.contact.port, router))
+    log.Fatal(http.ListenAndServe(localhost+":1025", router))
 }
 
