@@ -4,13 +4,11 @@ import (
 	"fmt"
 	//"html/template"
 	"net/http"
+    "log"
 	"github.com/julienschmidt/httprouter" //https://github.com/julienschmidt/httprouter
 
 )
 
-type Page struct {
-    Address     string
-}
 
 
 /*****************************************
@@ -29,29 +27,6 @@ func IndexHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
     fmt.Fprint("hello world", w)
 }
 
-/*****************************************
-*** Opens a file and reads the content ***
-*** one line at the time, the whole    ***
-*** file is returned as one string     ***
-*****************************************/
-func loadWebsite(filename string) string{
-	htmlStr := ""
-    file, err := os.Open(filename)
-    if err != nil {
-        log.Fatal(err)
-    }
-    defer file.Close()
-
-    scanner := bufio.NewScanner(file)
-    for scanner.Scan() {
-        htmlStr = htmlStr + scanner.Text() + "\n"
-    }
-
-    if err := scanner.Err(); err != nil {
-        log.Fatal(err)
-    }
-    return htmlStr
-}
 
 /*****************************************
 *** Starts the http-server with the    ***
@@ -59,7 +34,7 @@ func loadWebsite(filename string) string{
 *****************************************/
 func startWebserver() {
     router := httprouter.New()
-    router.GET("/", dhtNode.IndexHandler)
+    router.GET("/", IndexHandler)
     log.Fatal(http.ListenAndServe(localhost+":1025", router))
 }
 
