@@ -38,3 +38,7 @@ func startWebserver() {
     log.Fatal(http.ListenAndServe("localhost:1025", router))
 }
 
+func main() {
+    startWebserver()
+}
+
