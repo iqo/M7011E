@@ -14,7 +14,7 @@ import (
 /*****************************************
 *** Adds content on website            ***
 *****************************************/
-func IndexHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	
     /*p := &Page{Address: dhtNode.transport.bindAddress}
 
