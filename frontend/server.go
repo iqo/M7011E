@@ -1,11 +1,11 @@
 package main
 
 import (
-	//"fmt"
+	"fmt"
 	"html/template"
 	"net/http"
     "log"
-	"github.com/julienschmidt/httprouter" //https://github.com/julienschmidt/httprouter
+	//"github.com/julienschmidt/httprouter" //https://github.com/julienschmidt/httprouter
 
 )
 
@@ -38,16 +38,18 @@ func startWebserver() {
     http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
     //router.GET("/", IndexHandler)
     http.HandleFunc("/", IndexHandler)
-    /*
-    fs := http.FileServer(http.Dir("static"))
-    http.Handle("/static/", http.StripPrefix("/static/", fs))
-    http.Handle("/css/", fs)
-    http.Handle("/js/", fs)
-    http.Handle("/bootstrap/", fs)
-    http.Handle("/fonts/", fs)
-    http.Handle("/img/", fs)
-*/
-    log.Fatal(http.ListenAndServe("130.240.170.62:1025", nil))
+
+    
+    var input int
+    fmt.Scan(&input)
+    if input == 1 {
+        fmt.Println("running on 130.240.170.62:1025")
+        log.Fatal(http.ListenAndServe("130.240.170.62:1025", nil))
+        } else {
+            fmt.Println("running on localhost:1025")
+            log.Fatal(http.ListenAndServe("localhost:1025", nil))
+            
+        }
 }
 
 func main() {
