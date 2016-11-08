@@ -37,11 +37,11 @@ func startWebserver() {
     router := httprouter.New()
     router.GET("/", IndexHandler)
     fs := http.FileServer(http.Dir("../static"))
-    router.GET("/css/", fs)
-    router.GET("/js/", fs)
-    router.GET("/bootstrap/", fs)
-    router.GET("/fonts/", fs)
-    router.GET("/img/", fs)
+    http.Handle("/css/", fs)
+    http.Handle("/js/", fs)
+    http.Handle("/bootstrap/", fs)
+    http.Handle("/fonts/", fs)
+    http.Handle("/img/", fs)
     log.Fatal(http.ListenAndServe("130.240.170.62:1025", router))
 }
 
