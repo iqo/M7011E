@@ -38,6 +38,7 @@ func startWebserver() {
     //http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
     router.GET("/", IndexHandler)
     fs := http.FileServer(http.Dir("static"))
+    http.Handle("/static/", http.StripPrefix("/static/", fs))
     http.Handle("/css/", fs)
     http.Handle("/js/", fs)
     http.Handle("/bootstrap/", fs)
