@@ -25,7 +25,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
     
     t.Execute(w, p)*/
     //fmt.Fprintf(w, "hello world")
-    template.Must(template.ParseFiles("static/index.html")).Execute(w, nil)
+    template.Must(template.ParseFiles("index.html")).Execute(w, nil)
 }
 
 
