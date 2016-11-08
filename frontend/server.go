@@ -37,7 +37,7 @@ func startWebserver() {
     router := httprouter.New()
     //http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
     router.GET("/", IndexHandler)
-    router.ServeFiles("/*filepath", http.Dir("static"))
+    router.NotFound = http.FileServer(http.Dir("static/"))
     /*
     fs := http.FileServer(http.Dir("static"))
     http.Handle("/static/", http.StripPrefix("/static/", fs))
