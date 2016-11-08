@@ -34,10 +34,10 @@ func IndexHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 *** different commands (get, post etc) ***
 *****************************************/
 func startWebserver() {
-    router := httprouter.New()
-    //http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
-    router.GET("/", IndexHandler)
-    router.NotFound = http.FileServer(http.Dir("static/"))
+    //router := httprouter.New()
+    http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
+    //router.GET("/", IndexHandler)
+    http.HandleFunc("/", IndexHandler)
     /*
     fs := http.FileServer(http.Dir("static"))
     http.Handle("/static/", http.StripPrefix("/static/", fs))
@@ -47,7 +47,7 @@ func startWebserver() {
     http.Handle("/fonts/", fs)
     http.Handle("/img/", fs)
 */
-    log.Fatal(http.ListenAndServe("130.240.170.62:1025", router))
+    log.Fatal(http.ListenAndServe("130.240.170.62:1025", nil))
 }
 
 func main() {
