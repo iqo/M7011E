@@ -46,9 +46,6 @@ func startWebserver(input string) {
     if input == "1" {
         fmt.Println("running on 130.240.170.62:1025")
         log.Fatal(http.ListenAndServe("130.240.170.62:1025", nil))
-        } else if input == "2" {
-            fmt.Println("running on 130.240.170.62:9999")
-            log.Fatal(http.ListenAndServe("130.240.170.62:9999", nil))
         } else {
             fmt.Println("running on localhost:1025")
             log.Fatal(http.ListenAndServe("localhost:1025", nil))
