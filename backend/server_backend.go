@@ -32,6 +32,7 @@ type User struct {
     }
 
 
+
 /*****************************************
 *** Starts the http-server with the    ***
 *** different commands (get, post etc) ***

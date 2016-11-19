@@ -14,10 +14,10 @@
   
 
 
-    <title>Hat4UrCat</title>
+    <title>{{template "Title"}}</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/css/style.css" rel="stylesheet">
 
 
@@ -41,8 +41,15 @@
   
   <div class="navbar-collapse collapse">
     <ul class="nav navbar-nav navbar-left">
-        <li><a class="navbar-brand" href="#">Hat for your cat</a></li>
-        <li><a href="#about">About</a></li>
+        <li><a class="navbar-brand" href="/">Hat for your cat</a></li>
+        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="/">Top cats<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="/">Weekly top cats</a></li>
+          <li><a href="/">Cuteness overload</a></li>
+          <li><a href="/">All time high</a></li>
+        </ul>
+      </li>
+        <li><a href="/about">About</a></li>
         <li><a href="#catMagic">Cat Magic</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
@@ -58,23 +65,7 @@
 
         <div class="row">
             <div class="col-lg-12 text-center">
-                <h1>Hat for your cat</h1>
-                <p class="lead"> M7011E - Design of Dynamic Web Systems</p>
-                <p>The goal with this page is to put funny hats on your cat pictures! Create an account and upload your favorite pictures of your (or someone else's) cat today (or not now, this page is still under construction). After that you can start putting funny hats on the cat by using drag-and-drop. Did the image become super funny and cute? Download it and show it to all your friends and family! Are you tired of the American election, no worries, at this page you can actually vote for something you like and support. Vote and comment other users' hilarious cat pictures as much as you'd like, without worrying about the world to end.</p>
-
-                <p>For the course M7011E, we are going to build a dynamic web system from scratch. The frameworks we are planning on using are the following:</p>
-                <ul class="list-unstyled">
-                    <li><b>HTML5</b>  - Frontend</li>
-                    <li><b>CSS3 and Bootstrap</b> - Frontend</li>
-                    <li><b>JavaScript</b> - Frontend</li>
-                    <li><b>AngularJS</b> - Frontend</li>
-                    <li><b>MySQL</b> - Database</li>
-                    <li><b>Golang</b> - Webserver and backend</li>
-                </ul>
-
-                <p>Follow our progress on our git: <a href="https://github.com/sophiacaspar/M7011E">https://github.com/sophiacaspar/M7011E</a></p>
-
-                <p>/Sophia and Niklas</p>
+                {{template "Body"}}
             </div>
         </div>
         <!-- /.row -->
@@ -87,6 +78,12 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="/static/js/bootstrap.min.js"></script>
+
+    <div class="panel-footer footer"><div class="row">
+  <div class="col-xs-6 col-md-4"> M7011E - Design of Dynamic Web Systems</div>
+  <div class="col-xs-6 col-md-4">Sophia Caspár - sopcas-1</div>
+  <div class="col-xs-6 col-md-4">Niklas Brynolf - nikbry-1</div>
+</div></div>
 
 </body>
 
