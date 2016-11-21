@@ -22,6 +22,10 @@ func AboutHandler(w http.ResponseWriter, r *http.Request) {
     template.Must(template.ParseFiles("static/index.html", "static/templates/about.html")).Execute(w, nil)
 }
 
+func CatMagicHandler(w http.ResponseWriter, r *http.Request) {
+    template.Must(template.ParseFiles("static/index.html", "static/templates/catmagic.html")).Execute(w, nil)
+}
+
 
 /*****************************************
 *** Starts the http-server with the    ***
@@ -33,6 +37,7 @@ func startWebserver(input string) {
     //router.GET("/", IndexHandler)
     http.HandleFunc("/", IndexHandler)
     http.HandleFunc("/about", AboutHandler)
+    http.HandleFunc("/catmagic", CatMagicHandler)
 
 
     

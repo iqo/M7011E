@@ -1,0 +1,80 @@
+{{define "Title"}}
+Cat Magic
+{{end}}
+
+{{define "Body"}}
+
+<html>
+
+
+
+<div class="container">
+      <div class="col-sm-3">
+        <div id="midCol"  data-offset-top="300">
+
+        <div class="well">
+        	<h3>Cat projects</h3>
+        	<div class="well">
+        	<div class="btn-group">
+  			<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Open existing project
+  			</button>
+
+		  <div class="dropdown-menu">
+		    <li><a class="dropdown-item" href="#">Project 1</a></li>
+		    <li><a class="dropdown-item" href="#">Project 2</a></li>
+		    <li><a class="dropdown-item" href="#">Project 3</a></li>
+		  	</div>
+			</div>
+		</div>
+		<div class="well">
+        	<h4>Start new project</h4>
+                  <form action="" method="post" enctype="multipart/form-data" id="uploadCat">
+
+              <div class="form-group">
+                <input type="file" name="cats[]" id="catfile">
+              </div>
+              <button type="submit" class="btn btn-sm btn-primary" id="catUpload">Upload</button>
+
+          </form>
+        </div></div>
+        <div class="well"> 
+
+		</div>
+
+        <div class="well">Well, that's it for now Jim.</div>
+        <div class="well"></div>
+         </div>
+      </div>
+      <div class="col-sm-7">
+          <div class="row">
+            <div class="col col-sm-12"><h2>Responsive</h2><p>In simple terms, a responsive web design figures out what resolution of
+                device it's being served on. Flexible grids then size correctly to fit
+                the screen. Mobile-first Bootstrap 3 is responsive.</p></div>
+          </div>
+        	<hr>
+          <div class="row">
+            <div class="col-sm-8"><h2>Lighweight</h2><p>The new Bootstrap 3 is a smaller build. The separate Bootstrap
+                base and responsive.css files have now been merged into one. There is no
+                more fixed grid, only fluid.</p></div>
+            <div class="col-sm-4"><img class="img-responsive" src="//placehold.it/220x180/666666/FFF"></div>
+          </div>
+        	<hr>
+          <div class="row">
+            <div class="col-sm-4"><img class="img-responsive" src="//placehold.it/220x180/777777/FFF"></div>
+            <div class="col-sm-8"></div>
+          </div>
+        	<hr>
+          <div class="row">
+            <div class="col-sm-8"><h2>A Playground</h2><p>
+              Bootply is a playground for Bootstrap. Designers and developers use Bootply to edit, design, prototype, test and find examples that use Bootstrap 3.
+              Use Bootply to hand-code HTML, Javascript, CSS and drop in the Bootstrap classes. There is a also a visual drag-and-drop builder that is perfect for wire-framing and mockups.
+              </p></div>
+            <div class="col-sm-4"><img class="img-responsive" src="//placehold.it/220x180/777777/FFF"></div>
+          </div>
+        	<hr>
+      </div>
+    </div>
+</div>
+
+</html>
+{{end}}
