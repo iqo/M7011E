@@ -11,22 +11,19 @@ import (
 )
 
 
-
 /*****************************************
 *** Adds content on website            ***
 *****************************************/
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	
-    /*p := &Page{Address: dhtNode.transport.bindAddress}
+    template.Must(template.ParseFiles("static/index.html", "static/templates/start.html")).Execute(w, nil)
+}
 
-    style := loadWebsite("skynet/style.html")
-    script := loadWebsite("skynet/script.html")
-	htmlStr := loadWebsite("skynet/webpage.html")
-	t, _ := template.New("webpage").Parse(style + script + htmlStr)
-    
-    t.Execute(w, p)*/
-    //fmt.Fprintf(w, "hello world")
-    template.Must(template.ParseFiles("static/index.html")).Execute(w, nil)
+func AboutHandler(w http.ResponseWriter, r *http.Request) {
+    template.Must(template.ParseFiles("static/index.html", "static/templates/about.html")).Execute(w, nil)
+}
+
+func CatMagicHandler(w http.ResponseWriter, r *http.Request) {
+    template.Must(template.ParseFiles("static/index.html", "static/templates/catmagic.html")).Execute(w, nil)
 }
 
 
@@ -39,6 +36,9 @@ func startWebserver(input string) {
     http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
     //router.GET("/", IndexHandler)
     http.HandleFunc("/", IndexHandler)
+    http.HandleFunc("/about", AboutHandler)
+    http.HandleFunc("/catmagic", CatMagicHandler)
+
 
     
     //var input int

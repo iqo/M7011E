@@ -27,9 +27,44 @@
     padding-right: 30px;
 }
 
-@media (max-width: 700px) {
+
+.footer {
+  width: 100%;
+  text-align: center;
+  margin-top: 50px;
+  color: #939393;
+}
+
+@media screen and (max-width: 900px) {
 .wide {
   padding:0;
   height: 200px;
+  }
 }
+
+.topcat1 {
+  margin: 0 auto;
+  float:center;
+  content:url('../img/topcat/cat1.jpg');
+}
+
+#drag-1, #drag-2 {
+  width: 25%;
+  height: 100%;
+  min-height: 6.5em;
+  margin: 10%;
+
+  background-color: #29e;
+  color: white;
+
+  border-radius: 0.75em;
+  padding: 4%;
+
+  -webkit-transform: translate(0px, 0px);
+          transform: translate(0px, 0px);
+}
+
+#drag-me::before {
+  content: "#" attr(id);
+  font-weight: bold;
 }
