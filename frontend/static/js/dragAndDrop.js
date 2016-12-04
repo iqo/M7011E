@@ -1,32 +1,4 @@
-/*
 
-// target elements with the "draggable" class
-interact('.draggable')
-  .draggable({
-    // enable inertial throwing
-    inertia: true,
-    // keep the element within the area of it's parent
-    restrict: {
-      restriction: "parent",
-      endOnly: true,
-      elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
-    },
-    // enable autoScroll
-    autoScroll: true,
-
-    // call this function on every dragmove event
-    onmove: dragMoveListener,
-    // call this function on every dragend event
-    onend: function (event) {
-      var textEl = event.target.querySelector('p');
-
-      textEl && (textEl.textContent =
-        'moved a distance of '
-        + (Math.sqrt(event.dx * event.dx +
-                     event.dy * event.dy)|0) + 'px');
-    }
-  });
-*/
   function dragMoveListener (event) {
     var target = event.target,
         // keep the dragged position in the data-x/data-y attributes
@@ -43,12 +15,31 @@ interact('.draggable')
     target.setAttribute('data-y', y);
   }
 
-  // this is used later in the resizing and gesture demos
+ /*   function drawOnCanvas (event) {
+        var canvas = document.getElementById("catCanvas");
+        if (canvas) {
+            var ctx = canvas.getContext("2d");
+            var target = event.target,
+            // keep the dragged position in the data-x/data-y attributes
+            x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+            y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+            //ctx.drawImage(target, 33, 71, 104, 124, 21, 20, 87, 104);
+            console.log("x: " + x + ", y: " + y);
+            var rect = canvas.getBoundingClientRect();
+            console.log(rect.top, rect.right, rect.bottom, rect.left);
+        } else {
+            console.log("droped hat, no canvas")
+        }
+        
+    }
+*/
+
   window.dragMoveListener = dragMoveListener;
 
 interact('.draggable')
   .draggable({
     onmove: window.dragMoveListener
+    //onend: window.drawOnCanvas
   })
   .resizable({
     preserveAspectRatio: true,
@@ -74,3 +65,55 @@ interact('.draggable')
     target.setAttribute('data-y', y);
     target.textContent = Math.round(event.rect.width) + '×' + Math.round(event.rect.height);
 });
+
+var insideDropzone = "unset";
+
+interact('.dropzone').dropzone({
+  // only accept elements matching this CSS selector
+  //accept: '#yes-drop',
+  // Require a 75% element overlap for a drop to be possible
+  //overlap: 0.75,
+
+  
+// listen for drop related events:
+    ondropactivate: function (event) {
+        var hat = event.relatedTarget;
+        var id = hat.id;
+        console.log(id);
+        // add active dropzone feedback
+        //event.target.classList.add('drop-active');
+        console.log("ondropactive");
+        console.log(insideDropzone);
+      },
+    ondragenter: function (event) {
+        insideDropzone = true;
+      },
+    ondragleave: function (event) {
+        insideDropzone = false;
+        console.log("leaves dropzone");
+        var hat = event.relatedTarget
+
+      },
+    ondrop: function (event) {
+        console.log(event);
+        var hat = event.relatedTarget,
+            dropzone = event.target.id;
+        if (document.getElementById(hat.id).parentNode.id != dropzone){
+            addHatInDiv(dropzone, hat.id);
+        }
+        
+        //removeHatFromDiv(hat.id);
+        
+        console.log("dropped");
+        
+      },
+    ondropdeactivate: function (event) {
+        console.log("not dragging anymore");
+        var hat = event.relatedTarget;
+
+      }
+});
+
+
+
+
