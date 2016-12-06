@@ -110,14 +110,19 @@ func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 
 func savePhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
     //db := l.connectToDB()
-    fmt.Println("savePhoto plz")
+    fmt.Println("1")
     w.Header().Set("Access-Control-Allow-Origin", "*")
+    fmt.Println("2")
     dec := json.NewDecoder(r.Body)
+    fmt.Println("3")
     photo := Photo{}
     err := dec.Decode(&photo)
+    fmt.Println("4")
     if err != nil {
+        fmt.Println("5 nil")
         log.Fatal(err)
     }
+    fmt.Println("6")
     fmt.Println(photo.Data)
 }
 
