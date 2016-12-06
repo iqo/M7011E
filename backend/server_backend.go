@@ -32,9 +32,11 @@ type User struct {
     }
 
 type Photo struct {
-    Id          int `json="id"`
+    /*Id          int `json="id"`
     Name        string `json="name"`
     Desc        string `json="description"`
+    */
+    Data        string `json="data"`
     }
 
 
@@ -105,7 +107,12 @@ func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 func (l *loginDB) savePhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
     db := l.connectToDB()
     dec := json.NewDecoder(r.Body)
-    console.log(dec)
+    photo := Photo{}
+    err := dec.Decode(&photo)
+    if err != nil {
+        log.Fatal(err)
+    }
+    console.log(photo.Data)
 }
 
 func checkError(w http.ResponseWriter, err error) {

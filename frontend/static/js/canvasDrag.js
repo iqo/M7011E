@@ -47,7 +47,7 @@ function drop(ev) {
     var dropElement = document.getElementById(id);
 
     // draw the drag image at the drop coordinates
-
+    console.log(dropElement.src);
     var image = new DragImage(dropElement.src, dropX, dropY);
     ctx.drawImage(dropElement, dropX, dropY, 150, 150);
     

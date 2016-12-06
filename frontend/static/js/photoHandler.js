@@ -79,10 +79,10 @@ function loadCanvas(src) {
 function savePhoto() {
     var canvas = document.getElementById("catCanvas");
     var img    = canvas.toDataURL("image/png");
-    console.log(img);
+    //console.log(img);
     //var w=window.open(c.toDataURL('image/png'));
-    /*var photo={};
-    photo.data = 
+    var photo={};
+    photo.data = img;
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {
         if (xhr.status == 200) {
@@ -119,7 +119,7 @@ function addHatInDiv(divId, hatId) {
     hat.style.transform = "translate(0,0)";
     hat.setAttribute("data-x", "0");
     hat.setAttribute("data-y", "0");
-
+    console.log(hat.src);
     var image = new DragImage(newHat.src, 0, 0);
     context.imageList.push(image);
     console.log("imageList" + context.imageList);
