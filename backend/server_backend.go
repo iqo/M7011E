@@ -49,7 +49,7 @@ func (l *loginDB) startWebserver() {
     router.GET("/", testpage)
     router.GET("/user/:id", l.getUser)
     router.POST("/newuser", l.newUser)
-    router.POST("/photo", savePhoto)
+    router.POST("/photo", l.savePhoto)
 
 
     log.Fatal(http.ListenAndServe("localhost:1026", router))
@@ -112,7 +112,7 @@ func (l *loginDB) savePhoto(w http.ResponseWriter, r *http.Request, ps httproute
     if err != nil {
         log.Fatal(err)
     }
-    console.log(photo.Data)
+    fmt.Println(photo.Data)
 }
 
 func checkError(w http.ResponseWriter, err error) {
