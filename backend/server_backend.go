@@ -120,7 +120,7 @@ func (l *loginDB) savePhoto(w http.ResponseWriter, r *http.Request, ps httproute
     res,  err := db.Prepare("insert into hat4cat.catsInHats (name, desc, image, uid) values (?, ?, ?, ?)")
     checkError(w, err)
 
-    _, err = res.Run(photo.imgName, photo.imgDesc, photo.Image, photo.Uid)
+    _, err = res.Run(photo.ImgName, photo.ImgDesc, photo.Image, photo.Uid)
     checkError(w, err)
 }
 
