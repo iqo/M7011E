@@ -52,7 +52,8 @@ func (l *loginDB) startWebserver() {
     router.POST("/photo", l.savePhoto)
 
 
-    log.Fatal(http.ListenAndServe("localhost:1026", router))
+    log.Fatal(http.ListenAndServe("130.240.170.62:1026", router))
+    fmt.Println("running on 130.240.170.62:1026")
 }
 
 func testpage(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
