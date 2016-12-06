@@ -31,6 +31,11 @@ type User struct {
     Lastname    string `json="lastname"`
     }
 
+type Photo struct {
+    Id          int `json="id"`
+    Name        string `json="name"`
+    Desc        string `json="description"`
+    }
 
 
 /*****************************************
@@ -42,6 +47,7 @@ func (l *loginDB) startWebserver() {
     router.GET("/", testpage)
     router.GET("/user/:id", l.getUser)
     router.POST("/newuser", l.newUser)
+    router.POST("/photo", savePhoto)
 
 
     log.Fatal(http.ListenAndServe("localhost:1026", router))
@@ -94,6 +100,12 @@ func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.
         checkError(w, err)
         }
     }
+}
+
+func (l *loginDB) savePhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    db := l.connectToDB()
+    dec := json.NewDecoder(r.Body)
+    console.log(dec)
 }
 
 func checkError(w http.ResponseWriter, err error) {

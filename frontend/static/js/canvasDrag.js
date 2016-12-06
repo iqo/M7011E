@@ -6,7 +6,7 @@ var startOffsetX, startOffsetY;
 
 
 var pi2 = Math.PI * 2;
-var resizerRadius = 10;
+var resizerRadius = 12;
 var rr = resizerRadius * resizerRadius;
 var draggingResizer = {
     x: 0,
@@ -32,7 +32,6 @@ function mousedown(ev) {
 }
 
 function dragstart(ev) {
-    console.log("dragstart");
     ev.dataTransfer.setData("Text", ev.target.id);
 }
 
@@ -47,7 +46,6 @@ function drop(ev) {
     
     var dropElement = document.getElementById(id);
 
-    console.log(dropElement);
     // draw the drag image at the drop coordinates
 
     var image = new DragImage(dropElement.src, dropX, dropY);
@@ -72,7 +70,8 @@ function canvasInit(img) {
     canvas.ondragover = allowDrop;
     ctx.imageList = [];
     ctx.backgroundImg = img;
-
+    console.log(canvas.width); //878
+    console.log(canvas.height); //494
     var loop = setInterval(function() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawImageProp(ctx, ctx.backgroundImg,0,0, canvas.width, canvas.height, 0.5, 0.5);
@@ -119,7 +118,6 @@ function getMousePos(canvas, evt) {
             if (mousePressed) {
                 var left = that.x;
                 var right = that.x + imageWidth;
-                console.log(right);
                 var top = that.y;
                 var bottom = that.y + imageHeight;
                 if (!drag){
@@ -142,14 +140,14 @@ function getMousePos(canvas, evt) {
                 switch (dragResize) {
                     case 0:
                         //top-left
-                        imageWidth = startX - mouseX;
-                        imageHeight = startY - mouseY;
+                        imageWidth = right - mouseX;
+                        imageHeight = right - mouseX;
                         
                         break;
                     case 1:
                         //top-right
                         imageWidth = mouseX - that.x;
-                        imageHeight = bottom - mouseY;
+                        imageHeight = mouseY-bottom;
                         break;
                     case 2:
                         //bottom-right
@@ -181,8 +179,6 @@ function checkIfResize (x, y, left, right, top, bottom) {
     // top-left
     dx = x;
     dy = y;
-    console.log(x, y);
-    console.log(dx, dy);
     if (dx * dx + dy * dy <= rr) {
         console.log("top-left");
         return (0);

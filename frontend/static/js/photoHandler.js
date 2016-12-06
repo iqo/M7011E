@@ -1,21 +1,27 @@
-document.getElementById("catPhotoUpload").onchange = uploadPhoto;
-
+//document.getElementById("catFile").onchange = uploadPhoto;
 function uploadPhoto(){
-    displayHats();
-    var file = document.getElementById("catPhotoUpload").files[0];
+    
+    var file = document.getElementById("catFile").files[0];
     var readFile = new FileReader();
+    console.log(file);
 
     function success(e){
         loadCanvas(e.target.result);
-        //document.getElementById('catPhoto').src = e.target.result;
-        
-    //document.getElementById('hatHolder').innerHTML += "<img class = 'draggable' src='/static/img/hats/strawhat.png' id='strawhat' width='20%' height='10%'> <img class = 'draggable' src='/static/img/hats/tophat.png' id='tophat' width='20%' height='10%'>" ;
-    
+        displayHats();
+        addSaveButton();
     };
 
   readFile.readAsDataURL(file);
   // function call to success after file is read, no () needed
   readFile.onload = success;
+}
+
+
+
+function clickUploadButton(){
+    document.getElementById('catFile').click();
+    document.getElementById("catFile").onchange = uploadPhoto;
+    return false;
 }
 
 function downloadPhoto(text, name, type) {
@@ -29,7 +35,7 @@ function displayHats(){
     var hats = document.getElementsByClassName('draggable');
     console.log(hats);
     if (hats.length == 0){
-        document.getElementById('hatHolder').insertAdjacentHTML('afterbegin', "<img draggable='true' class='draggable' onmousedown=mousedown ondragstart=dragstart src='/static/img/hats/strawhat.png' id='strawhat' width='20%' height='10%'> <img draggable='true' class='draggable' onmousedown=mousedown ondragstart=dragstart src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Green_square.svg/1024px-Green_square.svg.png' id='santa' width='20%' height='10%'>");
+        document.getElementById('hatHolder').insertAdjacentHTML('afterbegin', "<img draggable='true' class='draggable' onmousedown=mousedown ondragstart=dragstart src='/static/img/hats/strawhat.png' id='strawhat' width='10%' height='5%'> <img draggable='true' class='draggable' onmousedown=mousedown ondragstart=dragstart src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Green_square.svg/1024px-Green_square.svg.png' id='santa' width='10%' height='5%'>");
     }
     imgs = document.getElementById('hatHolder').getElementsByTagName('img');
     for(var i =0; i<imgs.length; i++){
@@ -45,12 +51,11 @@ function loadCanvas(src) {
         var img = new Image();
         var context = canvas.getContext('2d');
 
-        
-
         img.onload = function() {
             canvas.id = "catCanvas";
-            canvas.height=window.innerHeight;
             canvas.width=window.innerHeight*(16/9);
+            canvas.height=window.innerHeight;
+            
             //canvas.style.width  = div.width; 
 
 
@@ -72,15 +77,37 @@ function loadCanvas(src) {
 
 
 function savePhoto() {
-    var c=document.getElementById("catCanvas");
-    var w=window.open(c.toDataURL('image/png'));
+    var canvas = document.getElementById("catCanvas");
+    var img    = canvas.toDataURL("image/png");
+    console.log(img);
+    //var w=window.open(c.toDataURL('image/png'));
+    /*var photo={};
+    photo.data = 
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function() {
+        if (xhr.status == 200) {
+          location.reload(); // reloads page
+          alert("Success! Upload completed");
+        } else {
+          alert("Error! Upload failed");
+        }
+      };
+      xhr.onerror = function() {
+        alert("Error! Upload failed.");
+      };
+        
+      xhr.open('POST', 'http://130.240.93.234:1026/photo', true);
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.send(JSON.stringify(photo));
+      */
+}
 
-    /*html2canvas(document.getElementById('catPhotoHolder'), {
-        onrendered: function(canvas) {
-            document.body.appendChild(canvas);
-  }
-});*/
-
+function addSaveButton(){
+    var div = document.getElementById('buttonHolder');
+    console.log(div.childNodes.length);
+    if (div.childNodes.length == 3) {
+        div.innerHTML += "<div id='savePhoto'><button type='button' class='btn btn-sm btn-primary' id='saveCat' onclick='savePhoto()'>Save cat</button></div>";
+    };
 }
 
 function addHatInDiv(divId, hatId) {
@@ -99,8 +126,4 @@ function addHatInDiv(divId, hatId) {
     //newParent.appendChild(newHat);
 }
 
-function removeHatFromDiv(hatId) {
-    var hat = document.getElementById(hatId);
-    hat.parentNode.removeChild(hat);
-}
 

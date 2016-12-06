@@ -6,8 +6,8 @@ Cat Magic
 
 <html>
 <div class="container">
-
-      <div class="row">
+<!--
+      <div class="col-sm-2">
         <div id="midCol"  data-offset-top="300">
 
         <div class="well">
@@ -23,7 +23,7 @@ Cat Magic
 		    <li><a class="dropdown-item" href="#">Project 3</a></li>
 		  	</div>
 			</div>
-		</div>
+		</div></div>
 		<div class="well">
         	<h4>Start new project</h4>
           <form action="" method="post" enctype="multipart/form-data" id="uploadCat">
@@ -34,10 +34,9 @@ Cat Magic
 
           </form>
         </div></div>
-
-         </div>
-      </div>
-      <div class="row">
+        </div>
+        -->
+      <div class="col-sm-12">
           <div class="row">
             <div class="col col-sm-12"><h2>Put hats on cats</h2><p>Select an existing project or upload a new cat picture. Use drag and drop to put hats on the cats.</p></div>
           </div>
@@ -55,10 +54,26 @@ Cat Magic
                     <!--<img src="" id="catPhoto" style="max-width:100%; height:auto;">-->
 
                 </div>
-                <button type="button" class="btn btn-sm btn-primary" id="saveCat" onclick='savePhoto()'>Save cat</button>
+                <div id="buttonHolder">
+                    <div id="uploadPhoto">
+                    <!--<div class="col-sm-4">
+                        <form action="" method="post" enctype="multipart/form-data" id="uploadCat">
+                    <input type="file" name="cats[]" id="catPhotoUpload">
+                    </div></div>
+                    <div class="col-sm-4"><button type="button" class="btn btn-sm btn-primary" id="catUploadButton" onclick='uploadPhoto()'>Upload image to start new project</button>
+                    </form>-->
+                    <input type="button" class="btn btn-sm btn-primary" id="catUploadButton" value="Upload image to start new project" onclick="clickUploadButton()"/>
+                    <input type="file" id="catFile" class="fileUpload"/>
+                    </div>
+
+
+                    
+                </div>
             </div>
         </div>
     </div>
+             </div> 
 </div>
+
 </html>
 {{end}}

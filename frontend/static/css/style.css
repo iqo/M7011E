@@ -58,3 +58,7 @@
   width: 80%;
   transition: background-color 0.3s;
 }
+
+.fileUpload {
+  visibility: hidden;
+}
