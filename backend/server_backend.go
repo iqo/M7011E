@@ -117,7 +117,7 @@ func (l *loginDB) savePhoto(w http.ResponseWriter, r *http.Request, ps httproute
         log.Fatal(err)
     }
     fmt.Println(photo)
-    res,  err := db.Prepare("insert into hat4cat.photos (name, desc, image, uid) values (?, ?, ?, ?)")
+    res,  err := db.Prepare("insert into hat4cat.photos (name, description, image, uid) values (?, ?, ?, ?)")
     checkError(w, err)
 
     _, err = res.Run(photo.ImgName, photo.ImgDesc, photo.Image, photo.Uid)
