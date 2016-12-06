@@ -107,6 +107,7 @@ func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 
 func (_ *loginDB) savePhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
     //db := l.connectToDB()
+    w.Header().Set("Access-Control-Allow-Origin", "*")
     dec := json.NewDecoder(r.Body)
     photo := Photo{}
     err := dec.Decode(&photo)
