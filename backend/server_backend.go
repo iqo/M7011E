@@ -50,7 +50,8 @@ func (l *loginDB) startWebserver() {
     router.GET("/", testpage)
     router.GET("/user/:id", l.getUser)
     router.POST("/user", l.newUser)
-    router.POST("/photo", l.savePhoto)
+    router.POST("/photo", savePhoto)
+    router.GET("/photo", savePhoto)
 
     handler := cors.Default().Handler(router)
 
@@ -107,7 +108,7 @@ func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.
     }
 }
 
-func (_ *loginDB) savePhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func savePhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
     //db := l.connectToDB()
     fmt.Println("savePhoto plz")
     w.Header().Set("Access-Control-Allow-Origin", "*")

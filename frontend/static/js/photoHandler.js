@@ -82,8 +82,8 @@ function savePhoto() {
     console.log(img);
     //var w=window.open(c.toDataURL('image/png'));
     var photo={};
-    photo.data = img;
-    /*var xhr = new XMLHttpRequest();
+    photo.data = "hej";//img;
+    var xhr = new XMLHttpRequest();
     xhr.onload = function() {
         if (xhr.status == 200) {
           location.reload(); // reloads page
@@ -93,20 +93,21 @@ function savePhoto() {
         }
       };
       xhr.onerror = function() {
-        alert("Error! Upload failed.");
+        alert("Error! Upload failed." + xhr.status);
       };
         
       xhr.open('POST', 'http://130.240.93.234:1026/photo', true);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(JSON.stringify(photo));
-*/
 
+/*
     var xhr = createCORSRequest('POST', 'http://130.240.93.234:1026/photo');
     if (!xhr) {
         throw new Error('CORS not supported');
     }
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(photo));
+    */
 }
 
 function createCORSRequest(method, url) {
