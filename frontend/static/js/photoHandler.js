@@ -84,8 +84,8 @@ function savePhoto() {
     var photo={};
     photo.imgName = "testCat";
     photo.imgDesc = "mjaow";
-    photo.uid = 1;
     photo.image = img;//img;
+    photo.uid = 1;
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {
         if (xhr.status == 200) {
