@@ -33,11 +33,12 @@ type User struct {
     }
 
 type Photo struct {
-    /*Id          int `json="id"`
-    Name        string `json="name"`
-    Desc        string `json="description"`
-    */
-    Data        string `json="data"`
+    Id          int `json="id"`
+    ImgName     string `json="imgName"`
+    ImgDesc     string `json="imgDesc"`
+    Image       string `json="image"`
+    Created     string `json="created"`
+    Uid         int `json="uid"`
     }
 
 
@@ -50,8 +51,7 @@ func (l *loginDB) startWebserver() {
     router.GET("/", testpage)
     router.GET("/user/:id", l.getUser)
     router.POST("/user", l.newUser)
-    router.POST("/photo", savePhoto)
-    router.GET("/photo", savePhoto)
+    router.POST("/photo", l.savePhoto)
 
     handler := cors.Default().Handler(router)
 
@@ -108,22 +108,20 @@ func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.
     }
 }
 
-func savePhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-    //db := l.connectToDB()
-    fmt.Println("1")
-    w.Header().Set("Access-Control-Allow-Origin", "*")
-    fmt.Println("2")
+func (l *loginDB) savePhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    db := l.connectToDB()
     dec := json.NewDecoder(r.Body)
-    fmt.Println("3")
     photo := Photo{}
     err := dec.Decode(&photo)
-    fmt.Println("4")
     if err != nil {
-        fmt.Println("5 nil")
         log.Fatal(err)
     }
-    fmt.Println("6")
-    fmt.Println(photo.Data)
+
+    res,  err := db.Prepare("insert into hat4cat.catsInHats (name, desc, image, uid) values (?, ?, ?, ?)")
+    checkError(w, err)
+
+    _, err = res.Run(photo.imgName, photo.imgDesc, photo.Image, photo.Uid)
+    checkError(w, err)
 }
 
 func checkError(w http.ResponseWriter, err error) {
