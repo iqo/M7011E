@@ -35,7 +35,7 @@ function displayHats(){
     var hats = document.getElementsByClassName('draggable');
     console.log(hats);
     if (hats.length == 0){
-        document.getElementById('hatHolder').insertAdjacentHTML('afterbegin', "<img draggable='true' class='draggable' onmousedown=mousedown ondragstart=dragstart src='/static/img/hats/strawhat.png' id='strawhat' width='10%' height='5%'> <img draggable='true' class='draggable' onmousedown=mousedown ondragstart=dragstart src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Green_square.svg/1024px-Green_square.svg.png' id='santa' width='10%' height='5%'>");
+        document.getElementById('hatHolder').insertAdjacentHTML('afterbegin', "<img draggable='true' class='draggable' onmousedown=mousedown ondragstart=dragstart src='/static/img/hats/strawhat.png' id='strawhat' width='10%' height='5%'> <img draggable='true' class='draggable' onmousedown=mousedown ondragstart=dragstart src='/static/img/hats/santa.png' id='santa' width='10%' height='5%'>");
     }
     imgs = document.getElementById('hatHolder').getElementsByTagName('img');
     for(var i =0; i<imgs.length; i++){
@@ -79,7 +79,7 @@ function loadCanvas(src) {
 function savePhoto() {
     var canvas = document.getElementById("catCanvas");
     var img    = canvas.toDataURL("image/png");
-    //console.log(img);
+    console.log(img);
     //var w=window.open(c.toDataURL('image/png'));
     var photo={};
     photo.data = img;
@@ -99,7 +99,7 @@ function savePhoto() {
       xhr.open('POST', 'http://130.240.93.234:1026/photo', true);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(JSON.stringify(photo));
-      */
+
 }
 
 function addSaveButton(){
