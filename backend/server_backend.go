@@ -52,6 +52,7 @@ func (l *loginDB) startWebserver() {
     router.GET("/user/:id", l.getUser)
     router.POST("/user", l.newUser)
     router.POST("/photo", l.savePhoto)
+    router.GET("/photo/:id", l.getPhoto)
 
     handler := cors.Default().Handler(router)
 
@@ -122,6 +123,35 @@ func (l *loginDB) savePhoto(w http.ResponseWriter, r *http.Request, ps httproute
 
     _, err = res.Run(photo.ImgName, photo.ImgDesc, photo.Image, photo.Uid)
     checkError(w, err)
+}
+
+func (l *loginDB) getPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    db := l.connectToDB()
+
+    id, err := strconv.Atoi(ps.ByName("id"))
+    checkError(w, err)
+
+    rows, res,  err := db.Query("select * from hat4cat.photos where uid=%d", id)
+    checkError(w, err)
+
+    if rows == nil {
+        w.WriteHeader(404)
+    } else {
+        for _, row := range rows {
+        id := res.Map("photoId")
+        imgName := res.Map("name")
+        imgDesc := res.Map("description")
+        image := res.Map("image")
+        created := res.Map("date")
+        uid := res.Map("uid")
+        photo := &Photo{row.Int(id), row.Str(imgName), row.Str(imgDesc), row.Str(image), row.Str(created), row.Int(uid)}
+
+        jsonBody, err := json.Marshal(photo)
+        w.WriteHeader(200) // is ok
+        w.Write(jsonBody)
+        checkError(w, err)
+        }
+    }
 }
 
 func checkError(w http.ResponseWriter, err error) {
