@@ -104,8 +104,8 @@ func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.
     }
 }
 
-func (l *loginDB) savePhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-    db := l.connectToDB()
+func (_ *loginDB) savePhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    //db := l.connectToDB()
     dec := json.NewDecoder(r.Body)
     photo := Photo{}
     err := dec.Decode(&photo)
