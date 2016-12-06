@@ -117,7 +117,6 @@ func (l *loginDB) savePhoto(w http.ResponseWriter, r *http.Request, ps httproute
     if err != nil {
         log.Fatal(err)
     }
-    fmt.Println(photo)
     res,  err := db.Prepare("insert into hat4cat.photos (name, description, image, uid) values (?, ?, ?, ?)")
     checkError(w, err)
 
@@ -125,9 +124,9 @@ func (l *loginDB) savePhoto(w http.ResponseWriter, r *http.Request, ps httproute
     checkError(w, err)
 }
 
+
 func (l *loginDB) getPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
     db := l.connectToDB()
-
     id, err := strconv.Atoi(ps.ByName("id"))
     checkError(w, err)
 
@@ -138,18 +137,17 @@ func (l *loginDB) getPhoto(w http.ResponseWriter, r *http.Request, ps httprouter
         w.WriteHeader(404)
     } else {
         for _, row := range rows {
-        id := res.Map("photoId")
-        imgName := res.Map("name")
-        imgDesc := res.Map("description")
-        image := res.Map("image")
-        created := res.Map("date")
-        uid := res.Map("uid")
-        photo := &Photo{row.Int(id), row.Str(imgName), row.Str(imgDesc), row.Str(image), row.Str(created), row.Int(uid)}
+            id := res.Map("photoId")
+            imgName := res.Map("name")
+            imgDesc := res.Map("description")
+            image := res.Map("image")
+            created := res.Map("date")
+            uid := res.Map("uid")
+            photo := &Photo{row.Int(id), row.Str(imgName), row.Str(imgDesc), row.Str(image), row.Str(created), row.Int(uid)}
 
-        jsonBody, err := json.Marshal(photo)
-        w.WriteHeader(200) // is ok
-        w.Write(jsonBody)
-        checkError(w, err)
+            jsonBody, err := json.Marshal(photo)
+            w.Write(jsonBody)
+            checkError(w, err)
         }
     }
 }

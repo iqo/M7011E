@@ -103,14 +103,27 @@ function savePhoto() {
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(JSON.stringify(photo));
 
-/*
-    var xhr = createCORSRequest('POST', 'http://130.240.93.234:1026/photo');
-    if (!xhr) {
-        throw new Error('CORS not supported');
-    }
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(JSON.stringify(photo));
-    */
+}
+
+function getPhoto() {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function(event) {
+        if (xhr.status == 200) {
+          var photo = event.target.response;
+          photo = JSON.parse(photo);
+          var w=window.open(photo.Image);
+        } else {
+          alert("Error! Get files failed");
+        }
+      };
+      xhr.onerror = function() {
+        alert("Error! Get file failed. Cannot connect to server.");
+      };
+        
+      xhr.open('GET', 'http://130.240.170.62:1026/photo/2', false);
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.send(null);
+
 }
 
 function createCORSRequest(method, url) {
