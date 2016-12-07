@@ -130,7 +130,7 @@ func (l *loginDB) getPhoto(w http.ResponseWriter, r *http.Request, ps httprouter
     id, err := strconv.Atoi(ps.ByName("id"))
     checkError(w, err)
 
-    rows, res,  err := db.Query("select * from hat4cat.photos where uid=%d", id)
+    rows, res,  err := db.Query("select * from hat4cat.photos where photoId=%d", id)
     checkError(w, err)
 
     if rows == nil {
