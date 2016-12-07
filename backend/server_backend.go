@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+    "github.com/rs/cors"
     //"encoding/json"
     //"time"
     "html/template"
@@ -31,6 +32,14 @@ type User struct {
     Lastname    string `json="lastname"`
     }
 
+type Photo struct {
+    Id          int `json="id"`
+    ImgName     string `json="imgName"`
+    ImgDesc     string `json="imgDesc"`
+    Image       string `json="image"`
+    Created     string `json="created"`
+    Uid         int `json="uid"`
+    }
 
 
 /*****************************************
@@ -41,14 +50,18 @@ func (l *loginDB) startWebserver() {
     router := httprouter.New()
     router.GET("/", testpage)
     router.GET("/user/:id", l.getUser)
-    router.POST("/newuser", l.newUser)
+    router.POST("/user", l.newUser)
+    router.POST("/photo", l.savePhoto)
+    router.GET("/photo/:id", l.getPhoto)
 
+    handler := cors.Default().Handler(router)
 
-    log.Fatal(http.ListenAndServe("localhost:1026", router))
+    log.Fatal(http.ListenAndServe("130.240.170.62:1026", handler))
+    fmt.Println("running on 130.240.170.62:1026")
 }
 
 func testpage(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-    form := "<html><body><form action='/newuser' method='POST'><p>Firstname: <input type='text' name='firstname' id='fname'/></p><p>Lastname: <input type='text' name='lastname' id='lname' /></p><p><input type='button' onclick = 'testfunc()' value='Testa'/></p></form><script>function testfunc() {var xhr = new XMLHttpRequest(); var fname = document.getElementById('fname').value; var lname = document.getElementById('lname').value;  var user = {}; user.firstname = fname; user.lastname = lname; xhr.open('POST', 'http://localhost:1026/newuser', true); xhr.setRequestHeader('Content-Type', 'application/json'); xhr.send(JSON.stringify(user))}</script></body></html>"
+    form := "<html><body><form action='/user' method='POST'><p>Firstname: <input type='text' name='firstname' id='fname'/></p><p>Lastname: <input type='text' name='lastname' id='lname' /></p><p><input type='button' onclick = 'testfunc()' value='Testa'/></p></form><script>function testfunc() {var xhr = new XMLHttpRequest(); var fname = document.getElementById('fname').value; var lname = document.getElementById('lname').value;  var user = {}; user.firstname = fname; user.lastname = lname; xhr.open('POST', 'http://localhost:1026/user', true); xhr.setRequestHeader('Content-Type', 'application/json'); xhr.send(JSON.stringify(user))}</script></body></html>"
     t, _ := template.New("webpage").Parse(form)
 
     t.Execute(w, nil)
@@ -92,6 +105,49 @@ func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.
         w.WriteHeader(200) // is ok
         w.Write(jsonBody)
         checkError(w, err)
+        }
+    }
+}
+
+func (l *loginDB) savePhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    db := l.connectToDB()
+    dec := json.NewDecoder(r.Body)
+    photo := Photo{}
+    err := dec.Decode(&photo)
+    if err != nil {
+        log.Fatal(err)
+    }
+    res,  err := db.Prepare("insert into hat4cat.photos (name, description, image, uid) values (?, ?, ?, ?)")
+    checkError(w, err)
+
+    _, err = res.Run(photo.ImgName, photo.ImgDesc, photo.Image, photo.Uid)
+    checkError(w, err)
+}
+
+
+func (l *loginDB) getPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    db := l.connectToDB()
+    id, err := strconv.Atoi(ps.ByName("id"))
+    checkError(w, err)
+
+    rows, res,  err := db.Query("select * from hat4cat.photos where uid=%d", id)
+    checkError(w, err)
+
+    if rows == nil {
+        w.WriteHeader(404)
+    } else {
+        for _, row := range rows {
+            id := res.Map("photoId")
+            imgName := res.Map("name")
+            imgDesc := res.Map("description")
+            image := res.Map("image")
+            created := res.Map("date")
+            uid := res.Map("uid")
+            photo := &Photo{row.Int(id), row.Str(imgName), row.Str(imgDesc), row.Str(image), row.Str(created), row.Int(uid)}
+
+            jsonBody, err := json.Marshal(photo)
+            w.Write(jsonBody)
+            checkError(w, err)
         }
     }
 }
