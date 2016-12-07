@@ -105,13 +105,16 @@ function savePhoto() {
 
 }
 
-function getPhoto() {
+function getPhoto(id) {
     var xhr = new XMLHttpRequest();
     xhr.onload = function(event) {
+        console.log(xhr.status);
         if (xhr.status == 200) {
           var photo = event.target.response;
-          photo = JSON.parse(photo);
-          var w=window.open(photo.Image);
+          console.log(photo[0].Image);
+          //photo = JSON.parse(photo);
+          //window.open(photo.Image);
+          document.getElementById("test").src = photo.Image;
         } else {
           alert("Error! Get files failed");
         }
@@ -120,7 +123,7 @@ function getPhoto() {
         alert("Error! Get file failed. Cannot connect to server.");
       };
         
-      xhr.open('GET', 'http://130.240.170.62:1026/photo/2', false);
+      xhr.open('GET', 'http://130.240.170.62:1026/photo/' + id, false);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(null);
 
