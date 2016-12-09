@@ -57,7 +57,7 @@ func (l *loginDB) startBackend() {
     router.POST("/user", l.newUser)
     router.POST("/photo", l.savePhoto)
     router.GET("/photo/:id", l.getPhoto)
-    router.GET("/photo/latest/:page", l.getLatestPhotos)
+    router.GET("/latest/:page", l.getLatestPhotos)
 
     handler := cors.Default().Handler(router)
 
