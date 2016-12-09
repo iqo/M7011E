@@ -1,0 +1,15 @@
+{{define "Title"}}
+Latest Cats
+{{end}}
+
+{{define "Body"}}
+<html>
+<div id="latestPhotos" class="row"> 
+
+</div>
+
+
+
+</html>
+
+{{end}}

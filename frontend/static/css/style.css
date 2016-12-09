@@ -62,3 +62,11 @@
 .fileUpload {
   visibility: hidden;
 }
+
+.hatHolder {
+  display: none;
+}
+
+.modal-body {
+  margin-left: 5px;
+}

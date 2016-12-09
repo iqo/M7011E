@@ -15,6 +15,10 @@ import (
 *** Adds content on website            ***
 *****************************************/
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
+    template.Must(template.ParseFiles("static/index.html", "static/templates/latestCats.tmp")).Execute(w, nil)
+}
+
+func TopListHandler(w http.ResponseWriter, r *http.Request) {
     template.Must(template.ParseFiles("static/index.html", "static/templates/start.html")).Execute(w, nil)
 }
 
@@ -23,7 +27,7 @@ func AboutHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func CatMagicHandler(w http.ResponseWriter, r *http.Request) {
-    template.Must(template.ParseFiles("static/index.html", "static/templates/catmagic.html")).Execute(w, nil)
+    template.Must(template.ParseFiles("static/index.html", "static/templates/catmagic.html", "static/templates/hats.tmp")).Execute(w, nil)
 }
 
 
@@ -38,6 +42,8 @@ func startWebserver(input string) {
     http.HandleFunc("/", IndexHandler)
     http.HandleFunc("/about", AboutHandler)
     http.HandleFunc("/catmagic", CatMagicHandler)
+    http.HandleFunc("/toplist", TopListHandler)
+
 
 
     

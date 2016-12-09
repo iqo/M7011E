@@ -4,7 +4,6 @@ var canvasLeft;
 var canvasTop;
 var startOffsetX, startOffsetY;
 
-
 var pi2 = Math.PI * 2;
 var resizerRadius = 12;
 var rr = resizerRadius * resizerRadius;
@@ -13,13 +12,12 @@ var draggingResizer = {
     y: 0
 };
 
-var imageX = 100;
-var imageY = 100;
-var imageWidth = 100;
-var imageHeight = 100;
-var draggingImage = false;
 var startX;
 var startY;
+var dragId = "";
+
+var trash = new Image();
+trash.src = '/static/img/icon/trash.png';
 //
 
 function allowDrop(ev) {
@@ -47,8 +45,7 @@ function drop(ev) {
     var dropElement = document.getElementById(id);
 
     // draw the drag image at the drop coordinates
-    console.log(dropElement.src);
-    var image = new DragImage(dropElement.src, dropX, dropY);
+    var image = new DragImage(dropElement.src, dropX, dropY, id);
     ctx.drawImage(dropElement, dropX, dropY, 150, 150);
     
     ctx.imageList.push(image);
@@ -58,7 +55,6 @@ function drop(ev) {
 
 var mouseX = 0, mouseY = 0;
 var mousePressed = false;
-var c;
 
 function canvasInit(img) {
     canvas = document.getElementById('catCanvas');
@@ -70,17 +66,17 @@ function canvasInit(img) {
     canvas.ondragover = allowDrop;
     ctx.imageList = [];
     ctx.backgroundImg = img;
-    console.log(canvas.width); //878
-    console.log(canvas.height); //494
     var loop = setInterval(function() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawImageProp(ctx, ctx.backgroundImg,0,0, canvas.width, canvas.height, 0.5, 0.5);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        //drawImageProp(ctx, ctx.backgroundImg,0,0, canvas.width, canvas.height, 0.5, 0.5);
 
         for (var i = 0; i < ctx.imageList.length; i++) {
             ctx.imageList[i].update();
         }
+        if (ctx.loop == false) {clearInterval(loop)};
 
-    }, 50);
+    }, 20);
 
     
     canvas.addEventListener('mousemove', function(e) {
@@ -105,49 +101,71 @@ function getMousePos(canvas, evt) {
         };
       }
 
- function DragImage(src, x, y) {
+ function DragImage(src, x, y, id) {
+        var imageX = 100;
+        var imageY = 100;
+        var imageWidth = 100;
+        var imageHeight = 100;
         var that = this;
         var startX = 0, startY = 0;
         var drag = false;
+        var remove = false;
         var dragResize = -1;
         this.x = x;
         this.y = y;
         var img = new Image();
         img.src = src;
+        img.name = id;
         this.update = function() {
-            if (mousePressed) {
                 var left = that.x;
                 var right = that.x + imageWidth;
                 var top = that.y;
                 var bottom = that.y + imageHeight;
+            if (mousePressed) {
+
                 if (!drag){
                   startX = mouseX - that.x;
                   startY = mouseY - that.y;
+
                 }
-                if (mouseX < right && mouseX > left && mouseY < bottom && mouseY > top){
+                if (hitImage(left, right, top, bottom) && (dragId == "" || dragId == id)){
                    drag = true;
+                   dragId = id;
                    putCorners(left,right,top, bottom);
-                   dragResize = checkIfResize(startX, startY, left, right, top, bottom);
+                   dragResize = checkIfResize(startX, startY, right, bottom);
+                   drawTrash();
                 }
             } else {
-               drag = false;
+                dragId = "";
+                drag = false;
+                if (hitImage(left, right, top, bottom)){
+                   putCorners(left,right,top, bottom);
+                }
+                //checkIfremoveHat(this, top, left);
             }
+            // Sets new position, drags object
             if (drag && dragResize == -1){
                 that.x = mouseX - startX;
                 that.y = mouseY - startY;
-            }
+
+            } 
             if (drag && (dragResize == 0 || dragResize == 1 || dragResize == 2 || dragResize == 3)) {
+                putCorners(left,right,top, bottom);
                 switch (dragResize) {
                     case 0:
                         //top-left
-                        imageWidth = right - mouseX;
-                        imageHeight = right - mouseX;
+                        that.x = mouseX - startX;
+                        imageWidth = right - that.x;
+                        that.y = mouseY - startY;
+                        imageHeight = bottom - that.y;
                         
                         break;
                     case 1:
                         //top-right
+                        //that.x = mouseX - startX;
                         imageWidth = mouseX - that.x;
-                        imageHeight = mouseY-bottom;
+                        that.y = mouseY - startY;
+                        imageHeight = bottom-that.y;
                         break;
                     case 2:
                         //bottom-right
@@ -156,10 +174,14 @@ function getMousePos(canvas, evt) {
                         break;
                     case 3:
                         //bottom-left
-                        imageWidth = right - mouseX;
+                        that.x = mouseX - startX;
+                        imageWidth = right - that.x;
+                        //that.y = mouseY - startY;
                         imageHeight = mouseY - that.y;
+                        
                         break;
                 }
+
 
                 if(imageWidth<25){imageWidth=25;}
                 if(imageHeight<25){imageHeight=25;}
@@ -173,14 +195,48 @@ function getMousePos(canvas, evt) {
         }
     }
 
-function checkIfResize (x, y, left, right, top, bottom) {
-
+function hitImage(left, right, top, bottom){
+    return (mouseX < right && mouseX > left && mouseY < bottom && mouseY > top)
+}
+//image x = left, imagey = top, imagerignt= right, imagebottom=bottom 
+// startx, starty = x,y = that.x, that.y
+function checkIfResize (x, y, right, bottom) {
     var dx, dy;
     // top-left
     dx = x;
     dy = y;
     if (dx * dx + dy * dy <= rr) {
-        console.log("top-left");
+        return (0);
+    }
+
+    // top-right
+    dx = mouseX - right;
+    dy = y;
+    if (dx * dx + dy * dy <= rr) {
+        return (1);
+    }
+    // bottom-right
+    dx = mouseX - right;
+    dy = mouseY - bottom;
+    if (dx * dx + dy * dy <= rr) {
+        return (2);
+    }
+    // bottom-left
+    dx = x;
+    dy = mouseY - bottom;
+    if (dx * dx + dy * dy <= rr) {
+        return (3);
+    }
+    return (-1);
+
+}
+
+function checkIfResize2 (x, y, imageX, imageY) {
+    var dx, dy;
+    // top-left
+    dx = x;
+    dy = y;
+    if (dx * dx + dy * dy <= rr) {
         return (0);
     }
 
@@ -203,17 +259,28 @@ function checkIfResize (x, y, left, right, top, bottom) {
     dy = y - imageY;
     if (dx * dx + dy * dy <= rr) {
         console.log("bottom-left");
+        console.log(dx,dy);
         return (3);
     }
     return (-1);
 
 }
 
+function checkIfremoveHat(img, left, bottom){
+    if (left < 30 && bottom > (canvas.height-40)) {
+        var index = ctx.imageList.indexOf(img);
+        if (index > -1) {
+            ctx.imageList.splice(index, 1);
+        };
+    };
+
+}
+
 function putCorners (left, right, top, bottom) {
-    drawCorners(left, top);
-    drawCorners(right, top);
-    drawCorners(left, bottom);
-    drawCorners(right, bottom);
+    drawCorners(left+5, top+5);
+    drawCorners(right-5, top+5);
+    drawCorners(left+5, bottom-5);
+    drawCorners(right-5, bottom-5);
 }
 
 function drawCorners(x, y) {
@@ -223,7 +290,11 @@ function drawCorners(x, y) {
     ctx.fill();
 }
 
+function drawTrash() {
+    ctx.drawImage(trash, 0, canvas.height-60 , 50, 50);
+}
 
+/*
 // Draws background image on canvas
 function drawImageProp(ctx, img, x, y, w, h, offsetX, offsetY) {
 
@@ -272,3 +343,5 @@ function drawImageProp(ctx, img, x, y, w, h, offsetX, offsetY) {
     /// fill image in dest. rectangle
     ctx.drawImage(img, cx, cy, cw, ch,  x, y, w, h);
 }
+
+*/
