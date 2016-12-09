@@ -181,7 +181,7 @@ func (l *loginDB) getLatestPhotos(w http.ResponseWriter, r *http.Request, ps htt
     if l1 < 0 { l1 = 0}
     l2 := l1 + 11
 
-    rows, res,  err := db.Query("select (photoId, name, thumbnail) from hat4cat.photos order by photoId desc limit %d, %d", l1, l2)
+    rows, res,  err := db.Query("select photoId, name, thumbnail from hat4cat.photos order by photoId desc limit %d, %d", l1, l2)
     checkError(w, err)
 
     if rows == nil {
