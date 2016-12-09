@@ -189,7 +189,7 @@ func (l *loginDB) getLatestPhotos(w http.ResponseWriter, r *http.Request, ps htt
             created := res.Map("date")
             uid := res.Map("uid")
             thumbnail := res.Map("thumbnail")
-            photo := &Photo{row.Int(id), row.Str(imgName), row.Str(imgDesc), row.Str(image), row.Str(created), row.Int(uid)}
+            photo := &Photo{row.Int(id), row.Str(imgName), row.Str(imgDesc), row.Str(image), row.Str(created), row.Int(uid), row.Str(thumbnail)}
             photos = append(photos, photo)
 
         }
