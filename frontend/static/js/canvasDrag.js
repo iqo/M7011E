@@ -141,7 +141,7 @@ function getMousePos(canvas, evt) {
                 if (hitImage(left, right, top, bottom)){
                    putCorners(left,right,top, bottom);
                 }
-                //checkIfremoveHat(this, top, left);
+                checkIfremoveHat(this, left, bottom);
             }
             // Sets new position, drags object
             if (drag && dragResize == -1){
@@ -231,40 +231,7 @@ function checkIfResize (x, y, right, bottom) {
 
 }
 
-function checkIfResize2 (x, y, imageX, imageY) {
-    var dx, dy;
-    // top-left
-    dx = x;
-    dy = y;
-    if (dx * dx + dy * dy <= rr) {
-        return (0);
-    }
 
-    // top-right
-    dx = x - imageX;
-    dy = y;
-    if (dx * dx + dy * dy <= rr) {
-        console.log("top-right");
-        return (1);
-    }
-    // bottom-right
-    dx = x - imageX;
-    dy = y - imageY;
-    if (dx * dx + dy * dy <= rr) {
-        console.log("bottom-right");
-        return (2);
-    }
-    // bottom-left
-    dx = x;
-    dy = y - imageY;
-    if (dx * dx + dy * dy <= rr) {
-        console.log("bottom-left");
-        console.log(dx,dy);
-        return (3);
-    }
-    return (-1);
-
-}
 
 function checkIfremoveHat(img, left, bottom){
     if (left < 30 && bottom > (canvas.height-40)) {

@@ -40,10 +40,16 @@ type Photo struct {
     Created     string `json="created"`
     Uid         int `json="uid"`
     Thumbnail   string `json="thumbnail"`
-    }
+}
 
-type PhotoList struct {
-    Photos       []*Photo `json="photos"`
+type Thumbnail struct {
+    Id          int `json="id"`
+    ImgName     string `json="imgName"`
+    Thumbnail   string `json="thumbnail"`
+}
+
+type ThumbnailList struct {
+    Thumbnails       []*Thumbnail `json="thumbnails"`
 }
 
 /*****************************************
@@ -167,7 +173,7 @@ func (l *loginDB) getPhoto(w http.ResponseWriter, r *http.Request, ps httprouter
 }
 
 func (l *loginDB) getLatestPhotos(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-    var photos []*Photo
+    var thumbnails []*Thumbnail
     db := l.connectToDB()
     page, err := strconv.Atoi(ps.ByName("page"))
     checkError(w, err)
@@ -175,7 +181,7 @@ func (l *loginDB) getLatestPhotos(w http.ResponseWriter, r *http.Request, ps htt
     if l1 < 0 { l1 = 0}
     l2 := l1 + 11
 
-    rows, res,  err := db.Query("select * from hat4cat.photos order by photoId desc limit %d, %d", l1, l2)
+    rows, res,  err := db.Query("select (photoId, imgName, thumbnail) from hat4cat.photos order by photoId desc limit %d, %d", l1, l2)
     checkError(w, err)
 
     if rows == nil {
@@ -184,18 +190,14 @@ func (l *loginDB) getLatestPhotos(w http.ResponseWriter, r *http.Request, ps htt
         for _, row := range rows {
             id := res.Map("photoId")
             imgName := res.Map("name")
-            imgDesc := res.Map("description")
-            image := res.Map("image")
-            created := res.Map("date")
-            uid := res.Map("uid")
             thumbnail := res.Map("thumbnail")
-            photo := &Photo{row.Int(id), row.Str(imgName), row.Str(imgDesc), row.Str(image), row.Str(created), row.Int(uid), row.Str(thumbnail)}
-            photos = append(photos, photo)
+            tn := &Thumbnail{row.Int(id), row.Str(imgName), row.Str(thumbnail)}
+            thumbnails = append(thumbnails, tn)
 
         }
-        photoList := &PhotoList{Photos: photos}
+        tnList := &ThumbnailList{Thumbnails: thumbnails}
 
-        jsonBody, err := json.Marshal(photoList)
+        jsonBody, err := json.Marshal(tnList)
         w.Write(jsonBody)
         checkError(w, err)
     }

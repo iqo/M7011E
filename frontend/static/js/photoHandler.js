@@ -144,10 +144,10 @@ function getLatestPhotos(page) {
     xhr.onload = function(event) {
         console.log(xhr.status);
         if (xhr.status == 200) {
-          var photo = event.target.response;
+          var thumbnail = event.target.response;
           
-          photo = JSON.parse(photo);
-          addFiles(photo.Photos);
+          thumbnail = JSON.parse(thumbnail);
+          placeLatestPhotos(thumbnail.Thumbnails);
 
         } else {
           alert("Error! Get files failed");
@@ -162,10 +162,10 @@ function getLatestPhotos(page) {
       xhr.send(null);
 }
 
-function placeLatestPhotos(photos){
-    if (photos != null) {
-        photos.forEach(function(photo){
-        document.getElementById('latestPhotos').innerHTML += "<div class='col-lg-3 col-sm-4 col-xs-6'><a title="+ photo.ImgName + " href="#"><img class='thumbnail img-responsive' src="+ photo.Thumbnail + "></a></div>";
+function placeLatestPhotos(thumbnails){
+    if (thumbnails != null) {
+        thumbnails.forEach(function(thumbnail){
+        document.getElementById('latestPhotos').innerHTML += "<div class='col-lg-2 col-sm-4 col-xs-6'><a title="+ thumbnail.ImgName + " href='#''><img id=" + thumbnail.photoId + " class='thumbnail img-responsive' src="+ thumbnail.Thumbnail + "></a></div>";
     }); 
   }
 }

@@ -48,16 +48,6 @@
   content:url('../img/topcat/cat1.jpg');
 }
 
-.dropzone {
-  background-color: #F5F5F5;
-  border: solid 1px #dbdbdb;
-  border-radius: 4px;
-  margin: 30px auto;
-
-  padding: 10px;
-  width: 80%;
-  transition: background-color 0.3s;
-}
 
 .fileUpload {
   visibility: hidden;
@@ -69,4 +59,8 @@
 
 .modal-body {
   margin-left: 5px;
+}
+
+.well {
+  text-align: center;
 }
