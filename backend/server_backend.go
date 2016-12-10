@@ -73,7 +73,7 @@ func (l *loginDB) newUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 	dec := json.NewDecoder(r.Body)
 	user := User{}
 	err := dec.Decode(&user)
-	if status_check(user.AuthToken) {
+	if statusCheck(user.AuthToken) {
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -175,7 +175,7 @@ func (l *loginDB) connectToDB() mysql.Conn {
 }
 
 //ceck the status code of the loged in user
-func status_check(token string) bool {
+func statusCheck(token string) bool {
 	auth_token := "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" + token
 	resp, err := http.Get(auth_token)
 	if (err == nil) && (resp.StatusCode == 200) {
