@@ -1,0 +1,57 @@
+{{define "Title"}}
+Hat4urCat
+{{end}}
+
+{{define "Body"}}
+<html>
+<script src="/static/js/commentRateHandler.js"></script>
+
+<body onload="photoToCanvas('{{ .Image }}')">
+<div class="col-sm-12">
+	<div class="row">
+	<div class="col col-sm-12"> <h2> {{ .ImgName }} <small> by {{ .Uid }} </small> </h2> 
+		<p> {{ .ImgDesc }} </p> <small> {{ .Created }} </small> </div>
+          </div>
+        	<hr>
+    <div class="well">
+		<div id="photohotos" class="row"> 
+			<canvas id='photoCanvas'> </canvas>
+		</div>
+
+<div class="well comment">
+
+<div class="row">
+	<div class="col-sm-10 col-xs-6 col-lg-offset-1">
+    <div class="input-group">
+        <input type="text" id="userComment" class="form-control" placeholder="Write your comment here..." />
+	    <span class="input-group-btn" onclick="addComment('{{ .Id }}'')">     
+            <a href="#" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-comment"></span> Add Comment</a>
+        </span>
+    </div>
+</div>
+</div>
+<hr>
+<div class="row">
+	<div class="col-sm-1">
+		<div class="thumbnail">
+			<img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
+		</div><!-- /thumbnail -->
+	</div><!-- /col-sm-1 -->
+
+<div class="col-sm-10">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<strong>myusername</strong> <span class="text-muted">commented 5 days ago</span>
+		</div>
+		<div class="panel-body">
+			Panel content
+		</div><!-- /panel-body -->
+	</div><!-- /panel panel-default -->
+</div><!-- /col-sm-10 -->
+</div> <!-- /well -->
+	</div>
+	</div>
+</div>
+</body>
+</html>
+{{end}}

@@ -7,7 +7,8 @@ import (
     "log"
     "os"
     "strings"
-    "io/ioutil"
+    "encoding/json"
+    //"io/ioutil"
 	//"github.com/julienschmidt/httprouter" //https://github.com/julienschmidt/httprouter
 
 )
@@ -22,6 +23,18 @@ type Photo struct {
     Thumbnail   string `json="thumbnail"`
 }
 
+type PhotoView struct {
+    Id          int `json="id"`
+    ImgName     string `json="imgName"`
+    ImgDesc     string `json="imgDesc"`
+    Image       string `json="image"`
+    Created     string `json="created"`
+    Uid         int `json="uid"`
+    Firstname   string `json="firstname"`
+    Lastname    string `json="lastname"`
+    //Comments    []*Comment `json="comments"`
+    Rate        int `json="rate"`
+}
 
 /*****************************************
 *** Adds content on website            ***
@@ -37,16 +50,15 @@ func TopListHandler(w http.ResponseWriter, r *http.Request) {
 func PhotoHandler(w http.ResponseWriter, r *http.Request) {
     id := strings.Split(r.URL.Path, "/")
     response, err := http.Get("http://130.240.170.62:1026/photo/" + id[2])
-    fmt.Printf("test")
     checkError(w, err)
-
 
     defer response.Body.Close()
-    responseData, err := ioutil.ReadAll(response.Body)
+    dec := json.NewDecoder(response.Body)
+    photo := Photo{}
+    err = dec.Decode(&photo)
     checkError(w, err)
-    fmt.Printf(string(responseData))
-
-    //template.Must(template.ParseFiles("static/index.html", "static/templates/start.html")).Execute(w, nil)
+    t :=template.Must(template.ParseFiles("static/index.html", "static/templates/photo.tmp"))
+    t.Execute(w, photo)
 }
 
 func AboutHandler(w http.ResponseWriter, r *http.Request) {

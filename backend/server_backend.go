@@ -42,6 +42,25 @@ type Photo struct {
     Thumbnail   string `json="thumbnail"`
 }
 
+
+type Comment struct {
+    Cid         int `json="cid"`
+    PhotoId     int `json="photoId"`
+    Comment     string `json="comment"`
+    Uid         int `json="uid"`
+    Timestamp   string `json="timestamp"`
+}
+
+type Comments struct {
+    Comments       []*Comment `json="comments"`
+}
+
+type Rating struct {
+    Rid         int `json="rid"`
+    PhotoId     int `json="photoId"`
+    Rate        int `json="rate"`
+}
+
 type Thumbnail struct {
     Id          int `json="id"`
     ImgName     string `json="imgName"`
@@ -64,6 +83,8 @@ func (l *loginDB) startBackend() {
     router.POST("/photo", l.savePhoto)
     router.GET("/photo/:id", l.getPhoto)
     router.GET("/latest/:page", l.getLatestPhotos)
+    router.GET("/comments/:id", l.getComments)
+    router.POST("/comment", l.newComment)
 
     handler := cors.Default().Handler(router)
 
@@ -172,6 +193,7 @@ func (l *loginDB) getPhoto(w http.ResponseWriter, r *http.Request, ps httprouter
     }
 }
 
+
 func (l *loginDB) getLatestPhotos(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
     var thumbnails []*Thumbnail
     limit := 23
@@ -203,6 +225,60 @@ func (l *loginDB) getLatestPhotos(w http.ResponseWriter, r *http.Request, ps htt
         checkError(w, err)
     }
 }
+
+/*******************************************************
+*************** COMMENT HANDLERS ***********************
+*******************************************************/
+
+func (l *loginDB) newComment(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    db := l.connectToDB()
+    dec := json.NewDecoder(r.Body)
+    comment := Comment{}
+    err := dec.Decode(&comment)
+    if err != nil {
+        log.Fatal(err)
+    }
+    res,  err := db.Prepare("insert into hat4cat.comment (photoId, comment, uid) values (?, ?, ?)")
+    checkError(w, err)
+
+    _, err = res.Run(comment.PhotoId, comment.Comment, photo.Uid)
+    checkError(w, err)
+}
+
+
+func (l *loginDB) getComments(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    var comments []*Comment
+    db := l.connectToDB()
+
+    id, err := strconv.Atoi(ps.ByName("id"))
+    checkError(w, err)
+
+    rows, res,  err := db.Query("select * from hat4cat.comment where photoId=%d", id)
+    checkError(w, err)
+
+    if rows == nil {
+        w.WriteHeader(404)
+    } else {
+        for _, row := range rows {
+            cid := res.Map("cid")
+            photoId := res.Map("photoId")
+            comment := res.Map("comment")
+            uid := res.Map("uid")
+            timestamp := res.Map("timestamp")
+            comment := &Comment{row.Int(cid), row.Int(photoId), row.Str(comment), row.Int(uid), row.Int(timestamp)}
+            comments = append(comments, comment)
+
+        }
+        commentL := &Comments{Comments: comments}
+
+        jsonBody, err := json.Marshal(commentL)
+        w.WriteHeader(200) // is ok
+        w.Write(jsonBody)
+        checkError(w, err)
+        }
+    }
+}
+
 
 /*******************************************************
 *************** ERROR HANDLERS *************************

@@ -85,6 +85,19 @@ function canvasToPhoto(){
 
 }
 
+function photoToCanvas(src){
+    canvas = document.getElementById('photoCanvas');
+    ctx = canvas.getContext('2d');
+    canvas.width=window.innerHeight*(2/3)*(16/9);
+    canvas.height=window.innerHeight *(2/3); 
+    var img = new Image();
+    img.onload = function() {
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    }
+    img.src = src;
+    
+}
+
 
 function savePhoto(img, thumbnail) {
     var imgName = document.getElementById("imgName").value;
@@ -165,10 +178,12 @@ function getLatestPhotos(page) {
 function placeLatestPhotos(thumbnails){
     if (thumbnails != null) {
         thumbnails.forEach(function(thumbnail){
-        document.getElementById('latestPhotos').innerHTML += "<div class='col-lg-2 col-sm-4 col-xs-6'><a title="+ thumbnail.ImgName + " href='#''><img id=" + thumbnail.Id + " class='thumbnail img-responsive' src="+ thumbnail.Thumbnail + "></a></div>";
+        document.getElementById('latestPhotos').innerHTML += "<div class='col-lg-2 col-sm-4 col-xs-6'><a title="+ thumbnail.ImgName + " href='/photo/" + thumbnail.Id + "'><img id=" + thumbnail.Id + " class='thumbnail img-responsive' src="+ thumbnail.Thumbnail + "></a></div>";
     }); 
   }
 }
+
+
 
 function createCORSRequest(method, url) {
   var xhr = new XMLHttpRequest();
