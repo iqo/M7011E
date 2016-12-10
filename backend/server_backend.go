@@ -241,7 +241,7 @@ func (l *loginDB) newComment(w http.ResponseWriter, r *http.Request, ps httprout
     res,  err := db.Prepare("insert into hat4cat.comment (photoId, comment, uid) values (?, ?, ?)")
     checkError(w, err)
 
-    _, err = res.Run(comment.PhotoId, comment.Comment, photo.Uid)
+    _, err = res.Run(comment.PhotoId, comment.Comment, comment.Uid)
     checkError(w, err)
 }
 
@@ -265,7 +265,7 @@ func (l *loginDB) getComments(w http.ResponseWriter, r *http.Request, ps httprou
             comment := res.Map("comment")
             uid := res.Map("uid")
             timestamp := res.Map("timestamp")
-            c := &Comment{row.Int(cid), row.Int(photoId), row.Str(comment), row.Int(uid), row.Int(timestamp)}
+            c := &Comment{row.Int(cid), row.Int(photoId), row.Str(comment), row.Int(uid), row.Str(timestamp)}
             comments = append(comments, c)
 
         }
