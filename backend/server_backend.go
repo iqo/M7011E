@@ -149,7 +149,7 @@ func (l *loginDB) getPhoto(w http.ResponseWriter, r *http.Request, ps httprouter
     id, err := strconv.Atoi(ps.ByName("id"))
     checkError(w, err)
 
-    rows, res,  err := db.Query("select * from hat4cat.photos where photodI=%d", id)
+    rows, res,  err := db.Query("select * from hat4cat.photos where photoId=%d", id)
     checkError(w, err)
 
     if rows == nil {
@@ -174,12 +174,13 @@ func (l *loginDB) getPhoto(w http.ResponseWriter, r *http.Request, ps httprouter
 
 func (l *loginDB) getLatestPhotos(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
     var thumbnails []*Thumbnail
+    limit := 23
     db := l.connectToDB()
     page, err := strconv.Atoi(ps.ByName("page"))
     checkError(w, err)
-    l1 := page * 11 - 11
+    l1 := page * limit - limit
     if l1 < 0 { l1 = 0}
-    l2 := l1 + 11
+    l2 := l1 + limit
 
     rows, res,  err := db.Query("select photoId, name, thumbnail from hat4cat.photos order by photoId desc limit %d, %d", l1, l2)
     checkError(w, err)

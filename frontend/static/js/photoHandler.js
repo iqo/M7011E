@@ -165,7 +165,7 @@ function getLatestPhotos(page) {
 function placeLatestPhotos(thumbnails){
     if (thumbnails != null) {
         thumbnails.forEach(function(thumbnail){
-        document.getElementById('latestPhotos').innerHTML += "<div class='col-lg-2 col-sm-4 col-xs-6'><a title="+ thumbnail.ImgName + " href='#''><img id=" + thumbnail.photoId + " class='thumbnail img-responsive' src="+ thumbnail.Thumbnail + "></a></div>";
+        document.getElementById('latestPhotos').innerHTML += "<div class='col-lg-2 col-sm-4 col-xs-6'><a title="+ thumbnail.ImgName + " href='#''><img id=" + thumbnail.Id + " class='thumbnail img-responsive' src="+ thumbnail.Thumbnail + "></a></div>";
     }); 
   }
 }

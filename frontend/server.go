@@ -6,9 +6,21 @@ import (
 	"net/http"
     "log"
     "os"
+    "strings"
+    "io/ioutil"
 	//"github.com/julienschmidt/httprouter" //https://github.com/julienschmidt/httprouter
 
 )
+
+type Photo struct {
+    Id          int `json="id"`
+    ImgName     string `json="imgName"`
+    ImgDesc     string `json="imgDesc"`
+    Image       string `json="image"`
+    Created     string `json="created"`
+    Uid         int `json="uid"`
+    Thumbnail   string `json="thumbnail"`
+}
 
 
 /*****************************************
@@ -20,6 +32,21 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 func TopListHandler(w http.ResponseWriter, r *http.Request) {
     template.Must(template.ParseFiles("static/index.html", "static/templates/start.html")).Execute(w, nil)
+}
+
+func PhotoHandler(w http.ResponseWriter, r *http.Request) {
+    id := strings.Split(r.URL.Path, "/")
+    response, err := http.Get("http://130.240.170.62:1026/photo/" + id[2])
+    fmt.Printf("test")
+    checkError(w, err)
+
+
+    defer response.Body.Close()
+    responseData, err := ioutil.ReadAll(response.Body)
+    checkError(w, err)
+    fmt.Printf(string(responseData))
+
+    //template.Must(template.ParseFiles("static/index.html", "static/templates/start.html")).Execute(w, nil)
 }
 
 func AboutHandler(w http.ResponseWriter, r *http.Request) {
@@ -43,6 +70,7 @@ func startWebserver(input string) {
     http.HandleFunc("/about", AboutHandler)
     http.HandleFunc("/catmagic", CatMagicHandler)
     http.HandleFunc("/toplist", TopListHandler)
+    http.HandleFunc("/photo/", PhotoHandler)
 
 
 
@@ -57,6 +85,14 @@ func startWebserver(input string) {
             log.Fatal(http.ListenAndServe("localhost:1025", nil))
             
         }
+}
+
+func checkError(w http.ResponseWriter, err error) {
+    if err != nil {
+        w.WriteHeader(500) // error
+        fmt.Println(err)
+        fmt.Fprintf(w, "Bad input")
+    }
 }
 
 func main() {
