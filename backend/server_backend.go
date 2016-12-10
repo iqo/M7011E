@@ -265,8 +265,8 @@ func (l *loginDB) getComments(w http.ResponseWriter, r *http.Request, ps httprou
             comment := res.Map("comment")
             uid := res.Map("uid")
             timestamp := res.Map("timestamp")
-            comment := &Comment{row.Int(cid), row.Int(photoId), row.Str(comment), row.Int(uid), row.Int(timestamp)}
-            comments = append(comments, comment)
+            c := &Comment{row.Int(cid), row.Int(photoId), row.Str(comment), row.Int(uid), row.Int(timestamp)}
+            comments = append(comments, c)
 
         }
         commentL := &Comments{Comments: comments}
@@ -277,7 +277,7 @@ func (l *loginDB) getComments(w http.ResponseWriter, r *http.Request, ps httprou
         checkError(w, err)
         }
     }
-}
+
 
 
 /*******************************************************
