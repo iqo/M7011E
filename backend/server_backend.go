@@ -331,11 +331,11 @@ func (l *loginDB) getRating(w http.ResponseWriter, r *http.Request, ps httproute
             uid := res.Map("uid")
             rating := &Rating{row.Int(photoId), row.Int(rate), row.Int(uid)}
 
-        }
-        jsonBody, err := json.Marshal(rating)
-        w.WriteHeader(200) // is ok
-        w.Write(jsonBody)
-        checkError(w, err)
+            jsonBody, err := json.Marshal(rating)
+            w.WriteHeader(200) // is ok
+            w.Write(jsonBody)
+            checkError(w, err)
+            }
         }
     }
 
@@ -356,11 +356,11 @@ func (l *loginDB) getRatingSum(w http.ResponseWriter, r *http.Request, ps httpro
             rateS := res.Map("ratingSum")
             rateSum := &RateSum{row.Int(photoId), row.Int(rateS)}
 
-        }
-        jsonBody, err := json.Marshal(rateSum)
-        w.WriteHeader(200) // is ok
-        w.Write(jsonBody)
-        checkError(w, err)
+            jsonBody, err := json.Marshal(rateSum)
+            w.WriteHeader(200) // is ok
+            w.Write(jsonBody)
+            checkError(w, err)
+            }
         }
     }
 
