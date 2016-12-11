@@ -50,9 +50,10 @@ function getComments(pid) {
 
 function displayComments(comments){
     if (comments != null) {
+        console.log(comments);
         comments.forEach(function(c){
-        document.getElementById('comments').innerHTML += "<div class='row' id='" + c.Uid + "'><div class='col-sm-10 col-lg-offset-1'><div class='panel panel-default'><div class='panel-heading'><strong>"+ c.Firstname + " " + c.Lastname +"</strong> <span class='text-muted'>commented " + c.Timestamp + "</span></div><div class='panel-body'>"+ c.Comment + "</div></div></div></div> "
-        
+            document.getElementById('comments').innerHTML += "<div class='row' ><div class='col-sm-10 col-lg-offset-1'><div class='panel panel-default'><div class='panel-heading'><strong>"+ c.Firstname + " " + c.Lastname +"</strong> <span class='text-muted'>commented " + c.Timestamp + "</span></div><div class='panel-body'>"+ c.Comment + "</div></div></div></div> "
+            
     }); 
   }
 }

@@ -255,7 +255,7 @@ func (l *loginDB) getComments(w http.ResponseWriter, r *http.Request, ps httprou
     id, err := strconv.Atoi(ps.ByName("id"))
     checkError(w, err)
 
-    rows, res,  err := db.Query("select cid, photoId, 'comment', c.uid, firstname, lastname, timestamp  from hat4cat.comment as c join hat4cat.users as u on c.uid = u.uid where photoId=%d order by cid desc", id)
+    rows, res,  err := db.Query("select cid, photoId, comment, c.uid, firstname, lastname, timestamp  from hat4cat.comment as c join hat4cat.users as u on c.uid = u.uid where photoId=%d order by cid desc", id)
     checkError(w, err)
 
     if rows == nil {
