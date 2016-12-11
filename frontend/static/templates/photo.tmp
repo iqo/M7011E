@@ -4,10 +4,10 @@ Hat4urCat
 
 {{define "Body"}}
 <html>
+<script src="/static/js/photoHandler.js"></script>
 <script src="/static/js/commentRateHandler.js"></script>
 
-
-<body onload="photoToCanvas('{{ .Image }}')">
+<body>
 <div class="col-sm-12">
 	<div class="row">
 	<div class="col col-sm-12"> <h2> {{ .ImgName }} <small> by {{ .Firstname }} {{ .Lastname}} </small> </h2> 
@@ -22,15 +22,15 @@ Hat4urCat
 
 	<div class="row">
 
-			<div id="upvote" class="col col-sm-1 col-lg-offset-3 rate-arrow upvote" onclick="checkIfVoted('up')">
+			<div id="upvote" class="col col-sm-1 col-lg-offset-3 rate-arrow upvote" onclick="checkIfVoted('up', '{{ .Id }}')">
 				<span > &#8670; </span>
 			</div>
-			<div id="downvote" class="col col-sm-1 rate-arrow downvote" onclick="checkIfVoted('down')">
+			<div id="downvote" class="col col-sm-1 rate-arrow downvote" onclick="checkIfVoted('down', '{{ .Id }}')">
 				<span> &#8671; </span>
 			</div>
 
-			<div id="rate" class="col col-sm-4 rate">
-				Mjaow-points: {{ .RateSum }}
+			<div id="rate" class="col col-sm-5 rate">
+				Mjaow-points: {{ .RatingSum }}
 			</div>
 
 </div>
@@ -60,6 +60,11 @@ Hat4urCat
 	</div>
 </div>
 </body>
-<script type="text/javascript"> document.onload = getComments('{{ .Id }}');</script>
+<script type="text/javascript"> 
+	document.onload=photoToCanvas('{{ .Image }}');
+	document.onload = getComments('{{ .Id }}');
+	//document.onload=getRate('{{ .Id }}');
+
+	</script>
 </html>
 {{end}}

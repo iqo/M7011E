@@ -114,6 +114,7 @@ func testpage(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 *******************************************************/
 
 func (l *loginDB) newUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    fmt.Println("POST newUser")
     db := l.connectToDB()
     dec := json.NewDecoder(r.Body)
     user := User{}
@@ -130,6 +131,7 @@ func (l *loginDB) newUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 
 
 func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    fmt.Println("GET getUser")
     db := l.connectToDB()
 
     id, err := strconv.Atoi(ps.ByName("id"))
@@ -160,6 +162,7 @@ func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 *************** PHOTO HANDLERS *************************
 *******************************************************/
 func (l *loginDB) savePhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    fmt.Println("POST savePhoto")
     db := l.connectToDB()
     dec := json.NewDecoder(r.Body)
     photo := Photo{}
@@ -176,6 +179,7 @@ func (l *loginDB) savePhoto(w http.ResponseWriter, r *http.Request, ps httproute
 
 
 func (l *loginDB) getPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    fmt.Println("GET getPhoto")
     db := l.connectToDB()
     id, err := strconv.Atoi(ps.ByName("id"))
     checkError(w, err)
@@ -205,6 +209,7 @@ func (l *loginDB) getPhoto(w http.ResponseWriter, r *http.Request, ps httprouter
 
 
 func (l *loginDB) getLatestPhotos(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    fmt.Println("GET getLatestPhotos")
     var thumbnails []*Thumbnail
     limit := 23
     db := l.connectToDB()
@@ -241,6 +246,7 @@ func (l *loginDB) getLatestPhotos(w http.ResponseWriter, r *http.Request, ps htt
 *******************************************************/
 
 func (l *loginDB) newComment(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    fmt.Println("POST newComment")
     db := l.connectToDB()
     dec := json.NewDecoder(r.Body)
     comment := Comment{}
@@ -257,6 +263,7 @@ func (l *loginDB) newComment(w http.ResponseWriter, r *http.Request, ps httprout
 
 
 func (l *loginDB) getComments(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    fmt.Println("GET getComments")
     var comments []*Comment
     db := l.connectToDB()
 
@@ -295,6 +302,7 @@ func (l *loginDB) getComments(w http.ResponseWriter, r *http.Request, ps httprou
 *******************************************************/
 
 func (l *loginDB) newRating(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    fmt.Println("POST newRating")
     db := l.connectToDB()
     dec := json.NewDecoder(r.Body)
     rating := Rating{}
@@ -302,7 +310,7 @@ func (l *loginDB) newRating(w http.ResponseWriter, r *http.Request, ps httproute
     if err != nil {
         log.Fatal(err)
     }
-    res,  err := db.Prepare("insert into hat4cat.rating (pid, rate, uid) values (?, ?, ?)")
+    res,  err := db.Prepare("insert into hat4cat.rating (photoId, rate, uid) values (?, ?, ?)")
     checkError(w, err)
 
     _, err = res.Run(rating.PhotoId, rating.Rate, rating.Uid)
@@ -311,6 +319,7 @@ func (l *loginDB) newRating(w http.ResponseWriter, r *http.Request, ps httproute
 
 
 func (l *loginDB) getRating(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    fmt.Println("GET getRating")
     db := l.connectToDB()
 
     pid, err := strconv.Atoi(ps.ByName("pid"))
@@ -340,6 +349,7 @@ func (l *loginDB) getRating(w http.ResponseWriter, r *http.Request, ps httproute
     }
 
 func (l *loginDB) getRatingSum(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    fmt.Println("GET getRatingSum")
     db := l.connectToDB()
 
     pid, err := strconv.Atoi(ps.ByName("pid"))

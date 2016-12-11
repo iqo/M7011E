@@ -80,11 +80,11 @@ func PhotoHandler(w http.ResponseWriter, r *http.Request) {
     checkError(w, err)
     defer rResponse.Body.Close()
     dec = json.NewDecoder(rResponse.Body)
-    r := RatingSum{}
-    err = dec.Decode(&r)
+    rate := RateSum{}
+    err = dec.Decode(&rate)
 
     checkError(w, err)
-    photoV := &PhotoView{photo.Id, photo.ImgName, photo.ImgDesc, photo.Image, photo.Created, photo.Uid, user.Firstname, user.Lastname, r.RateSum}
+    photoV := &PhotoView{photo.Id, photo.ImgName, photo.ImgDesc, photo.Image, photo.Created, photo.Uid, user.Firstname, user.Lastname, rate.RateSum}
     t :=template.Must(template.ParseFiles("static/index.html", "static/templates/photo.tmp"))
     t.Execute(w, photoV)
 }

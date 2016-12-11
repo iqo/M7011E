@@ -27,7 +27,7 @@ function addComment(photoId) {
 }
 
 
-function getComments(pid) {
+function getComments(photoId) {
     var xhr = new XMLHttpRequest();
     xhr.onload = function(event) {
         if (xhr.status == 200) {
@@ -44,7 +44,7 @@ function getComments(pid) {
         alert("Error! Get comments failed. Cannot connect to server.");
       };
         
-      xhr.open('GET', 'http://130.240.170.62:1026/comments/' + pid, false);
+      xhr.open('GET', 'http://130.240.170.62:1026/comments/' + photoId, false);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(null);
 }
@@ -76,7 +76,7 @@ function getRate(pid) {
         alert("Error! Get rate failed. Cannot connect to server.");
       };
     /////////////////////////////// CHANGE USERID vvvvvvvvvvvvv //////////
-      xhr.open('GET', 'http://130.240.170.62:1026/rate/1/' + pid, false);
+      xhr.open('GET', 'http://130.240.170.62:1026/rating/' + pid + "/1", false);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(null);
 }
@@ -91,35 +91,66 @@ function displayRate(rate){
     } else {
         rated = false;
     }
-
 }
 
-function checkIfVoted(vote){
+function rate(photoId, rate) {
+    var rate={};
+    rate.photoId = parseInt(photoId);
+    rate.rate = parseInt(rate);
+    
+    /********* CHANGE TO ACTUAL USERID **********/
+    rate.uid = 1;
+
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function() {
+    if (xhr.status == 200) {
+        location.reload(); // reloads page
+    } else {
+        alert("Error! Rating failed");
+        }
+    };
+    xhr.onerror = function() {
+        alert("Error! Rating failed." + xhr.status);
+    };
+
+    if (!rated) {
+        xhr.open('POST', 'http://130.240.170.62:1026/rating', true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(JSON.stringify(rate));
+    } else {
+        console.log("already voted");
+
+    }
+}
+
+function checkIfVoted(vote, id){
     if (vote == "up") {
         if (document.getElementById("upvote").style.color == "green") {
             return;
         } else {
-            upvote();
+            upvote(id);
         }
     };
     if (vote == "down") {
         if (document.getElementById("downvote").style.color == "red") {
             return;
         } else {
-            downvote();
+            downvote(id);
         }
     };
     return;
 }
 
-function upvote(){
+function upvote(id){
     console.log("upvote");
     document.getElementById("upvote").style.color = "green";
     document.getElementById("downvote").style.color = "black";
+    rate(id, 1);
 }
 
-function downvote(){
+function downvote(id){
     console.log("downvote");
     document.getElementById("upvote").style.color = "black";
     document.getElementById("downvote").style.color = "red";
+    rate(id, -1);
 }
