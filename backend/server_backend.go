@@ -269,7 +269,7 @@ func (l *loginDB) getComments(w http.ResponseWriter, r *http.Request, ps httprou
             fname := res.Map("firstname")
             lname := res.Map("lastname")
             timestamp := res.Map("timestamp")
-            c := &Comment{row.Int(cid), row.Int(photoId), row.Str(comment), row.Int(uid),row.Str(fname), row.Str(lname) row.Str(timestamp)}
+            c := &Comment{row.Int(cid), row.Int(photoId), row.Str(comment), row.Int(uid),row.Str(fname), row.Str(lname), row.Str(timestamp)}
             comments = append(comments, c)
 
         }
