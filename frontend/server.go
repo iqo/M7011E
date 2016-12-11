@@ -8,10 +8,16 @@ import (
     "os"
     "strings"
     "encoding/json"
+    "strconv"
     //"io/ioutil"
 	//"github.com/julienschmidt/httprouter" //https://github.com/julienschmidt/httprouter
 
 )
+type User struct {
+    Id          int `json="id"`
+    Firstname   string `json="firstname"`
+    Lastname    string `json="lastname"`
+    }
 
 type Photo struct {
     Id          int `json="id"`
@@ -32,9 +38,8 @@ type PhotoView struct {
     Uid         int `json="uid"`
     Firstname   string `json="firstname"`
     Lastname    string `json="lastname"`
-    //Comments    []*Comment `json="comments"`
-    Rate        int `json="rate"`
 }
+
 
 /*****************************************
 *** Adds content on website            ***
@@ -49,16 +54,25 @@ func TopListHandler(w http.ResponseWriter, r *http.Request) {
 
 func PhotoHandler(w http.ResponseWriter, r *http.Request) {
     id := strings.Split(r.URL.Path, "/")
-    response, err := http.Get("http://130.240.170.62:1026/photo/" + id[2])
+    pResponse, err := http.Get("http://130.240.170.62:1026/photo/" + id[2])
     checkError(w, err)
-
-    defer response.Body.Close()
-    dec := json.NewDecoder(response.Body)
+    defer pResponse.Body.Close()
+    dec := json.NewDecoder(pResponse.Body)
     photo := Photo{}
     err = dec.Decode(&photo)
+
     checkError(w, err)
+    uResponse, err := http.Get("http://130.240.170.62:1026/user/" + strconv.Itoa(photo.Uid))
+    checkError(w, err)
+    defer uResponse.Body.Close()
+    dec = json.NewDecoder(uResponse.Body)
+    user := User{}
+    err = dec.Decode(&user)
+
+    checkError(w, err)
+    photoV := &PhotoView{photo.Id, photo.ImgName, photo.ImgDesc, photo.Image, photo.Created, photo.Uid, user.Firstname, user.Lastname}
     t :=template.Must(template.ParseFiles("static/index.html", "static/templates/photo.tmp"))
-    t.Execute(w, photo)
+    t.Execute(w, photoV)
 }
 
 func AboutHandler(w http.ResponseWriter, r *http.Request) {

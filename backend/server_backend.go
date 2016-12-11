@@ -48,6 +48,8 @@ type Comment struct {
     PhotoId     int `json="photoId"`
     Comment     string `json="comment"`
     Uid         int `json="uid"`
+    Firstname   string `json="firstname"`
+    Lastname    string `json="lastname"`
     Timestamp   string `json="timestamp"`
 }
 
@@ -132,15 +134,15 @@ func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.
         w.WriteHeader(404)
     } else {
         for _, row := range rows {
-        id := res.Map("uid")
-        firstname := res.Map("firstname")
-        lastname := res.Map("lastname")
-        usr := &User{row.Int(id), row.Str(firstname), row.Str(lastname)}
+            id := res.Map("uid")
+            firstname := res.Map("firstname")
+            lastname := res.Map("lastname")
+            usr := &User{row.Int(id), row.Str(firstname), row.Str(lastname)}
 
-        jsonBody, err := json.Marshal(usr)
-        w.WriteHeader(200) // is ok
-        w.Write(jsonBody)
-        checkError(w, err)
+            jsonBody, err := json.Marshal(usr)
+            w.WriteHeader(200) // is ok
+            w.Write(jsonBody)
+            checkError(w, err)
         }
     }
 }
@@ -253,7 +255,7 @@ func (l *loginDB) getComments(w http.ResponseWriter, r *http.Request, ps httprou
     id, err := strconv.Atoi(ps.ByName("id"))
     checkError(w, err)
 
-    rows, res,  err := db.Query("select * from hat4cat.comment where photoId=%d", id)
+    rows, res,  err := db.Query("select cid, photoId, 'comment', c.uid, firstname, lastname, timestamp  from hat4cat.comment as c join hat4cat.users as u on c.uid = u.uid where photoId=%d order by cid desc", id)
     checkError(w, err)
 
     if rows == nil {
@@ -264,8 +266,10 @@ func (l *loginDB) getComments(w http.ResponseWriter, r *http.Request, ps httprou
             photoId := res.Map("photoId")
             comment := res.Map("comment")
             uid := res.Map("uid")
+            fname := res.Map("firstname")
+            lname := res.Map("lastname")
             timestamp := res.Map("timestamp")
-            c := &Comment{row.Int(cid), row.Int(photoId), row.Str(comment), row.Int(uid), row.Str(timestamp)}
+            c := &Comment{row.Int(cid), row.Int(photoId), row.Str(comment), row.Int(uid),row.Str(fname), row.Str(lname) row.Str(timestamp)}
             comments = append(comments, c)
 
         }
