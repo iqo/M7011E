@@ -38,6 +38,12 @@ type PhotoView struct {
     Uid         int `json="uid"`
     Firstname   string `json="firstname"`
     Lastname    string `json="lastname"`
+    RatingSum   int `json="ratingSum"`
+}
+
+type RateSum struct {
+    PhotoId     int `json="photoId"`
+    RateSum     int `json="rateSum"`
 }
 
 
@@ -70,7 +76,15 @@ func PhotoHandler(w http.ResponseWriter, r *http.Request) {
     err = dec.Decode(&user)
 
     checkError(w, err)
-    photoV := &PhotoView{photo.Id, photo.ImgName, photo.ImgDesc, photo.Image, photo.Created, photo.Uid, user.Firstname, user.Lastname}
+    rResponse, err := http.Get("http://130.240.170.62:1026/rating/" + id[2])
+    checkError(w, err)
+    defer rResponse.Body.Close()
+    dec = json.NewDecoder(rResponse.Body)
+    r := RatingSum{}
+    err = dec.Decode(&r)
+
+    checkError(w, err)
+    photoV := &PhotoView{photo.Id, photo.ImgName, photo.ImgDesc, photo.Image, photo.Created, photo.Uid, user.Firstname, user.Lastname, r.RateSum}
     t :=template.Must(template.ParseFiles("static/index.html", "static/templates/photo.tmp"))
     t.Execute(w, photoV)
 }
@@ -99,8 +113,6 @@ func startWebserver(input string) {
     http.HandleFunc("/photo/", PhotoHandler)
 
 
-
-    
     //var input int
     //fmt.Scan(&input)
     if input == "1" {

@@ -58,9 +58,14 @@ type Comments struct {
 }
 
 type Rating struct {
-    Rid         int `json="rid"`
     PhotoId     int `json="photoId"`
     Rate        int `json="rate"`
+    Uid         int `json="uid"`
+}
+
+type RateSum struct {
+    PhotoId     int `json="photoId"`
+    RateSum        int `json="rateSum"`
 }
 
 type Thumbnail struct {
@@ -87,6 +92,9 @@ func (l *loginDB) startBackend() {
     router.GET("/latest/:page", l.getLatestPhotos)
     router.GET("/comments/:id", l.getComments)
     router.POST("/comment", l.newComment)
+    router.POST("/rating", l.newRating)
+    router.GET("/rating/:pid/:uid/", l.getRating)
+    router.GET("/rating/:pid", l.getRatingSum)
 
     handler := cors.Default().Handler(router)
 
@@ -281,6 +289,81 @@ func (l *loginDB) getComments(w http.ResponseWriter, r *http.Request, ps httprou
         checkError(w, err)
         }
     }
+
+/*******************************************************
+**************** RATING HANDLERS ***********************
+*******************************************************/
+
+func (l *loginDB) newRating(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    db := l.connectToDB()
+    dec := json.NewDecoder(r.Body)
+    rating := Rating{}
+    err := dec.Decode(&rating)
+    if err != nil {
+        log.Fatal(err)
+    }
+    res,  err := db.Prepare("insert into hat4cat.rating (pid, rate, uid) values (?, ?, ?)")
+    checkError(w, err)
+
+    _, err = res.Run(rating.PhotoId, rating.Rate, rating.Uid)
+    checkError(w, err)
+}
+
+
+func (l *loginDB) getRating(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    db := l.connectToDB()
+
+    pid, err := strconv.Atoi(ps.ByName("pid"))
+    checkError(w, err)
+
+    uid, err := strconv.Atoi(ps.ByName("uid"))
+    checkError(w, err)
+
+    rows, res,  err := db.Query("select photoId, rate, uid from hat4cat.rating where photoId=%d and uid=%d", pid, uid)
+    checkError(w, err)
+
+    if rows == nil {
+        w.WriteHeader(404)
+    } else {
+        for _, row := range rows {
+            photoId := res.Map("photoId")
+            rate := res.Map("rate")
+            uid := res.Map("uid")
+            rating := &Rating{row.Int(photoId), row.Int(rate), row.Int(uid)}
+
+        }
+        jsonBody, err := json.Marshal(rating)
+        w.WriteHeader(200) // is ok
+        w.Write(jsonBody)
+        checkError(w, err)
+        }
+    }
+
+func (l *loginDB) getRatingSum(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    db := l.connectToDB()
+
+    pid, err := strconv.Atoi(ps.ByName("pid"))
+    checkError(w, err)
+
+    rows, res,  err := db.Query("select photoId, sum(rate) as ratingSum from hat4cat.rating where photoId=%d", pid)
+    checkError(w, err)
+
+    if rows == nil {
+        w.WriteHeader(404)
+    } else {
+        for _, row := range rows {
+            photoId := res.Map("photoId")
+            rateS := res.Map("ratingSum")
+            rateSum := &RateSum{row.Int(photoId), row.Int(rateS)}
+
+        }
+        jsonBody, err := json.Marshal(rateSum)
+        w.WriteHeader(200) // is ok
+        w.Write(jsonBody)
+        checkError(w, err)
+        }
+    }
+
 
 
 

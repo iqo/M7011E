@@ -19,6 +19,23 @@ Hat4urCat
 			<canvas id='photoCanvas'> </canvas>
 		</div>
 
+
+	<div class="row">
+
+			<div id="upvote" class="col col-sm-1 col-lg-offset-3 rate-arrow upvote" onclick="checkIfVoted('up')">
+				<span > &#8670; </span>
+			</div>
+			<div id="downvote" class="col col-sm-1 rate-arrow downvote" onclick="checkIfVoted('down')">
+				<span> &#8671; </span>
+			</div>
+
+			<div id="rate" class="col col-sm-4 rate">
+				Mjaow-points: {{ .RateSum }}
+			</div>
+
+</div>
+
+
 <div class="well comment">
 
 <div class="row">
