@@ -179,7 +179,6 @@ func statusCheck(token string) bool {
 	auth_token := "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" + token
 	resp, err := http.Get(auth_token)
 	if (err == nil) && (resp.StatusCode == 200) {
-		fmt.Println("status code: ", resp.StatusCode)
 		return true
 	} else {
 		return false

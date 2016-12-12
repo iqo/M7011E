@@ -112,7 +112,7 @@ function getPhoto(id) {
         if (xhr.status == 200) {
           var photo = event.target.response;
           console.log(photo[0].Image);
-          //photo = JSON.parse(photo);
+          photo = JSON.parse(photo);
           //window.open(photo.Image);
           document.getElementById("test").src = photo.Image;
         } else {
