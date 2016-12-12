@@ -94,7 +94,7 @@ func (l *loginDB) startBackend() {
     router.POST("/comment", l.newComment)
     router.POST("/rating", l.newRating)
     //router.POST("/updaterating", l.updateRating)
-    router.GET("/rating/:pid/:uid/", l.getRating)
+    router.GET("/rating/:pid/:uid", l.getRating)
     router.GET("/rating/:pid", l.getRatingSum)
 
     handler := cors.Default().Handler(router)

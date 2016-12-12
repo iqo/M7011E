@@ -122,12 +122,13 @@ function rate(photoId, rate) {
 
     if (!rated) {
         xhr.open('POST', 'http://130.240.170.62:1026/rating', true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(JSON.stringify(r));
 
     } else {
         //xhr.open('POST', 'http://130.240.170.62:1026/updaterating', true);
     }
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(JSON.stringify(r));
+    
 }
 
 function checkIfVoted(vote, id){
