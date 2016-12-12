@@ -275,7 +275,7 @@ func (l *loginDB) getComments(w http.ResponseWriter, r *http.Request, ps httprou
     checkError(w, err)
 
     if rows == nil {
-        w.WriteHeader(404)
+        //w.WriteHeader(404)
     } else {
         for _, row := range rows {
             cid := res.Map("cid")
@@ -305,6 +305,7 @@ func (l *loginDB) getComments(w http.ResponseWriter, r *http.Request, ps httprou
 func (l *loginDB) newRating(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
     fmt.Println("POST newRating")
     db := l.connectToDB()
+    w.Header().Set("Access-Control-Allow-Origin", "*")
     dec := json.NewDecoder(r.Body)
     rating := Rating{}
     err := dec.Decode(&rating)
@@ -321,6 +322,7 @@ func (l *loginDB) newRating(w http.ResponseWriter, r *http.Request, ps httproute
 func (l *loginDB) updateRating(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
     fmt.Println("POST updateRating")
     db := l.connectToDB()
+     w.Header().Set("Access-Control-Allow-Origin", "*")
     dec := json.NewDecoder(r.Body)
     rating := Rating{}
     err := dec.Decode(&rating)
@@ -338,7 +340,7 @@ func (l *loginDB) updateRating(w http.ResponseWriter, r *http.Request, ps httpro
 func (l *loginDB) getRating(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
     fmt.Println("GET getRating")
     db := l.connectToDB()
-
+    w.Header().Set("Access-Control-Allow-Origin", "*")
     pid, err := strconv.Atoi(ps.ByName("pid"))
     checkError(w, err)
 
