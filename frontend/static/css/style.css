@@ -69,6 +69,8 @@
 
 .thumbnail {
     padding:0px;
+    width: 183px;
+    height: 87px;
 }
 .panel {
   position:relative;

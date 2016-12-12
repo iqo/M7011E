@@ -36,8 +36,9 @@ function getComments(photoId) {
           c = JSON.parse(c);
           displayComments(c.Comments);
 
-        } else {
-        }
+        } else if (xhr.status == 404){
+            console.log ("No comments found")
+        } else {}
       };
       xhr.onerror = function() {
         alert("Error! Get comments failed. Cannot connect to server.");
@@ -68,14 +69,15 @@ function getRate(pid) {
           displayRate(r);
 
         } else {
-          alert("Error! Get rate failed");
+            console.log(r);
+            console.log("hej");
         }
       };
       xhr.onerror = function() {
-        alert("Error! Get rate failed. Cannot connect to server.");
+            alert("Error! Get rate failed. Cannot connect to server.");
       };
     /////////////////////////////// CHANGE USERID vvvvvvvvvvvvv //////////
-      xhr.open('GET', 'http://130.240.170.62:1026/rating/' + pid + "/1", false);
+      xhr.open('GET', 'http://130.240.170.62:1026/rating/' + pid + "/1", true);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(null);
 }
@@ -100,7 +102,6 @@ function rate(photoId, rate) {
     
     /********* CHANGE TO ACTUAL USERID **********/
     r.uid = 1;
-    console.log(r);
 
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {
@@ -117,12 +118,12 @@ function rate(photoId, rate) {
 
     if (!rated) {
         xhr.open('POST', 'http://130.240.170.62:1026/rating', true);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.send(JSON.stringify(r));
-    } else {
-        console.log("already voted");
 
+    } else {
+        xhr.open('POST', 'http://130.240.170.62:1026/updaterating', true);
     }
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify(r));
 }
 
 function checkIfVoted(vote, id){

@@ -93,7 +93,8 @@ func (l *loginDB) startBackend() {
     router.GET("/comments/:id", l.getComments)
     router.POST("/comment", l.newComment)
     router.POST("/rating", l.newRating)
-    router.GET("/checkrating/:pid/:uid/", l.getRating)
+    router.POST("/updaterating", l.updateRating)
+    router.GET("/rating/:pid/:uid/", l.getRating)
     router.GET("/rating/:pid", l.getRatingSum)
 
     handler := cors.Default().Handler(router)
@@ -314,6 +315,22 @@ func (l *loginDB) newRating(w http.ResponseWriter, r *http.Request, ps httproute
     checkError(w, err)
 
     _, err = res.Run(rating.PhotoId, rating.Rate, rating.Uid)
+    checkError(w, err)
+}
+
+func (l *loginDB) updateRating(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    fmt.Println("POST updateRating")
+    db := l.connectToDB()
+    dec := json.NewDecoder(r.Body)
+    rating := Rating{}
+    err := dec.Decode(&rating)
+    if err != nil {
+        log.Fatal(err)
+    }
+    res,  err := db.Prepare("update hat4cat.rating set rate=%d where photoId=%d and uid=%d (?, ?, ?)")
+    checkError(w, err)
+
+    _, err = res.Run(rating.Rate, rating.PhotoId, rating.Uid)
     checkError(w, err)
 }
 
