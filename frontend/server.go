@@ -54,7 +54,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func TopListHandler(w http.ResponseWriter, r *http.Request) {
-	template.Must(template.ParseFiles("static/index.html", "static/templates/start.html")).Execute(w, nil)
+	template.Must(template.ParseFiles("static/index.html", "static/templates/toplist.tmp")).Execute(w, nil)
 }
 
 func PhotoHandler(w http.ResponseWriter, r *http.Request) {

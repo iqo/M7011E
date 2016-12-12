@@ -96,7 +96,7 @@ func (l *loginDB) startBackend() {
 	router.POST("/photo", l.savePhoto)
 	router.GET("/photo/:id", l.getPhoto)
 	router.GET("/latest/:page", l.getLatestPhotos)
-    router.GET("/top/:time", l.getToplist)
+    router.GET("/top", l.getToplist)
 	router.GET("/comments/:id", l.getComments)
 	router.POST("/comment", l.newComment)
 	router.POST("/rating", l.newRating)

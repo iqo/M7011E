@@ -194,32 +194,6 @@ function placeLatestPhotos(thumbnails){
 
 
 
-function createCORSRequest(method, url) {
-  var xhr = new XMLHttpRequest();
-  if ("withCredentials" in xhr) {
-
-    // Check if the XMLHttpRequest object has a "withCredentials" property.
-    // "withCredentials" only exists on XMLHTTPRequest2 objects.
-    xhr.open(method, url, true);
-
-  } else if (typeof XDomainRequest != "undefined") {
-
-    // Otherwise, check if XDomainRequest.
-    // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
-    xhr = new XDomainRequest();
-    xhr.open(method, url);
-
-  } else {
-
-    // Otherwise, CORS is not supported by the browser.
-    xhr = null;
-
-  }
-  return xhr;
-}
-
-
-
 function addSaveButton(){
     var div = document.getElementById('buttonHolder');
     if (div.childNodes.length == 3) {
@@ -243,3 +217,56 @@ function getThumbnail(src, width, height) {
     original.src = src;
     
 }
+
+
+function getTopList() {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function(event) {
+        console.log(xhr.status);
+        if (xhr.status == 200) {
+          var top = event.target.response;
+          
+          top = JSON.parse(top);
+          placeTopLlist(top.Toplist);
+
+        } else {
+          alert("Error! Get toplist failed");
+        }
+      };
+      xhr.onerror = function() {
+        alert("Error! Get file failed. Cannot connect to server.");
+      };
+        
+      xhr.open('GET', 'http://130.240.170.62:1026/top', false);
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.send(null);
+}
+
+function placeToplist(toplist){
+    if (toplist != null) {
+        for (i = 0; i < toplist.length; i++){
+            if (i == 0) {
+                document.getElementById('toplist-alltime').innerHTML += "<div class='row'><div class='col-lg-2 col-sm-4 col-xs-6'><a title="
+                                                + toplist[0].ImgName 
+                                                + " href='/photo/" 
+                                                + toplist[0].Id 
+                                                + "'><img id=" 
+                                                + toplist[0].Id 
+                                                + " class='thumbnail img-responsive' src="
+                                                + toplist[0].Thumbnail 
+                                                + "></a></div></div>";
+            } else{
+                document.getElementById('toplist-alltime').innerHTML += "<div class='col-lg-2 col-sm-4 col-xs-6'><a title="
+                                                + toplist[i].ImgName 
+                                                + " href='/photo/" 
+                                                + toplist[i].Id 
+                                                + "'><img id=" 
+                                                + toplist[i].Id 
+                                                + " class='thumbnail img-responsive' src="
+                                                + toplist[i].Thumbnail 
+                                                + "></a></div>";
+
+    }); 
+  }
+}
+
