@@ -37,7 +37,6 @@ function getComments(photoId) {
           displayComments(c.Comments);
 
         } else {
-          alert("Error! Get comments failed");
         }
       };
       xhr.onerror = function() {
@@ -94,17 +93,20 @@ function displayRate(rate){
 }
 
 function rate(photoId, rate) {
-    var rate={};
-    rate.photoId = parseInt(photoId);
-    rate.rate = parseInt(rate);
+    var r={};
+    r.photoId = parseInt(photoId);
+    r.rate = parseInt(rate);
+
     
     /********* CHANGE TO ACTUAL USERID **********/
-    rate.uid = 1;
+    r.uid = 1;
+    console.log(r);
 
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {
     if (xhr.status == 200) {
         location.reload(); // reloads page
+
     } else {
         alert("Error! Rating failed");
         }
@@ -116,7 +118,7 @@ function rate(photoId, rate) {
     if (!rated) {
         xhr.open('POST', 'http://130.240.170.62:1026/rating', true);
         xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.send(JSON.stringify(rate));
+        xhr.send(JSON.stringify(r));
     } else {
         console.log("already voted");
 
@@ -145,12 +147,12 @@ function upvote(id){
     console.log("upvote");
     document.getElementById("upvote").style.color = "green";
     document.getElementById("downvote").style.color = "black";
-    rate(id, 1);
+    rate(id, "1");
 }
 
 function downvote(id){
     console.log("downvote");
     document.getElementById("upvote").style.color = "black";
     document.getElementById("downvote").style.color = "red";
-    rate(id, -1);
+    rate(id, "-1");
 }
