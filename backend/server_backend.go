@@ -358,12 +358,13 @@ func (l *loginDB) getRating(w http.ResponseWriter, r *http.Request, ps httproute
             rate := res.Map("rate")
             uid := res.Map("uid")
             rating := &Rating{row.Int(photoId), row.Int(rate), row.Int(uid)}
-
-            }fmt.Println("GET getRating", rating)
+            fmt.Println("GET getRating", rating)
             jsonBody, err := json.Marshal(rating)
             w.WriteHeader(200) // is ok
             w.Write(jsonBody)
             checkError(w, err)
+            }
+
         }
     }
 
