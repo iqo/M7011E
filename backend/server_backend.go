@@ -281,7 +281,7 @@ func (l *loginDB) getToplist(w http.ResponseWriter, r *http.Request, ps httprout
         }
         topList := &Toplist{Toplist: top}
 
-        jsonBody, err := json.Marshal(tnList)
+        jsonBody, err := json.Marshal(topList)
         w.Write(jsonBody)
         checkError(w, err)
     }
