@@ -275,7 +275,7 @@ func (l *loginDB) getComments(w http.ResponseWriter, r *http.Request, ps httprou
     checkError(w, err)
 
     if rows == nil {
-        //w.WriteHeader(404)
+        w.WriteHeader(404)
     } else {
         for _, row := range rows {
             cid := res.Map("cid")
