@@ -93,7 +93,7 @@ func (l *loginDB) startBackend() {
     router.GET("/comments/:id", l.getComments)
     router.POST("/comment", l.newComment)
     router.POST("/rating", l.newRating)
-    //router.POST("/updaterating", l.updateRating)
+    router.POST("/updaterating", l.updateRating)
     router.GET("/rating/:pid/:uid", l.getRating)
     router.GET("/rating/:pid", l.getRatingSum)
 
@@ -305,7 +305,6 @@ func (l *loginDB) getComments(w http.ResponseWriter, r *http.Request, ps httprou
 func (l *loginDB) newRating(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
     fmt.Println("POST newRating")
     db := l.connectToDB()
-    w.Header().Set("Access-Control-Allow-Origin", "*")
     dec := json.NewDecoder(r.Body)
     rating := Rating{}
     err := dec.Decode(&rating)
@@ -322,7 +321,6 @@ func (l *loginDB) newRating(w http.ResponseWriter, r *http.Request, ps httproute
 func (l *loginDB) updateRating(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
     fmt.Println("POST updateRating")
     db := l.connectToDB()
-     w.Header().Set("Access-Control-Allow-Origin", "*")
     dec := json.NewDecoder(r.Body)
     rating := Rating{}
     err := dec.Decode(&rating)
@@ -338,7 +336,7 @@ func (l *loginDB) updateRating(w http.ResponseWriter, r *http.Request, ps httpro
 
 
 func (l *loginDB) getRating(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-    
+    fmt.Println("GET getRating")
     db := l.connectToDB()
 
     pid, err := strconv.Atoi(ps.ByName("pid"))
@@ -358,7 +356,6 @@ func (l *loginDB) getRating(w http.ResponseWriter, r *http.Request, ps httproute
             rate := res.Map("rate")
             uid := res.Map("uid")
             rating := &Rating{row.Int(photoId), row.Int(rate), row.Int(uid)}
-            fmt.Println("GET getRating", rating)
             jsonBody, err := json.Marshal(rating)
             w.WriteHeader(200) // is ok
             w.Write(jsonBody)

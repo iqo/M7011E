@@ -29,11 +29,11 @@ Hat4urCat
 				<span> &#8671; </span>
 			</div>
 
-			<div id="rate" class="col col-sm-5 rate">
-				Mjaow-points: {{ .RatingSum }}
+			<div id="rate" class="col col-sm-3 rate">
+				{{ .RatingSum }} Mjaows
 			</div>
 
-</div>
+	</div>
 
 
 <div class="well comment">

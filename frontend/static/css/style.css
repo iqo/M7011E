@@ -105,12 +105,15 @@
 }
 
 .rate {
-  font-size: 48px;
+  font-size: 36px;
   color: black;
+  margin: 0 auto;
+  vertical-align: middle;;
 }
 
+
 .rate-arrow {
-  font-size: 60px;
+  font-size: 48px;
   display: block;
 }
 
