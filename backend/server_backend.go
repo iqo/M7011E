@@ -131,12 +131,13 @@ func (l *loginDB) newUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 		log.Fatal(err)
 	}
 	if statusCheck(user.AuthToken) {
-		rows, res, err := db.Query("select count(*) from hat4cat.users where googletoken=%d", user.GoogleToken)
-		fmt.Println("rows: ", len(rows))
+		rows, _, err := db.Query("select count(*) from hat4cat.users where googletoken=%d", user.GoogleToken)
+		checkError(w, err)
+        fmt.Println("rows: ", len(rows))
 		if len(rows) == 0 {
-			res2, err := db.Prepare("insert into hat4cat.users (firstname, lastname, googletoken) values (?, ?, ?)")
+			res, err := db.Prepare("insert into hat4cat.users (firstname, lastname, googletoken) values (?, ?, ?)")
 			checkError(w, err)
-            _, err = res2.Run(user.Firstname, user.Lastname, user.GoogleToken)
+            _, err = res.Run(user.Firstname, user.Lastname, user.GoogleToken)
             checkError(w, err)
 		}
 	} else {
