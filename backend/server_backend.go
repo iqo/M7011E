@@ -338,13 +338,8 @@ func (l *loginDB) updateRating(w http.ResponseWriter, r *http.Request, ps httpro
 
 
 func (l *loginDB) getRating(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-    fmt.Println("GET getRating")
+    
     db := l.connectToDB()
-    w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-    w.Header().Set("Access-Control-Allow-Headers",
-            "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
-
 
     pid, err := strconv.Atoi(ps.ByName("pid"))
     checkError(w, err)
@@ -364,11 +359,11 @@ func (l *loginDB) getRating(w http.ResponseWriter, r *http.Request, ps httproute
             uid := res.Map("uid")
             rating := &Rating{row.Int(photoId), row.Int(rate), row.Int(uid)}
 
+            }fmt.Println("GET getRating", rating)
             jsonBody, err := json.Marshal(rating)
             w.WriteHeader(200) // is ok
             w.Write(jsonBody)
             checkError(w, err)
-            }
         }
     }
 

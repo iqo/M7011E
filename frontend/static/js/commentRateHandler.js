@@ -32,7 +32,8 @@ function getComments(photoId) {
     xhr.onload = function(event) {
         if (xhr.status == 200) {
           var c = event.target.response;
-          if (c=" ") {
+          console.log(c);
+          if (c.length == 0) {
             console.log("yes");
             return;
         };
@@ -48,7 +49,7 @@ function getComments(photoId) {
         alert("Error! Get comments failed. Cannot connect to server.");
       };
         
-      xhr.open('GET', 'http://130.240.170.62:1026/comments/' + photoId, true);
+      xhr.open('GET', 'http://130.240.170.62:1026/comments/' + photoId, false);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(null);
 }
@@ -81,7 +82,7 @@ function getRate(pid) {
             alert("Error! Get rate failed. Cannot connect to server.");
       };
     /////////////////////////////// CHANGE USERID vvvvvvvvvvvvv //////////
-      xhr.open('GET', 'http://130.240.170.62:1026/rating/' + pid + "/1", true);
+      xhr.open('GET', 'http://130.240.170.62:1026/rating/' + pid + "/1", false);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(null);
 }
