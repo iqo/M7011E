@@ -327,7 +327,7 @@ func (l *loginDB) updateRating(w http.ResponseWriter, r *http.Request, ps httpro
     if err != nil {
         log.Fatal(err)
     }
-    res,  err := db.Prepare("update hat4cat.rating set rate=%d where photoId=%d and uid=%d (?, ?, ?)")
+    res,  err := db.Prepare("update hat4cat.rating set rate=? where photoId=? and uid=?")
     checkError(w, err)
 
     _, err = res.Run(rating.Rate, rating.PhotoId, rating.Uid)
