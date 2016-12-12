@@ -32,6 +32,10 @@ function getComments(photoId) {
     xhr.onload = function(event) {
         if (xhr.status == 200) {
           var c = event.target.response;
+          if (c=" ") {
+            console.log("yes");
+            return;
+        };
           
           c = JSON.parse(c);
           displayComments(c.Comments);
