@@ -73,12 +73,16 @@ func (l *loginDB) newUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 	dec := json.NewDecoder(r.Body)
 	user := User{}
 	err := dec.Decode(&user)
+	if err != nil {
+		log.Fatal(err)
+	}
 	if statusCheck(user.AuthToken) {
-		if err != nil {
-			log.Fatal(err)
+		rows, res, err := db.Query("select count(*) from hat4cat.users where googletoken=%d", User.GoogleToken)
+		fmt.Println("rows: ", len(rows))
+		if len(rows) == 0 {
+			res, err = db.Prepare("insert into hat4cat.users (firstname, lastname, googletoken) values (?, ?, ?)")
+			checkError(w, err)
 		}
-		res, err := db.Prepare("insert into hat4cat.users (firstname, lastname, googletoken) values (?, ?, ?)")
-		checkError(w, err)
 
 		_, err = res.Run(user.Firstname, user.Lastname, user.GoogleToken)
 		checkError(w, err)
