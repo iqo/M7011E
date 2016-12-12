@@ -126,14 +126,14 @@ func (l *loginDB) newUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 		log.Fatal(err)
 	}
 	if statusCheck(user.AuthToken) {
-		rows, res, err := db.Query("select count(*) from hat4cat.users where googletoken=%d", User.GoogleToken)
+		rows, res, err := db.Query("select count(*) from hat4cat.users where googletoken=%d", user.GoogleToken)
 		fmt.Println("rows: ", len(rows))
 		if len(rows) == 0 {
-			res, err = db.Prepare("insert into hat4cat.users (firstname, lastname, googletoken) values (?, ?, ?)")
+			res2, err := db.Prepare("insert into hat4cat.users (firstname, lastname, googletoken) values (?, ?, ?)")
 			checkError(w, err)
 		}
 
-		_, err = res.Run(user.Firstname, user.Lastname, user.GoogleToken)
+		_, err = res2.Run(user.Firstname, user.Lastname, user.GoogleToken)
 		checkError(w, err)
 	} else {
 		//	fmt.Println("token is not valid")
@@ -159,7 +159,8 @@ func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 			firstname := res.Map("firstname")
 			lastname := res.Map("lastname")
 			googletoken := res.Map("googletoken")
-			usr := &User{row.Int(id), row.Str(firstname), row.Str(lastname), row.Str(googletoken)}
+			authtoken := ""
+			usr := &User{row.Int(id), row.Str(firstname), row.Str(lastname), row.Str(googletoken), row.Str(authtoken)}
 
 			jsonBody, err := json.Marshal(usr)
 			w.WriteHeader(200) // is ok
