@@ -93,7 +93,7 @@ func (l *loginDB) startBackend() {
     router.GET("/comments/:id", l.getComments)
     router.POST("/comment", l.newComment)
     router.POST("/rating", l.newRating)
-    router.POST("/updaterating", l.updateRating)
+    //router.POST("/updaterating", l.updateRating)
     router.GET("/rating/:pid/:uid/", l.getRating)
     router.GET("/rating/:pid", l.getRatingSum)
 

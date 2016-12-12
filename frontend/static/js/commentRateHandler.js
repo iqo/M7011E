@@ -44,7 +44,7 @@ function getComments(photoId) {
         alert("Error! Get comments failed. Cannot connect to server.");
       };
         
-      xhr.open('GET', 'http://130.240.170.62:1026/comments/' + photoId, false);
+      xhr.open('GET', 'http://130.240.170.62:1026/comments/' + photoId, true);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(null);
 }
@@ -120,7 +120,7 @@ function rate(photoId, rate) {
         xhr.open('POST', 'http://130.240.170.62:1026/rating', true);
 
     } else {
-        xhr.open('POST', 'http://130.240.170.62:1026/updaterating', true);
+        //xhr.open('POST', 'http://130.240.170.62:1026/updaterating', true);
     }
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(r));
