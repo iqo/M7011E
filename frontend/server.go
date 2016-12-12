@@ -1,19 +1,91 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
+	"strings"
+	//"io/ioutil"
 	//"github.com/julienschmidt/httprouter" //https://github.com/julienschmidt/httprouter
 )
+
+type User struct {
+	Id        int    `json="id"`
+	Firstname string `json="firstname"`
+	Lastname  string `json="lastname"`
+}
+
+type Photo struct {
+	Id        int    `json="id"`
+	ImgName   string `json="imgName"`
+	ImgDesc   string `json="imgDesc"`
+	Image     string `json="image"`
+	Created   string `json="created"`
+	Uid       int    `json="uid"`
+	Thumbnail string `json="thumbnail"`
+}
+
+type PhotoView struct {
+	Id        int    `json="id"`
+	ImgName   string `json="imgName"`
+	ImgDesc   string `json="imgDesc"`
+	Image     string `json="image"`
+	Created   string `json="created"`
+	Uid       int    `json="uid"`
+	Firstname string `json="firstname"`
+	Lastname  string `json="lastname"`
+	RatingSum int    `json="ratingSum"`
+}
+
+type RateSum struct {
+	PhotoId int `json="photoId"`
+	RateSum int `json="rateSum"`
+}
 
 /*****************************************
 *** Adds content on website            ***
 *****************************************/
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
+	template.Must(template.ParseFiles("static/index.html", "static/templates/latestCats.tmp")).Execute(w, nil)
+}
+
+func TopListHandler(w http.ResponseWriter, r *http.Request) {
 	template.Must(template.ParseFiles("static/index.html", "static/templates/start.html")).Execute(w, nil)
+}
+
+func PhotoHandler(w http.ResponseWriter, r *http.Request) {
+	id := strings.Split(r.URL.Path, "/")
+	pResponse, err := http.Get("http://130.240.170.62:1026/photo/" + id[2])
+	checkError(w, err)
+	defer pResponse.Body.Close()
+	dec := json.NewDecoder(pResponse.Body)
+	photo := Photo{}
+	err = dec.Decode(&photo)
+
+	checkError(w, err)
+	uResponse, err := http.Get("http://130.240.170.62:1026/user/" + strconv.Itoa(photo.Uid))
+	checkError(w, err)
+	defer uResponse.Body.Close()
+	dec = json.NewDecoder(uResponse.Body)
+	user := User{}
+	err = dec.Decode(&user)
+
+	checkError(w, err)
+	rResponse, err := http.Get("http://130.240.170.62:1026/rating/" + id[2])
+	checkError(w, err)
+	defer rResponse.Body.Close()
+	dec = json.NewDecoder(rResponse.Body)
+	rate := RateSum{}
+	err = dec.Decode(&rate)
+
+	checkError(w, err)
+	photoV := &PhotoView{photo.Id, photo.ImgName, photo.ImgDesc, photo.Image, photo.Created, photo.Uid, user.Firstname, user.Lastname, rate.RateSum}
+	t := template.Must(template.ParseFiles("static/index.html", "static/templates/photo.tmp"))
+	t.Execute(w, photoV)
 }
 
 func AboutHandler(w http.ResponseWriter, r *http.Request) {
@@ -21,7 +93,7 @@ func AboutHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func CatMagicHandler(w http.ResponseWriter, r *http.Request) {
-	template.Must(template.ParseFiles("static/index.html", "static/templates/catmagic.html")).Execute(w, nil)
+	template.Must(template.ParseFiles("static/index.html", "static/templates/catmagic.html", "static/templates/hats.tmp")).Execute(w, nil)
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
@@ -39,6 +111,8 @@ func startWebserver(input string) {
 	http.HandleFunc("/", IndexHandler)
 	http.HandleFunc("/about", AboutHandler)
 	http.HandleFunc("/catmagic", CatMagicHandler)
+	http.HandleFunc("/toplist", TopListHandler)
+	http.HandleFunc("/photo/", PhotoHandler)
 	http.HandleFunc("/login", LoginHandler)
 
 	//var input int
@@ -50,6 +124,14 @@ func startWebserver(input string) {
 		fmt.Println("running on localhost:1025")
 		log.Fatal(http.ListenAndServe("localhost:1025", nil))
 
+	}
+}
+
+func checkError(w http.ResponseWriter, err error) {
+	if err != nil {
+		w.WriteHeader(500) // error
+		fmt.Println(err)
+		fmt.Fprintf(w, "Bad input")
 	}
 }
 

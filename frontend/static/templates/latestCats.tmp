@@ -1,0 +1,22 @@
+{{define "Title"}}
+Latest Cats
+{{end}}
+
+{{define "Body"}}
+<html>
+<body onload="getLatestPhotos(1)">
+	<div class="col-sm-12">
+	<div class="row">
+	<div class="col col-sm-12"><h2>Latest cats in hats</h2><p>The most recent cats in hats are placed here. Click on them and let everyone know what you think of their masterpiece.</p></div>
+          </div>
+        	<hr>
+    <div class="well">
+		<div id="latestPhotos" class="row"> 
+
+		</div>
+	</div>
+</div>
+</body>
+</html>
+
+{{end}}

@@ -1,0 +1,70 @@
+{{define "Title"}}
+Hat4urCat
+{{end}}
+
+{{define "Body"}}
+<html>
+<script src="/static/js/photoHandler.js"></script>
+<script src="/static/js/commentRateHandler.js"></script>
+
+<body>
+<div class="col-sm-12">
+	<div class="row">
+	<div class="col col-sm-12"> <h2> {{ .ImgName }} <small> by {{ .Firstname }} {{ .Lastname}} </small> </h2> 
+		<p> {{ .ImgDesc }} </p> <small> {{ .Created }} </small> </div>
+          </div>
+        	<hr>
+    <div class="well">
+		<div id="photohotos" class="row"> 
+			<canvas id='photoCanvas'> </canvas>
+		</div>
+
+
+	<div class="row">
+
+			<div id="upvote" class="col col-sm-1 col-lg-offset-3 rate-arrow upvote" onclick="checkIfVoted('up', '{{ .Id }}')">
+				<span > &#8670; </span>
+			</div>
+			<div id="downvote" class="col col-sm-1 rate-arrow downvote" onclick="checkIfVoted('down', '{{ .Id }}')">
+				<span> &#8671; </span>
+			</div>
+
+			<div id="rate" class="col col-sm-3 rate">
+				{{ .RatingSum }} Mjaows
+			</div>
+
+	</div>
+
+
+<div class="well comment">
+
+<div class="row">
+	<div class="col-sm-10 col-xs-6 col-lg-offset-1">
+    <div class="input-group">
+        <input type="text" id="userComment" class="form-control" placeholder="Write your comment here..." />
+	    <span class="input-group-btn" onclick="addComment('{{ .Id }}')">     
+            <a href="#" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-comment"></span> Add Comment</a>
+        </span>
+    </div>
+</div>
+</div>
+<hr>
+
+<div id="comments">
+
+
+</div> <!-- comments -->
+
+</div> <!-- /well -->
+	</div>
+	</div>
+</div>
+</body>
+<script type="text/javascript"> 
+	document.onload=photoToCanvas('{{ .Image }}');
+	document.onload = getComments('{{ .Id }}');
+	document.onload=getRate('{{ .Id }}');
+
+	</script>
+</html>
+{{end}}

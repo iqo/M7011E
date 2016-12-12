@@ -48,17 +48,80 @@
   content:url('../img/topcat/cat1.jpg');
 }
 
-.dropzone {
-  background-color: #F5F5F5;
-  border: solid 1px #dbdbdb;
-  border-radius: 4px;
-  margin: 30px auto;
-
-  padding: 10px;
-  width: 80%;
-  transition: background-color 0.3s;
-}
 
 .fileUpload {
   visibility: hidden;
+}
+
+.hatHolder {
+  display: none;
+}
+
+.comment {
+  margin-left: 30px;
+  margin-right: 30px;
+  margin-top: 10px;
+}
+
+.modal-body {
+  margin-left: 5px;
+}
+
+.thumbnail {
+    padding:0px;
+    width: 183px;
+    height: 87px;
+}
+.panel {
+  position:relative;
+
+}
+.panel>.panel-heading:after,.panel>.panel-heading:before{
+  position:absolute;
+  top:11px;left:-16px;
+  right:100%;
+  width:0;
+  height:0;
+  display:block;
+  content:" ";
+  border-color:transparent;
+  border-style:solid solid outset;
+  pointer-events:none;
+}
+.panel>.panel-heading:after{
+  border-width:7px;
+  border-right-color:#f7f7f7;
+  margin-top:1px;
+  margin-left:2px;
+}
+.panel>.panel-heading:before{
+  border-right-color:#ddd;
+  border-width:8px;
+}
+
+
+.form-control {
+    border-color:#d7d7d7;
+}
+
+.rate {
+  font-size: 36px;
+  color: black;
+  margin: 0 auto;
+  vertical-align: middle;;
+}
+
+
+.rate-arrow {
+  font-size: 48px;
+  display: block;
+}
+
+.upvote {
+  color:black;
+}
+
+.downvote {
+  color:black;
+
 }
