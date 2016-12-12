@@ -30,7 +30,7 @@ Hat4urCat
 			</div>
 
 			<div id="rate" class="col col-sm-3 rate">
-				{{ .RatingSum }} Mjaows
+				<span id="sum"> {{ .RatingSum }} </span> Mjaows
 			</div>
 
 	</div>

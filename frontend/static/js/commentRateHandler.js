@@ -69,12 +69,12 @@ function getRate(pid) {
           var r = event.target.response;
           
           r = JSON.parse(r);
-          displayRate(r);
+          rated = true;
+          changeColor(r.Rate);
           console.log(r);
 
         } else {
-            console.log(r);
-            console.log("hej");
+
         }
       };
       xhr.onerror = function() {
@@ -86,17 +86,6 @@ function getRate(pid) {
       xhr.send(null);
 }
 
-function displayRate(rate){
-    if (rate.Rate == 1) {
-        rated = true;
-        upvote();
-    } else if (rate.Rate == -1){
-        rated = true;
-        downvote();
-    } else {
-        rated = false;
-    }
-}
 
 function rate(photoId, rate) {
     var r={};
@@ -110,7 +99,8 @@ function rate(photoId, rate) {
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {
     if (xhr.status == 200) {
-        location.reload(); // reloads page
+        updateVote(r.rate);
+
 
     } else {
         alert("Error! Rating failed");
@@ -125,7 +115,8 @@ function rate(photoId, rate) {
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(JSON.stringify(r));
 
-    } else {
+    } 
+    if (rated) {
         xhr.open('POST', 'http://130.240.170.62:1026/updaterating', true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(JSON.stringify(r));
@@ -133,34 +124,38 @@ function rate(photoId, rate) {
     
 }
 
+function updateVote(rate){
+        var sum = document.getElementById("sum").innerHTML;
+        sum = parseInt(sum) + rate;
+        if (sum == 0) {sum = sum + rate;};
+        document.getElementById("sum").innerHTML = sum;
+        changeColor(rate);
+    }
+
 function checkIfVoted(vote, id){
     if (vote == "up") {
         if (document.getElementById("upvote").style.color == "green") {
             return;
         } else {
-            upvote(id);
+            rate(id, 1);
         }
     };
     if (vote == "down") {
         if (document.getElementById("downvote").style.color == "red") {
             return;
         } else {
-            downvote(id);
+            rate(id, -1);
         }
     };
     return;
 }
 
-function upvote(id){
-    console.log("upvote");
-    document.getElementById("upvote").style.color = "green";
-    document.getElementById("downvote").style.color = "black";
-    rate(id, "1");
-}
-
-function downvote(id){
-    console.log("downvote");
-    document.getElementById("upvote").style.color = "black";
-    document.getElementById("downvote").style.color = "red";
-    rate(id, "-1");
+function changeColor(rate){
+    if (rate == 1) {
+        document.getElementById("upvote").style.color = "green";
+        document.getElementById("downvote").style.color = "black";
+    } else {
+        document.getElementById("upvote").style.color = "black";
+        document.getElementById("downvote").style.color = "red";
+    }
 }
