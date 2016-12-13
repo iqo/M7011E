@@ -6,6 +6,7 @@ function onSignIn(googleUser) {
 	var profile = auth2.currentUser.get().getBasicProfile();
 	var xhr = new XMLHttpRequest();
 	if (auth2.isSignedIn.get()) {
+    location.reload();
 		//get basic info and the google token 
 		user.firstname = profile.getGivenName();
 		user.lastname = profile.getFamilyName();
@@ -24,8 +25,8 @@ function logOut() {
 	var auth2 = gapi.auth2.getAuthInstance();
 	auth2.signOut().then(function() {
 		console.log('User signed out.');
-        location.reload();
-	});
+    location.reload();
+  });
 }
 
 function onLoad() {
@@ -37,7 +38,6 @@ function onLoad() {
           var currentUser = auth2.currentUser.get();
 
           if (!isSignedIn) {
-          	'<h1>you need to be loged in to view this</h1>';
             // Rendering g-signin2 button.
             gapi.signin2.render('google-signin-button', {
             	'onsuccess': 'onSignIn', 
@@ -45,24 +45,25 @@ function onLoad() {
             	'onfailure': 'onFailure'
             });
 
-        }else{
-        	var profile = auth2.currentUser.get().getBasicProfile();
-        	console.log('Image URL: ' + profile.getImageUrl());
-        	document.getElementById("logout").innerHTML = "<button onclick='logOut()'>Sign out</button>";
-         	document.getElementById("user").innerHTML ="Good day " + profile.getName() + " are you ready for some cats in hats? ";
-        	document.getElementById("image").src = profile.getImageUrl();
-        }
-    });
+          }else{
+           var profile = auth2.currentUser.get().getBasicProfile();
+           console.log('google Token: ' + profile.getId());
+           document.getElementById("logout").innerHTML = "<button onclick='logOut()'>Sign out</button>";
+           document.getElementById("user").innerHTML ="Good day " + profile.getName() + " are you ready for some cats in hats? ";
+           document.getElementById("image").src = profile.getImageUrl();
+           //document.getElementById("id").innerHTML = getUser(profile.getId());
+         }
+       });
 	});
 }
 
 
 function getUser(token) {
-    var xhr = new XMLHttpRequest();
-    xhr.onload = function(event) {
-        console.log(xhr.status);
-        if (xhr.status == 200) {
-          var usr = event.target.response;
+  var xhr = new XMLHttpRequest();
+  xhr.onload = function(event) {
+    console.log("console log: " + xhr.status);
+    if (xhr.status == 200) {
+      var usr = event.target.response;
           //console.log(photo[0].Image);
           usr = JSON.parse(usr);
           //window.open(photo.Image);
@@ -74,9 +75,45 @@ function getUser(token) {
       xhr.onerror = function() {
         alert("Error! Get user token failed. Cannot connect to server.");
       };
-        
+
       xhr.open('GET', 'http://130.240.170.62:1026/user/' + token, false);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(null);
 
-}
+    }
+    //returns the database id of the currentlty logged in user 
+    function getCurrentUserId() {
+      //load google auth 
+      var auth2 = gapi.auth2.init();
+      //get the basic profile of currently logged in user
+      var profile = auth2.currentUser.get().getBasicProfile();
+      //get the idd of currently logged in user 
+      var token = profile.getId();
+      var xhr = new XMLHttpRequest();
+      xhr.onload = function(event) {
+        console.log(xhr.status);
+        if (xhr.status == 200) {
+          var usr = event.target.response;
+          usr = JSON.parse(usr);
+          //return the usertoken of currently logged in user 
+          returnUserId(usr.Id);
+        } else {
+          alert("Error! Get user id failed");
+        }
+      };
+      xhr.onerror = function() {
+        alert("Error! Get user id failed. Cannot connect to server.");
+      };
+
+      xhr.open('GET', 'http://130.240.170.62:1026/user/' + token, false);
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.send(null);
+
+    }
+//return the user token
+function returnUserId(userId){
+  if (userId != null) {
+    document.getElementById('userId').innerHTML =  'user id: ' + userId;
+    return userId;
+  }
+} 

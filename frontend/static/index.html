@@ -2,7 +2,11 @@
 <html lang="en">
 
 <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+
+      <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
+
+      <script src="/static/js/userHandler.js"></script>
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,7 +15,8 @@
     <meta name="author" content="">
 
     <meta name="google-signin-scope" content="profile email">
-    <meta name="google-signin-client_id" content="880326547496-0psk9ic5drr5tvh535qgfdk3gjhkt4jh.apps.googleusercontent.com">
+
+    <meta name="google-signin-client_id" content="364352394487-31j351c9j5l1k36gsprbrd81ouomsbs7.apps.googleusercontent.com">
 
 
     <title>{{template "Title" .}}</title>
@@ -55,8 +60,12 @@
         <li><a href="/catmagic">Cat Magic</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
+
       <li><a href="/mypage/1">My page</a></li>
-      <li><a href="/login">Login</a></li>
+
+      <li><a href="/login">Test mypage</a></li>
+      <div id="google-signin-button"></div>
+      <p id = "logout"></p>
     </ul>
   </div>
 </nav>

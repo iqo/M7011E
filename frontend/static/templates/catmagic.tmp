@@ -1,0 +1,74 @@
+{{define "Title"}}
+Cat Magic
+{{end}}
+
+{{define "Body"}}
+
+<html>
+<div class="container">
+      <div class="col-sm-12">
+          <div class="row">
+            <div class="col col-sm-12"><h2>Put hats on cats</h2><p>Select an existing project or upload a new cat picture. Use drag and drop to put hats on the cats.</p></div>
+          </div>
+        	<hr>
+        <div class="well">
+            <div class="row">
+                <div class="col-sm-12">
+                    {{template "Hats"}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12" id="catPhotoHolder" style="padding:20px"> 
+                    <!--<img src="" id="catPhoto" style="max-width:100%; height:auto;">-->
+
+                </div>
+                <div id="buttonHolder">
+                    <div id="uploadPhoto">
+
+                    <input type="button" class="btn btn-sm btn-primary" id="catUploadButton" value="Upload image to start new project" onclick="clickUploadButton()"/>
+                    <input type="file" id="catFile" class="fileUpload"/>
+                    </div>
+
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+             </div> 
+</div>
+
+<!-- Modal -->
+  <div class="modal fade" id="saveImageModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Save cat on website</h4>
+        </div>
+        <div class="modal-body">
+          <form id="saveImageForm" method='POST'>
+            <div class="form-group">
+                <label for='imgName'> Save as: </label>
+                <input type='text' class="form-control" id='imgName' placeholder="Untitled"/>
+            </div>
+            <div class="form-group">
+                <label for='imgDesc'> Description: </label> 
+                <input type='textarea' class="form-control" maxlength='50' id='imgDesc' placeholder="No description"/>
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+            <button type='submit' class="btn btn-btn-sm btn-primary" onclick = 'canvasToPhoto()' data-dismiss="modal">Save Cat</button></form>
+            <!-- onclick = 'savePhoto()' -->
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+</html>
+{{end}}
