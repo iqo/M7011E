@@ -85,8 +85,8 @@ function canvasToPhoto(){
 
 }
 
-function photoToCanvas(src){
-    canvas = document.getElementById('photoCanvas');
+function photoToCanvas(src, canvas){
+    canvas = document.getElementById(canvas);
     ctx = canvas.getContext('2d');
     canvas.width=window.innerHeight*(2/3)*(16/9);
     canvas.height=window.innerHeight *(2/3); 
@@ -129,7 +129,7 @@ function savePhoto(img, thumbnail) {
       xhr.send(JSON.stringify(photo));
 }
 
-function getPhoto(id) {
+function getPhoto(pid, canvas) {
     var xhr = new XMLHttpRequest();
     xhr.onload = function(event) {
         console.log(xhr.status);
@@ -139,7 +139,8 @@ function getPhoto(id) {
           
           photo = JSON.parse(photo);
           //window.open(photo.Image);
-          document.getElementById("test").src = photo.Image;
+          photoToCanvas(photo.Image, canvas);
+          //document.getElementById("test").src = photo.Image;
         } else {
           alert("Error! Get files failed");
         }
@@ -148,7 +149,7 @@ function getPhoto(id) {
         alert("Error! Get file failed. Cannot connect to server.");
       };
         
-      xhr.open('GET', 'http://130.240.170.62:1026/photo/' + id, false);
+      xhr.open('GET', 'http://130.240.170.62:1026/photo/' + pid, false);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(null);
 }
@@ -218,7 +219,6 @@ function getThumbnail(src, width, height) {
     
 }
 
-
 function getToplist() {
     var xhr = new XMLHttpRequest();
     xhr.onload = function(event) {
@@ -245,33 +245,19 @@ function getToplist() {
 function placeToplist(toplist){
     if (toplist != null) {
         for (i = 0; i < toplist.length; i++){
-            if (i == 0) {
-                document.getElementById('toplist-alltime').innerHTML += "<div class='row'><div class='col-lg-4 col-sm-4 col-xs-4'><a title="
-                                                + toplist[0].ImgName 
-                                                + " href='/photo/" 
-                                                + toplist[0].Id 
-                                                + "'>"
-                                                + [i]
-                                                +"<img id=" 
-                                                + toplist[0].Id 
-                                                + " class='toplist img-responsive' src="
-                                                + toplist[0].Thumbnail 
-                                                + "></a></div></div>";
-            } else{
                 document.getElementById('toplist-alltime').innerHTML += "<div class='col-lg-4 col-sm-4 col-xs-4'><a title="
                                                 + toplist[i].ImgName 
                                                 + " href='/photo/" 
                                                 + toplist[i].Id 
                                                 + "'>"
-                                                + [i]
+                                                + [i+1]
                                                 + "<img id=" 
                                                 + toplist[i].Id 
                                                 + " class='toplist img-responsive' src="
                                                 + toplist[i].Thumbnail 
                                                 + "></a></div>";
 
-    }; 
-  }
-}
+        }
+    }
 }
 
