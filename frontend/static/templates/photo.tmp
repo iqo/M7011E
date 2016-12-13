@@ -61,7 +61,7 @@ Hat4urCat
 </div>
 </body>
 <script type="text/javascript"> 
-	document.onload=photoToCanvas('{{ .Image }}');
+	document.onload=photoToCanvas('{{ .Image }}', 'photoCanvas');
 	document.onload = getComments('{{ .Id }}');
 	document.onload=getRate('{{ .Id }}');
 

@@ -1,0 +1,22 @@
+{{define "Title"}}
+ {{ .Heading}}
+{{end}}
+
+{{define "Body"}}
+<html>
+<body onload="placeToplist({{ .Toplist }}, {{ .DivId }})">
+	<div class="col-sm-12">
+	<div class="row">
+	<div class="col col-sm-12"><h2>Top 9 {{ .Heading }}</h2><p> {{ .Text }}</p></div>
+          </div>
+        	<hr>
+    <div class="well">
+		<div id="{{ .DivId }}" class="row"> 
+
+		</div>
+	</div>
+</div>
+</body>
+</html>
+
+{{end}}

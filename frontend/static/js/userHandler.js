@@ -8,7 +8,7 @@ function onSignIn(googleUser) {
 	if (auth2.isSignedIn.get()) {
     location.reload();
 		//get basic info and the google token 
-		user.firstname = profile.profile.getGivenName();
+		user.firstname = profile.getGivenName();
 		user.lastname = profile.getFamilyName();
 		user.googletoken = profile.getId();
 		user.authtoken = googleUser.getAuthResponse().id_token;
