@@ -79,6 +79,10 @@ type ThumbnailList struct {
 	Thumbnails []*Thumbnail `json="thumbnails"`
 }
 
+type Toplist struct {
+	Toplist []*Thumbnail `json="toplist"`
+}
+
 /*****************************************
 *** Starts the http-server with the    ***
 *** different commands (get, post etc) ***
@@ -92,6 +96,7 @@ func (l *loginDB) startBackend() {
 	router.POST("/photo", l.savePhoto)
 	router.GET("/photo/:id", l.getPhoto)
 	router.GET("/latest/:page", l.getLatestPhotos)
+	router.GET("/top", l.getToplist)
 	router.GET("/comments/:id", l.getComments)
 	router.POST("/comment", l.newComment)
 	router.POST("/rating", l.newRating)
@@ -126,15 +131,15 @@ func (l *loginDB) newUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 		log.Fatal(err)
 	}
 	if statusCheck(user.AuthToken) {
-		rows, res, err := db.Query("select count(*) from hat4cat.users where googletoken=%d", user.GoogleToken)
+		rows, _, err := db.Query("select count(*) from hat4cat.users where googletoken=%d", user.GoogleToken)
+		checkError(w, err)
 		fmt.Println("rows: ", len(rows))
 		if len(rows) == 0 {
-			res2, err := db.Prepare("insert into hat4cat.users (firstname, lastname, googletoken) values (?, ?, ?)")
+			res, err := db.Prepare("insert into hat4cat.users (firstname, lastname, googletoken) values (?, ?, ?)")
 			checkError(w, err)
-			_, err = res2.Run(user.Firstname, user.Lastname, user.GoogleToken)
+			_, err = res.Run(user.Firstname, user.Lastname, user.GoogleToken)
 			checkError(w, err)
 		}
-
 	} else {
 		//	fmt.Println("token is not valid")
 	}
@@ -160,7 +165,7 @@ func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 			lastname := res.Map("lastname")
 			googletoken := res.Map("googletoken")
 			authtoken := ""
-			usr := &User{row.Int(id), row.Str(firstname), row.Str(lastname), row.Str(googletoken), row.Str(authtoken)}
+			usr := &User{row.Int(id), row.Str(firstname), row.Str(lastname), row.Str(googletoken), authtoken}
 
 			jsonBody, err := json.Marshal(usr)
 			w.WriteHeader(200) // is ok
@@ -250,6 +255,33 @@ func (l *loginDB) getLatestPhotos(w http.ResponseWriter, r *http.Request, ps htt
 		tnList := &ThumbnailList{Thumbnails: thumbnails}
 
 		jsonBody, err := json.Marshal(tnList)
+		w.Write(jsonBody)
+		checkError(w, err)
+	}
+}
+
+func (l *loginDB) getToplist(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	fmt.Println("GET getToplist")
+	var top []*Thumbnail
+	db := l.connectToDB()
+
+	rows, res, err := db.Query("select p.photoId, p.name, p.thumbnail, sum(case when rate is null then 0 else rate end) as ratingSum from hat4cat.rating as r right join hat4cat.photos as p on p.photoId=r.photoId group by photoId order by ratingsum desc limit 0,10")
+	checkError(w, err)
+
+	if rows == nil {
+		w.WriteHeader(404)
+	} else {
+		for _, row := range rows {
+			id := res.Map("photoId")
+			imgName := res.Map("name")
+			thumbnail := res.Map("thumbnail")
+			tn := &Thumbnail{row.Int(id), row.Str(imgName), row.Str(thumbnail)}
+			top = append(top, tn)
+
+		}
+		topList := &Toplist{Toplist: top}
+
+		jsonBody, err := json.Marshal(topList)
 		w.Write(jsonBody)
 		checkError(w, err)
 	}
