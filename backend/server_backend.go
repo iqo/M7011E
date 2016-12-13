@@ -154,10 +154,10 @@ func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.
     var err error
 	db := l.connectToDB()
     input := ps.ByName("id")
-	id, err := strconv.Atoi(ps.ByName("id"))
-	checkError(w, err)
 
     if len(input) < 12 {
+        id, err := strconv.Atoi(ps.ByName("id"))
+        checkError(w, err)
         rows, res, err = db.Query("select * from hat4cat.users where uid=%d", id)
         checkError(w, err)
     } else {
