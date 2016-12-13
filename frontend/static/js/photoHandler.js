@@ -219,33 +219,13 @@ function getThumbnail(src, width, height) {
     
 }
 
-function getToplist() {
-    var xhr = new XMLHttpRequest();
-    xhr.onload = function(event) {
-        console.log(xhr.status);
-        if (xhr.status == 200) {
-          var top = event.target.response;
-          
-          top = JSON.parse(top);
-          placeToplist(top.Toplist);
 
-        } else {
-          alert("Error! Get toplist failed");
-        }
-      };
-      xhr.onerror = function() {
-        alert("Error! Get file failed. Cannot connect to server.");
-      };
-        
-      xhr.open('GET', 'http://130.240.170.62:1026/top', false);
-      xhr.setRequestHeader("Content-Type", "application/json");
-      xhr.send(null);
-}
-
-function placeToplist(toplist){
+function placeToplist(data, div){
+    toplist = data.Toplist;
+    
     if (toplist != null) {
         for (i = 0; i < toplist.length; i++){
-                document.getElementById('toplist-alltime').innerHTML += "<div class='col-lg-4 col-sm-4 col-xs-4'><a title="
+                document.getElementById(div).innerHTML += "<div class='col-lg-4 col-sm-4 col-xs-4'><a title="
                                                 + toplist[i].ImgName 
                                                 + " href='/photo/" 
                                                 + toplist[i].Id 

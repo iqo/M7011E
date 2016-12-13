@@ -1,17 +1,17 @@
 {{define "Title"}}
-Alltime mjaow
+ {{ .Heading}}
 {{end}}
 
 {{define "Body"}}
 <html>
-<body onload="getToplist()">
+<body onload="placeToplist({{ .Toplist }}, {{ .DivId }})">
 	<div class="col-sm-12">
 	<div class="row">
-	<div class="col col-sm-12"><h2>Top 9 alltime mjaow</h2><p>The cats with the highest rating score of all time is placed here. Why top 9 instead of 10 you ask? That's because cats have 9 lives silly and this makes sence!</p></div>
+	<div class="col col-sm-12"><h2>Top 9 {{ .Heading }}</h2><p> {{ .Text }}</p></div>
           </div>
         	<hr>
     <div class="well">
-		<div id="toplist-alltime" class="row"> 
+		<div id="{{ .DivId }}" class="row"> 
 
 		</div>
 	</div>

@@ -77,19 +77,53 @@ func TopListHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ToplistRateHandler(w http.ResponseWriter, r *http.Request) {
-    response, err := http.Get("http://130.240.170.62:1026/toplist/rate")
+    var topL []*Thumbnail
+    response, err := http.Get("http://130.240.170.62:1026/top/rate")
     checkError(w, err)
     defer response.Body.Close()
     dec := json.NewDecoder(response.Body)
     toplist := Toplist{}
+    //thumbnail := Thumbnail{}
     err = dec.Decode(&toplist)
-
     checkError(w, err)
+    for _, t := range toplist.Toplist {
+        tn := &Thumbnail{t.Id, t.ImgName, t.Thumbnail}
+        topL = append(topL, tn)
+    }
+    tl := &Toplist{Toplist: topL}
+
     heading := "Alltime mjaow"
     text := "The cats with the highest rating score of all time is placed here. Why top 9 instead of 10 you ask? That's because cats have 9 lives silly and this makes sence!"
     divId := "toplist-alltime"
 
-    toplistV := &ToplistView{heading, text, divId, toplist.Toplist}
+    toplistV := &ToplistView{Heading: heading, Text: text, DivId: divId, Toplist: tl}
+
+    t := template.Must(template.ParseFiles("static/index.html", "static/templates/toplist.tmp"))
+    t.Execute(w, toplistV)
+}
+
+func ToplistCommentHandler(w http.ResponseWriter, r *http.Request) {
+    var topL []*Thumbnail
+    response, err := http.Get("http://130.240.170.62:1026/top/comment")
+    checkError(w, err)
+    defer response.Body.Close()
+    dec := json.NewDecoder(response.Body)
+    toplist := Toplist{}
+    //thumbnail := Thumbnail{}
+    err = dec.Decode(&toplist)
+    checkError(w, err)
+    for _, t := range toplist.Toplist {
+        tn := &Thumbnail{t.Id, t.ImgName, t.Thumbnail}
+        topL = append(topL, tn)
+    }
+    tl := &Toplist{Toplist: topL}
+
+    heading := "Highest mjaow"
+    text := "The cats with the most comments of all time is placed here. Why top 9 instead of 10 you ask? That's because cats have 9 lives silly and this makes sence!"
+    divId := "toplist-comment"
+
+    toplistV := &ToplistView{Heading: heading, Text: text, DivId: divId, Toplist: tl}
+
     t := template.Must(template.ParseFiles("static/index.html", "static/templates/toplist.tmp"))
     t.Execute(w, toplistV)
 }
@@ -150,7 +184,8 @@ func startWebserver(input string) {
 	http.HandleFunc("/", IndexHandler)
 	http.HandleFunc("/about", AboutHandler)
 	http.HandleFunc("/catmagic", CatMagicHandler)
-    http.HandleFunc("toplist/rate", ToplistRateHandler)
+    http.HandleFunc("/toplist/rate", ToplistRateHandler)
+    http.HandleFunc("/toplist/comment", ToplistCommentHandler)
 	//http.HandleFunc("/toplist", TopListHandler)
 	http.HandleFunc("/photo/", PhotoHandler)
 	http.HandleFunc("/login", LoginHandler)
