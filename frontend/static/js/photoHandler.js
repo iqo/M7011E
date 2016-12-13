@@ -250,10 +250,11 @@ function placeToplist(toplist){
                                                 + " href='/photo/" 
                                                 + toplist[i].Id 
                                                 + "'>"
-                                                + [i+1]
-                                                + "<img id=" 
+                                                + "<span class='rate'>" 
+                                                + [i+1] 
+                                                +"</span><img id=" 
                                                 + toplist[i].Id 
-                                                + " class='toplist img-responsive' src="
+                                                + " class='toplist centerBlock img-responsive' src="
                                                 + toplist[i].Thumbnail 
                                                 + "></a></div>";
 

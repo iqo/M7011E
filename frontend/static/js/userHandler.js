@@ -7,7 +7,7 @@ function onSignIn(googleUser) {
 	var xhr = new XMLHttpRequest();
 	if (auth2.isSignedIn.get()) {
 		//get basic info and the google token 
-		user.firstname = profile.getName();
+		user.firstname = profile.getGivenName();
 		user.lastname = profile.getFamilyName();
 		user.googletoken = profile.getId();
 		user.authtoken = googleUser.getAuthResponse().id_token;

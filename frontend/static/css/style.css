@@ -117,6 +117,10 @@
   vertical-align: middle;
 }
 
+.centerBlock {
+  display: table;
+  margin: auto;
+}
 
 .rate-arrow {
   font-size: 48px;

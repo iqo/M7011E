@@ -96,7 +96,7 @@ func (l *loginDB) startBackend() {
 	router.POST("/photo", l.savePhoto)
 	router.GET("/photo/:id", l.getPhoto)
 	router.GET("/latest/:page", l.getLatestPhotos)
-	router.GET("/top", l.getToplist)
+	router.GET("/top/:list", l.getToplist)
 	router.GET("/comments/:id", l.getComments)
 	router.POST("/comment", l.newComment)
 	router.POST("/rating", l.newRating)
@@ -262,11 +262,22 @@ func (l *loginDB) getLatestPhotos(w http.ResponseWriter, r *http.Request, ps htt
 
 func (l *loginDB) getToplist(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Println("GET getToplist")
+    list:= ps.ByName("list")
 	var top []*Thumbnail
 	db := l.connectToDB()
 
-	rows, res, err := db.Query("select p.photoId, p.name, p.thumbnail, sum(case when rate is null then 0 else rate end) as ratingSum from hat4cat.rating as r right join hat4cat.photos as p on p.photoId=r.photoId group by photoId order by ratingsum desc limit 0,9")
-	checkError(w, err)
+    if list == "rate" {
+        rows, res, err := db.Query("select p.photoId, p.name, p.thumbnail, sum(case when rate is null then 0 else rate end) as ratingSum from hat4cat.rating as r right join hat4cat.photos as p on p.photoId=r.photoId group by photoId order by ratingsum desc limit 0,9")
+        checkError(w, err)
+    } else if list == "comment" {
+        rows, res, err := db.Query("select p.photoId, p.name, p.thumbnail, count(comment) as noComments from hat4cat.comment as c right join hat4cat.photos as p on p.photoId=c.photoId group by photoId order by noComments desc limit 0,9")
+        checkError(w, err)
+    } else {
+        fmt.Println("Forbidden getToplist request")
+        return
+    }
+
+	
 
 	if rows == nil {
 		w.WriteHeader(404)
