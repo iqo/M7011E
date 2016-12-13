@@ -1,19 +1,21 @@
-<!DOCTYPE html>
+{{define "Title"}}
+Login
+{{end}}
+
+{{define "Body"}}
 <html>
-<head>
+
 
 	
 	<script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
 
-	<script src="google.js"></script>
+	<script src="/static/js/userHandler.js"></script>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
 	<meta name="google-signin-client_id" content="364352394487-31j351c9j5l1k36gsprbrd81ouomsbs7.apps.googleusercontent.com">
-	<title>a hat for your cat</title>
 
 
-</head>
 <body>
 	<p id ="notLogedIn"></p>
 	<div id="google-signin-button"></div>
@@ -23,3 +25,4 @@
 </body>
 <!--onclick="location.href='user_page.html';"-->
 </html>
+{{end}}

@@ -24,6 +24,7 @@ function logOut() {
 	var auth2 = gapi.auth2.getAuthInstance();
 	auth2.signOut().then(function() {
 		console.log('User signed out.');
+        location.reload();
 	});
 }
 
@@ -36,7 +37,7 @@ function onLoad() {
           var currentUser = auth2.currentUser.get();
 
           if (!isSignedIn) {
-          	'<h1>you need to be loged in to view this</h1>'
+          	'<h1>you need to be loged in to view this</h1>';
             // Rendering g-signin2 button.
             gapi.signin2.render('google-signin-button', {
             	'onsuccess': 'onSignIn', 
@@ -47,8 +48,8 @@ function onLoad() {
         }else{
         	var profile = auth2.currentUser.get().getBasicProfile();
         	console.log('Image URL: ' + profile.getImageUrl());
-        	document.getElementById("logout").innerHTML = '<button href="#" onclick="signOut();">Sign out</button>'
-        	document.getElementById("user").innerHTML ="Good day " + profile.getName() + " are you ready for some cats in hats? ";
+        	document.getElementById("logout").innerHTML = "<button onclick='logOut()'>Sign out</button>";
+         	document.getElementById("user").innerHTML ="Good day " + profile.getName() + " are you ready for some cats in hats? ";
         	document.getElementById("image").src = profile.getImageUrl();
         }
     });

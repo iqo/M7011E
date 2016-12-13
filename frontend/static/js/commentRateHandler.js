@@ -67,6 +67,9 @@ function getRate(pid) {
 
         if (xhr.status == 200) {
           var r = event.target.response;
+        if (r.length == 0) {
+            return;
+        };
           
           r = JSON.parse(r);
           rated = true;

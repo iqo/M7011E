@@ -72,6 +72,12 @@
     width: 183px;
     height: 87px;
 }
+
+.toplist {
+    padding:0px;
+    width: 225px;
+    height: 107px;
+}
 .panel {
   position:relative;
 

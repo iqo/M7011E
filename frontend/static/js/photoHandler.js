@@ -219,7 +219,7 @@ function getThumbnail(src, width, height) {
 }
 
 
-function getTopList() {
+function getToplist() {
     var xhr = new XMLHttpRequest();
     xhr.onload = function(event) {
         console.log(xhr.status);
@@ -227,7 +227,7 @@ function getTopList() {
           var top = event.target.response;
           
           top = JSON.parse(top);
-          placeTopLlist(top.Toplist);
+          placeToplist(top.Toplist);
 
         } else {
           alert("Error! Get toplist failed");
@@ -246,27 +246,32 @@ function placeToplist(toplist){
     if (toplist != null) {
         for (i = 0; i < toplist.length; i++){
             if (i == 0) {
-                document.getElementById('toplist-alltime').innerHTML += "<div class='row'><div class='col-lg-2 col-sm-4 col-xs-6'><a title="
+                document.getElementById('toplist-alltime').innerHTML += "<div class='row'><div class='col-lg-4 col-sm-4 col-xs-4'><a title="
                                                 + toplist[0].ImgName 
                                                 + " href='/photo/" 
                                                 + toplist[0].Id 
-                                                + "'><img id=" 
+                                                + "'>"
+                                                + [i]
+                                                +"<img id=" 
                                                 + toplist[0].Id 
-                                                + " class='thumbnail img-responsive' src="
+                                                + " class='toplist img-responsive' src="
                                                 + toplist[0].Thumbnail 
                                                 + "></a></div></div>";
             } else{
-                document.getElementById('toplist-alltime').innerHTML += "<div class='col-lg-2 col-sm-4 col-xs-6'><a title="
+                document.getElementById('toplist-alltime').innerHTML += "<div class='col-lg-4 col-sm-4 col-xs-4'><a title="
                                                 + toplist[i].ImgName 
                                                 + " href='/photo/" 
                                                 + toplist[i].Id 
-                                                + "'><img id=" 
+                                                + "'>"
+                                                + [i]
+                                                + "<img id=" 
                                                 + toplist[i].Id 
-                                                + " class='thumbnail img-responsive' src="
+                                                + " class='toplist img-responsive' src="
                                                 + toplist[i].Thumbnail 
                                                 + "></a></div>";
 
-    }); 
+    }; 
   }
+}
 }
 
