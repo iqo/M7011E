@@ -262,7 +262,7 @@ func (l *loginDB) getLatestPhotos(w http.ResponseWriter, r *http.Request, ps htt
 
 func (l *loginDB) getToplist(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Println("GET getToplist")
-    var row []mysql.Row
+    var rows []mysql.Row
     var res mysql.Result
     list:= ps.ByName("list")
 	var top []*Thumbnail
