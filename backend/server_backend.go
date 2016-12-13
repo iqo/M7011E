@@ -161,7 +161,7 @@ func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.
         rows, res, err = db.Query("select * from hat4cat.users where uid=%d", id)
         checkError(w, err)
     } else {
-        rows, res, err := db.Query("select * from hat4cat.users where googletoken=%d", id)
+        rows, res, err = db.Query("select * from hat4cat.users where googletoken=%d", id)
         checkError(w, err)
     }
 
