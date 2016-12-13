@@ -264,6 +264,7 @@ func (l *loginDB) getToplist(w http.ResponseWriter, r *http.Request, ps httprout
 	fmt.Println("GET getToplist")
     var rows []mysql.Row
     var res mysql.Result
+    var err error
     list:= ps.ByName("list")
 	var top []*Thumbnail
 	db := l.connectToDB()
