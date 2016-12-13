@@ -172,7 +172,7 @@ function getLatestPhotos(page) {
         alert("Error! Get file failed. Cannot connect to server.");
       };
         
-      xhr.open('GET', 'http://130.240.170.62:1026/latest/' + page, false);
+      xhr.open('GET', 'http://130.240.170.62:1026/photo/latest/' + page, false);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(null);
 }

@@ -78,7 +78,7 @@ func TopListHandler(w http.ResponseWriter, r *http.Request) {
 
 func ToplistRateHandler(w http.ResponseWriter, r *http.Request) {
     var topL []*Thumbnail
-    response, err := http.Get("http://130.240.170.62:1026/top/rate")
+    response, err := http.Get("http://130.240.170.62:1026/photo/top/rate")
     checkError(w, err)
     defer response.Body.Close()
     dec := json.NewDecoder(response.Body)
@@ -104,7 +104,7 @@ func ToplistRateHandler(w http.ResponseWriter, r *http.Request) {
 
 func ToplistCommentHandler(w http.ResponseWriter, r *http.Request) {
     var topL []*Thumbnail
-    response, err := http.Get("http://130.240.170.62:1026/top/comment")
+    response, err := http.Get("http://130.240.170.62:1026/photo/top/comment")
     checkError(w, err)
     defer response.Body.Close()
     dec := json.NewDecoder(response.Body)

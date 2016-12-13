@@ -94,13 +94,14 @@ func (l *loginDB) startBackend() {
 	router.GET("/user/:id", l.getUser)
 	router.POST("/user", l.newUser)
 	router.POST("/photo", l.savePhoto)
-	router.GET("/photo/:id", l.getPhoto)
-	router.GET("/latest/:page", l.getLatestPhotos)
-	router.GET("/top/:list", l.getToplist)
+	router.GET("/photo/:pid", l.getPhoto)
+    router.GET("/photo/user/:uid", l.getUserPhotos)
+	router.GET("/photo/latest/:page", l.getLatestPhotos)
+	router.GET("/photo/top/:list", l.getToplist)
 	router.GET("/comments/:id", l.getComments)
 	router.POST("/comment", l.newComment)
 	router.POST("/rating", l.newRating)
-	router.POST("/updaterating", l.updateRating)
+	router.POST("/rating/update", l.updateRating)
 	router.GET("/rating/:pid/:uid", l.getRating)
 	router.GET("/rating/:pid", l.getRatingSum)
 
@@ -199,7 +200,7 @@ func (l *loginDB) savePhoto(w http.ResponseWriter, r *http.Request, ps httproute
 func (l *loginDB) getPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Println("GET getPhoto")
 	db := l.connectToDB()
-	id, err := strconv.Atoi(ps.ByName("id"))
+	id, err := strconv.Atoi(ps.ByName("pid"))
 	checkError(w, err)
 
 	rows, res, err := db.Query("select * from hat4cat.photos where photoId=%d", id)
@@ -260,6 +261,35 @@ func (l *loginDB) getLatestPhotos(w http.ResponseWriter, r *http.Request, ps htt
 	}
 }
 
+func (l *loginDB) getUserPhotos(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    fmt.Println("GET getUserPhotos")
+    var thumbnails []*Thumbnail
+    db := l.connectToDB()
+    uid, err := strconv.Atoi(ps.ByName("uid"))
+    checkError(w, err)
+
+    rows, res, err := db.Query("select photoId, name, thumbnail from hat4cat.photos where uid=%d order by photoId desc", uid)
+    checkError(w, err)
+
+    if rows == nil {
+        w.WriteHeader(404)
+    } else {
+        for _, row := range rows {
+            id := res.Map("photoId")
+            imgName := res.Map("name")
+            thumbnail := res.Map("thumbnail")
+            tn := &Thumbnail{row.Int(id), row.Str(imgName), row.Str(thumbnail)}
+            thumbnails = append(thumbnails, tn)
+
+        }
+        tnList := &ThumbnailList{Thumbnails: thumbnails}
+
+        jsonBody, err := json.Marshal(tnList)
+        w.Write(jsonBody)
+        checkError(w, err)
+    }
+}
+
 func (l *loginDB) getToplist(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Println("GET getToplist")
     var rows []mysql.Row
@@ -280,7 +310,6 @@ func (l *loginDB) getToplist(w http.ResponseWriter, r *http.Request, ps httprout
         return
     }
 
-	
 
 	if rows == nil {
 		w.WriteHeader(404)
