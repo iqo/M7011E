@@ -22,7 +22,7 @@ type User struct {
 type UserView struct {
     Firstname   string `json="firstname"`
     Lastname    string `json="lastname"`
-    Toplist   *Toplist `json="toplistlist"`
+    Toplist   *Toplist `json="toplist"`
 }
 
 type Photo struct {
@@ -172,11 +172,12 @@ func MyPageHandler(w http.ResponseWriter, r *http.Request) {
     uid := strings.Split(r.URL.Path, "/")
     var topL []*Thumbnail
     response, err := http.Get("http://130.240.170.62:1026/photo/user/" + uid[2])
+    fmt.Println("http://130.240.170.62:1026/photo/user/" + uid[2])
     checkError(w, err)
     defer response.Body.Close()
     dec := json.NewDecoder(response.Body)
+    fmt.Println(dec)
     toplist := Toplist{}
-    //thumbnail := Thumbnail{}
     err = dec.Decode(&toplist)
     fmt.Println(toplist)
     checkError(w, err)

@@ -149,13 +149,22 @@ func (l *loginDB) newUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 
 func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Println("GET getUser")
+    var rows []mysql.Row
+    var res mysql.Result
+    var err error
 	db := l.connectToDB()
-
+    input := ps.ByName("id")
 	id, err := strconv.Atoi(ps.ByName("id"))
 	checkError(w, err)
 
-	rows, res, err := db.Query("select * from hat4cat.users where uid=%d", id)
-	checkError(w, err)
+    if len(input) < 12 {
+        rows, res, err = db.Query("select * from hat4cat.users where uid=%d", id)
+        checkError(w, err)
+    } else {
+        rows, res, err := db.Query("select * from hat4cat.users where googletoken=%d", id)
+        checkError(w, err)
+    }
+
 
 	if rows == nil {
 		w.WriteHeader(404)

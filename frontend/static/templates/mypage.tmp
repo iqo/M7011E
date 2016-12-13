@@ -10,6 +10,7 @@
 	<div class="col-sm-12">
 	<div class="row">
 	<div class="col col-sm-12"><h2>Hello {{ .Firstname }}!</h2></p>This is your own page where all your masterpieces are stored!</div>
+	{{ .Toplist }}
           </div>
         	<hr>
     <div class="well">

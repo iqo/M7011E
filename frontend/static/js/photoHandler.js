@@ -34,10 +34,7 @@ function downloadPhoto(text, name, type) {
 
 function displayHats(){
     var hats = document.getElementsByClassName('draggable');
-    //console.log(hats);
-    /*if (hats.length == 0){
-        document.getElementById('hatHolder').insertAdjacentHTML('afterbegin', "<img draggable='true' class='draggable' onmousedown=mousedown ondragstart=dragstart src='/static/img/hats/strawhat.png' id='strawhat' width='10%' height='5%'> <img draggable='true' class='draggable' onmousedown=mousedown ondragstart=dragstart src='/static/img/hats/santa.png' id='santa' width='10%' height='5%'><img draggable='true' class='draggable' onmousedown=mousedown ondragstart=dragstart src='/static/img/hats/tophat.png' id='tophat' width='10%' height='5%'><img draggable='true' class='draggable' onmousedown=mousedown ondragstart=dragstart src='/static/img/hats/yellow_hat.png' id='yellow_hat' width='10%' height='5%'><img draggable='true' class='draggable' onmousedown=mousedown ondragstart=dragstart src='/static/img/hats/pirate.png' id='pirate' width='10%' height='5%'><img draggable='true' class='draggable' onmousedown=mousedown ondragstart=dragstart src='/static/img/hats/propeller.png' id='propeller' width='10%' height='5%'>");
-    }*/
+
     document.getElementById('hatHolder').style.display = "block";
     imgs = document.getElementById('hatHolder').getElementsByTagName('img');
     for(var i =0; i<imgs.length; i++){

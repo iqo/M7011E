@@ -45,7 +45,7 @@ function onLoad() {
             	'onfailure': 'onFailure'
             });
 
-          }else{
+          } else {
            var profile = auth2.currentUser.get().getBasicProfile();
            console.log('google Token: ' + profile.getId());
            document.getElementById("logout").innerHTML = "<button onclick='logOut()'>Sign out</button>";
@@ -89,6 +89,7 @@ function getUser(token) {
       var profile = auth2.currentUser.get().getBasicProfile();
       //get the idd of currently logged in user 
       var token = profile.getId();
+      console.log(token);
       var xhr = new XMLHttpRequest();
       xhr.onload = function(event) {
         console.log(xhr.status);

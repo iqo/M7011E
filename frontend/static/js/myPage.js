@@ -5,6 +5,7 @@ function placeUserPhotos(data){
     console.log(myPhotos);
     
     if (myPhotos != null) {
+        document.getElementById("myPhotos").innerHTML = "";
         for (i = 0; i < myPhotos.length; i++){
                 document.getElementById("myPhotos").innerHTML += "<div class='col-lg-4 col-sm-4 col-xs-4'><a title="
                                                 + myPhotos[i].ImgName 
@@ -21,4 +22,5 @@ function placeUserPhotos(data){
 
         }
     }
+            document.getElementById("myPhotos").innerHTML = "No cats to be found yet, perhaps a dog scared them away. Or perhaps you haven't started a new project yet. Go to Cat Magic to get started!";
 }
