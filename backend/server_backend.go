@@ -392,7 +392,7 @@ func (l *loginDB) getRating(w http.ResponseWriter, r *http.Request, ps httproute
 	checkError(w, err)
 
 	if rows == nil {
-		fmt.Println("No ratings found for photoId:", id)
+		fmt.Println("No ratings found for photoId:", pid)
 	} else {
 		for _, row := range rows {
 			photoId := res.Map("photoId")
