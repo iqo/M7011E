@@ -132,7 +132,7 @@ func ToplistCommentHandler(w http.ResponseWriter, r *http.Request) {
 
 func PhotoHandler(w http.ResponseWriter, r *http.Request) {
 	id := strings.Split(r.URL.Path, "/")
-	pResponse, err := http.Get("http://130.240.170.62:1026/photo/" + id[2])
+	pResponse, err := http.Get("http://130.240.170.62:1026/photo/get/" + id[2])
 	checkError(w, err)
 	defer pResponse.Body.Close()
 	dec := json.NewDecoder(pResponse.Body)

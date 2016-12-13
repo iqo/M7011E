@@ -149,7 +149,7 @@ function getPhoto(pid, canvas) {
         alert("Error! Get file failed. Cannot connect to server.");
       };
         
-      xhr.open('GET', 'http://130.240.170.62:1026/photo/' + pid, false);
+      xhr.open('GET', 'http://130.240.170.62:1026/photo/get/' + pid, false);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(null);
 }
