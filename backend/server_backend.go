@@ -131,10 +131,10 @@ func (l *loginDB) newUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 		if len(rows) == 0 {
 			res2, err := db.Prepare("insert into hat4cat.users (firstname, lastname, googletoken) values (?, ?, ?)")
 			checkError(w, err)
+			_, err = res2.Run(user.Firstname, user.Lastname, user.GoogleToken)
+			checkError(w, err)
 		}
 
-		_, err = res2.Run(user.Firstname, user.Lastname, user.GoogleToken)
-		checkError(w, err)
 	} else {
 		//	fmt.Println("token is not valid")
 	}

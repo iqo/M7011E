@@ -1,6 +1,6 @@
 //handels googlesing in and send auth token and first //last name on succefull login 
 
-function successfulSignIn(googleUser) {
+function onSignIn(googleUser) {
 	var auth2 = gapi.auth2.init();
 	var user={};
 	var profile = auth2.currentUser.get().getBasicProfile();
