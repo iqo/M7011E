@@ -95,7 +95,7 @@ func (l *loginDB) startBackend() {
 	router.POST("/user", l.newUser)
 	router.POST("/photo", l.savePhoto)
 	router.GET("/photo/get/:pid", l.getPhoto)
-    router.GET("/photo/user/:uid", l.getUserPhotos)
+	router.GET("/photo/user/:uid", l.getUserPhotos)
 	router.GET("/photo/latest/:page", l.getLatestPhotos)
 	router.GET("/photo/top/:list", l.getToplist)
 	router.GET("/comments/:id", l.getComments)
@@ -155,6 +155,36 @@ func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 	checkError(w, err)
 
 	rows, res, err := db.Query("select * from hat4cat.users where uid=%d", id)
+	checkError(w, err)
+
+	if rows == nil {
+		w.WriteHeader(404)
+	} else {
+		for _, row := range rows {
+			id := res.Map("uid")
+			firstname := res.Map("firstname")
+			lastname := res.Map("lastname")
+			googletoken := res.Map("googletoken")
+			authtoken := ""
+			usr := &User{row.Int(id), row.Str(firstname), row.Str(lastname), row.Str(googletoken), authtoken}
+
+			jsonBody, err := json.Marshal(usr)
+			w.WriteHeader(200) // is ok
+			w.Write(jsonBody)
+			checkError(w, err)
+		}
+	}
+
+}
+
+func (l *loginDB) getGoogleToken(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	fmt.Println("GET Token")
+	db := l.connectToDB()
+
+	id, err := strconv.Atoi(ps.ByName("token"))
+	checkError(w, err)
+
+	rows, res, err := db.Query("select * from hat4cat.users where googletoken=%d", id)
 	checkError(w, err)
 
 	if rows == nil {
@@ -262,54 +292,53 @@ func (l *loginDB) getLatestPhotos(w http.ResponseWriter, r *http.Request, ps htt
 }
 
 func (l *loginDB) getUserPhotos(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-    fmt.Println("GET getUserPhotos")
-    var thumbnails []*Thumbnail
-    db := l.connectToDB()
-    uid, err := strconv.Atoi(ps.ByName("uid"))
-    checkError(w, err)
+	fmt.Println("GET getUserPhotos")
+	var thumbnails []*Thumbnail
+	db := l.connectToDB()
+	uid, err := strconv.Atoi(ps.ByName("uid"))
+	checkError(w, err)
 
-    rows, res, err := db.Query("select photoId, name, thumbnail from hat4cat.photos where uid=%d order by photoId desc", uid)
-    checkError(w, err)
+	rows, res, err := db.Query("select photoId, name, thumbnail from hat4cat.photos where uid=%d order by photoId desc", uid)
+	checkError(w, err)
 
-    if rows == nil {
-        w.WriteHeader(404)
-    } else {
-        for _, row := range rows {
-            id := res.Map("photoId")
-            imgName := res.Map("name")
-            thumbnail := res.Map("thumbnail")
-            tn := &Thumbnail{row.Int(id), row.Str(imgName), row.Str(thumbnail)}
-            thumbnails = append(thumbnails, tn)
+	if rows == nil {
+		w.WriteHeader(404)
+	} else {
+		for _, row := range rows {
+			id := res.Map("photoId")
+			imgName := res.Map("name")
+			thumbnail := res.Map("thumbnail")
+			tn := &Thumbnail{row.Int(id), row.Str(imgName), row.Str(thumbnail)}
+			thumbnails = append(thumbnails, tn)
 
-        }
-        tnList := &ThumbnailList{Thumbnails: thumbnails}
+		}
+		tnList := &ThumbnailList{Thumbnails: thumbnails}
 
-        jsonBody, err := json.Marshal(tnList)
-        w.Write(jsonBody)
-        checkError(w, err)
-    }
+		jsonBody, err := json.Marshal(tnList)
+		w.Write(jsonBody)
+		checkError(w, err)
+	}
 }
 
 func (l *loginDB) getToplist(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Println("GET getToplist")
-    var rows []mysql.Row
-    var res mysql.Result
-    var err error
-    list:= ps.ByName("list")
+	var rows []mysql.Row
+	var res mysql.Result
+	var err error
+	list := ps.ByName("list")
 	var top []*Thumbnail
 	db := l.connectToDB()
 
-    if list == "rate" {
-        rows, res, err = db.Query("select p.photoId, p.name, p.thumbnail, sum(case when rate is null then 0 else rate end) as ratingSum from hat4cat.rating as r right join hat4cat.photos as p on p.photoId=r.photoId group by photoId order by ratingsum desc limit 0,9")
-        checkError(w, err)
-    } else if list == "comment" {
-        rows, res, err = db.Query("select p.photoId, p.name, p.thumbnail, count(comment) as noComments from hat4cat.comment as c right join hat4cat.photos as p on p.photoId=c.photoId group by photoId order by noComments desc limit 0,9")
-        checkError(w, err)
-    } else {
-        fmt.Println("Forbidden getToplist request")
-        return
-    }
-
+	if list == "rate" {
+		rows, res, err = db.Query("select p.photoId, p.name, p.thumbnail, sum(case when rate is null then 0 else rate end) as ratingSum from hat4cat.rating as r right join hat4cat.photos as p on p.photoId=r.photoId group by photoId order by ratingsum desc limit 0,9")
+		checkError(w, err)
+	} else if list == "comment" {
+		rows, res, err = db.Query("select p.photoId, p.name, p.thumbnail, count(comment) as noComments from hat4cat.comment as c right join hat4cat.photos as p on p.photoId=c.photoId group by photoId order by noComments desc limit 0,9")
+		checkError(w, err)
+	} else {
+		fmt.Println("Forbidden getToplist request")
+		return
+	}
 
 	if rows == nil {
 		w.WriteHeader(404)

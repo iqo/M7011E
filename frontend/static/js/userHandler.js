@@ -51,6 +51,7 @@ function onLoad() {
            document.getElementById("logout").innerHTML = "<button onclick='logOut()'>Sign out</button>";
            document.getElementById("user").innerHTML ="Good day " + profile.getName() + " are you ready for some cats in hats? ";
            document.getElementById("image").src = profile.getImageUrl();
+           //document.getElementById("id").innerHTML = getUser(profile.getId());
          }
        });
 	});
@@ -60,7 +61,7 @@ function onLoad() {
 function getUser(token) {
   var xhr = new XMLHttpRequest();
   xhr.onload = function(event) {
-    console.log(xhr.status);
+    console.log("console log: " + xhr.status);
     if (xhr.status == 200) {
       var usr = event.target.response;
           //console.log(photo[0].Image);
@@ -80,8 +81,8 @@ function getUser(token) {
       xhr.send(null);
 
     }
-
-    function getCurrentUserToken() {
+    //returns the database id of the currentlty logged in user 
+    function getCurrentUserId() {
       //load google auth 
       var auth2 = gapi.auth2.init();
       //get the basic profile of currently logged in user
@@ -95,13 +96,13 @@ function getUser(token) {
           var usr = event.target.response;
           usr = JSON.parse(usr);
           //return the usertoken of currently logged in user 
-          returnUserToken(usr.GoogleToken);
+          returnUserId(usr.Id);
         } else {
-          alert("Error! Get user token failed");
+          alert("Error! Get user id failed");
         }
       };
       xhr.onerror = function() {
-        alert("Error! Get user token failed. Cannot connect to server.");
+        alert("Error! Get user id failed. Cannot connect to server.");
       };
 
       xhr.open('GET', 'http://130.240.170.62:1026/user/' + token, false);
@@ -110,9 +111,9 @@ function getUser(token) {
 
     }
 //return the user token
-function returnUserToken(userToken){
-  if (userToken != null) {
-    document.getElementById('userToken').innerHTML =  'user token: ' + userToken;
-    return userToken;
+function returnUserId(userId){
+  if (userId != null) {
+    document.getElementById('userId').innerHTML =  'user id: ' + userId;
+    return userId;
   }
 } 
