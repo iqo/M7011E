@@ -19,6 +19,12 @@ type User struct {
 	Lastname  string `json="lastname"`
 }
 
+type UserView struct {
+    Firstname   string `json="firstname"`
+    Lastname    string `json="lastname"`
+    Toplist   *Toplist `json="toplistlist"`
+}
+
 type Photo struct {
 	Id        int    `json="id"`
 	ImgName   string `json="imgName"`
@@ -161,12 +167,46 @@ func PhotoHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, photoV)
 }
 
+
+func MyPageHandler(w http.ResponseWriter, r *http.Request) {
+    uid := strings.Split(r.URL.Path, "/")
+    var topL []*Thumbnail
+    response, err := http.Get("http://130.240.170.62:1026/photo/user/" + uid[2])
+    checkError(w, err)
+    defer response.Body.Close()
+    dec := json.NewDecoder(response.Body)
+    toplist := Toplist{}
+    //thumbnail := Thumbnail{}
+    err = dec.Decode(&toplist)
+    fmt.Println(toplist)
+    checkError(w, err)
+    for _, t := range toplist.Toplist {
+        tn := &Thumbnail{t.Id, t.ImgName, t.Thumbnail}
+        topL = append(topL, tn)
+    }
+    pl := &Toplist{Toplist: topL}
+
+
+    checkError(w, err)
+    uResponse, err := http.Get("http://130.240.170.62:1026/user/" + uid[2])
+    checkError(w, err)
+    defer uResponse.Body.Close()
+    dec = json.NewDecoder(uResponse.Body)
+    user := User{}
+    err = dec.Decode(&user)
+
+    checkError(w, err)
+    userV := &UserView{user.Firstname, user.Lastname, pl}
+    t := template.Must(template.ParseFiles("static/index.html", "static/templates/mypage.tmp"))
+    t.Execute(w, userV)
+}
+
 func AboutHandler(w http.ResponseWriter, r *http.Request) {
-	template.Must(template.ParseFiles("static/index.html", "static/templates/about.html")).Execute(w, nil)
+	template.Must(template.ParseFiles("static/index.html", "static/templates/about.tmp")).Execute(w, nil)
 }
 
 func CatMagicHandler(w http.ResponseWriter, r *http.Request) {
-	template.Must(template.ParseFiles("static/index.html", "static/templates/catmagic.html", "static/templates/hats.tmp")).Execute(w, nil)
+	template.Must(template.ParseFiles("static/index.html", "static/templates/catmagic.tmp", "static/templates/hats.tmp")).Execute(w, nil)
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
@@ -189,6 +229,7 @@ func startWebserver(input string) {
 	//http.HandleFunc("/toplist", TopListHandler)
 	http.HandleFunc("/photo/", PhotoHandler)
 	http.HandleFunc("/login", LoginHandler)
+    http.HandleFunc("/mypage/", MyPageHandler)
 
 	//var input int
 	//fmt.Scan(&input)
