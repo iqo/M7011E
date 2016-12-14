@@ -16,8 +16,8 @@ function onSignIn(googleUser) {
 		xhr.setRequestHeader('Content-Type', 'application/json');
 		xhr.onload = function() {
 			console.log('Signed in as: ' + xhr.responseText);
-      getCurrentUserId();
-		};
+        var uid = getCurrentUserId();
+        };
 		xhr.send(JSON.stringify(user));
 	}
 }
@@ -48,8 +48,11 @@ function onLoad() {
             });
 
           } else {
+            var uid = returnUserId();
            //document.getElementById("id").innerHTML = getUser(profile.getId());
-
+            document.getElementById("logout").innerHTML = '<button href="#" onclick="logOut();">Sign out</button>';
+            document.getElementById('mypageMenu').innerHTML = "<a href='/mypage/" + uid + "''>My page</a>";
+        
          }
        });
 	});
@@ -57,10 +60,7 @@ function onLoad() {
 
 
 function getUser(token) {
-  if (token == null){
-    token = document.cookie.split("; ")[1].split("=")[1];
-    console.log(token)
-  }
+
   var xhr = new XMLHttpRequest();
   xhr.onload = function(event) {
     //console.log("console log: " + xhr.status);
@@ -112,7 +112,7 @@ function getUser(token) {
           //returnUserId(usr.Id);
           document.cookie = "id="+usr.Id;
           //returnUserId
-          console.log(document.cookie)
+          console.log(document.cookie);
         } else {
           alert("Error! Get user id failed");
         }
@@ -128,7 +128,7 @@ function getUser(token) {
     }
 //return the user token
 function returnUserId(userId){
-  token = document.cookie.split("; ")[1].split("=")[1];
-  console.log(token)
+  token = document.cookie.split("; ")[2].split("=")[1];
+  console.log(token);
   return token;
 } 
