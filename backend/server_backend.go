@@ -106,7 +106,14 @@ func (l *loginDB) startBackend() {
 	router.GET("/rating/:pid/:uid", l.getRating)
 	router.GET("/rating/:pid", l.getRatingSum)
 
-	handler := cors.Default().Handler(router)
+	//handler := cors.Default().Handler(router)
+
+	c := cors.New(cors.Options{
+    AllowMethods: []string{"POST", "GET", "DELETE"}
+	})
+
+	// Insert the middleware
+	handler := c.Handler(handler)
 
 	log.Fatal(http.ListenAndServe("130.240.170.62:1026", handler))
 	fmt.Println("running on 130.240.170.62:1026")
