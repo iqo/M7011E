@@ -42,12 +42,6 @@
   }
 }
 
-.topcat1 {
-  margin: 0 auto;
-  float:center;
-  content:url('../img/topcat/cat1.jpg');
-}
-
 
 .fileUpload {
   visibility: hidden;

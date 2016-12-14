@@ -95,6 +95,7 @@ func (l *loginDB) startBackend() {
 	router.POST("/user", l.newUser)
 	router.POST("/photo", l.savePhoto)
 	router.GET("/photo/get/:pid", l.getPhoto)
+    router.DELETE("/photo/:pid/:uid", l.deletePhoto)
 	router.GET("/photo/user/:uid", l.getUserPhotos)
 	router.GET("/photo/latest/:page", l.getLatestPhotos)
 	router.GET("/photo/top/:list", l.getToplist)
@@ -105,7 +106,14 @@ func (l *loginDB) startBackend() {
 	router.GET("/rating/:pid/:uid", l.getRating)
 	router.GET("/rating/:pid", l.getRatingSum)
 
-	handler := cors.Default().Handler(router)
+	//handler := cors.Default().Handler(router)
+
+	c := cors.New(cors.Options{
+    	AllowedMethods: []string{"POST", "GET", "DELETE"},
+	})
+
+	// Insert the middleware
+	handler := c.Handler(router)
 
 	log.Fatal(http.ListenAndServe("130.240.170.62:1026", handler))
 	fmt.Println("running on 130.240.170.62:1026")
@@ -204,6 +212,19 @@ func (l *loginDB) savePhoto(w http.ResponseWriter, r *http.Request, ps httproute
 
 	_, err = res.Run(photo.ImgName, photo.ImgDesc, photo.Image, photo.Uid, photo.Thumbnail)
 	checkError(w, err)
+}
+
+func (l *loginDB) deletePhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    fmt.Println("DELETE deletePhoto")
+    db := l.connectToDB()
+    pid, err := strconv.Atoi(ps.ByName("pid"))
+    checkError(w, err)
+
+    uid, err := strconv.Atoi(ps.ByName("uid"))
+    checkError(w, err)
+    
+    _, _, err = db.Query("delete from hat4cat.photos where photoId=%d and uid=%d", pid, uid)
+    checkError(w, err)
 }
 
 func (l *loginDB) getPhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
