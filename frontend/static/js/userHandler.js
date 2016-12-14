@@ -16,6 +16,7 @@ function onSignIn(googleUser) {
 		xhr.setRequestHeader('Content-Type', 'application/json');
 		xhr.onload = function() {
 			console.log('Signed in as: ' + xhr.responseText);
+      getCurrentUserId();
 		};
 		xhr.send(JSON.stringify(user));
 	}
@@ -24,6 +25,7 @@ function onSignIn(googleUser) {
 function logOut() {
 	var auth2 = gapi.auth2.getAuthInstance();
 	auth2.signOut().then(function() {
+    document.cookie
 		console.log('User signed out.');
     location.reload();
   });
@@ -46,12 +48,8 @@ function onLoad() {
             });
 
           } else {
-           var profile = auth2.currentUser.get().getBasicProfile();
-           console.log('google Token: ' + profile.getId());
-           document.getElementById("logout").innerHTML = "<button onclick='logOut()'>Sign out</button>";
-           document.getElementById("user").innerHTML ="Good day " + profile.getName() + " are you ready for some cats in hats? ";
-           document.getElementById("image").src = profile.getImageUrl();
            //document.getElementById("id").innerHTML = getUser(profile.getId());
+
          }
        });
 	});
@@ -59,15 +57,19 @@ function onLoad() {
 
 
 function getUser(token) {
+  if (token == null){
+    token = document.cookie.split("; ")[1].split("=")[1];
+    console.log(token)
+  }
   var xhr = new XMLHttpRequest();
   xhr.onload = function(event) {
-    console.log("console log: " + xhr.status);
+    //console.log("console log: " + xhr.status);
     if (xhr.status == 200) {
       var usr = event.target.response;
-          //console.log(photo[0].Image);
           usr = JSON.parse(usr);
+          //console.log(usr);
           //window.open(photo.Image);
-          document.getElementById("test_user").src = usr.GoogleToken;
+          //document.getElementById("test_user").innerHTML = usr.GoogleToken;
         } else {
           alert("Error! Get user token failed");
         }
@@ -81,14 +83,25 @@ function getUser(token) {
       xhr.send(null);
 
     }
-    //returns the database id of the currentlty logged in user 
-    function getCurrentUserId() {
-      //load google auth 
+    function checkAuth(){
+      gapi.load('auth2,signin2', function() {
       var auth2 = gapi.auth2.init();
-      //get the basic profile of currently logged in user
-      var profile = auth2.currentUser.get().getBasicProfile();
-      //get the idd of currently logged in user 
-      var token = profile.getId();
+     
+      auth2.then(function() {
+          // Current values
+          var isSignedIn = auth2.isSignedIn.get();
+          if (!isSignedIn) {
+
+            location.href       
+          } else {
+            var profile = auth2.currentUser.get().getBasicProfile();
+           getCurrentUserId(profile.getId());
+         }
+       });
+  });
+    }
+    //returns the database id of the currentlty logged in user 
+    function getCurrentUserId(token) {
       var xhr = new XMLHttpRequest();
       xhr.onload = function(event) {
         console.log(xhr.status);
@@ -96,7 +109,10 @@ function getUser(token) {
           var usr = event.target.response;
           usr = JSON.parse(usr);
           //return the usertoken of currently logged in user 
-          returnUserId(usr.Id);
+          //returnUserId(usr.Id);
+          document.cookie = "id="+usr.Id;
+          //returnUserId
+          console.log(document.cookie)
         } else {
           alert("Error! Get user id failed");
         }
@@ -112,8 +128,7 @@ function getUser(token) {
     }
 //return the user token
 function returnUserId(userId){
-  if (userId != null) {
-    document.getElementById('userId').innerHTML =  'user id: ' + userId;
-    return userId;
-  }
+  token = document.cookie.split("; ")[1].split("=")[1];
+  console.log(token)
+  return token;
 } 
