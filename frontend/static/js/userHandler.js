@@ -109,7 +109,7 @@ function getUser(token) {
           // diff is the time in minutes before cookie expires 
           var diff = 30;
           var newDateObj = new Date(oldDateObj.getTime() + diff*60000);
-          document.cookie = "id="+usr.Id + "; expires=" + newDateObj.toUTCString() +"; path=/;";  
+          document.cookie = "id="+usr.Id + "; expires=" + newDateObj.toUTCString() +"; path=/;";  //path makes sure where to save cookies 
           //returnUserId
           console.log(document.cookie)
           console.log(newDateObj.toUTCString())
