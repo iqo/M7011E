@@ -7,7 +7,7 @@ Latest Cats
 <body onload="getLatestPhotos(1)">
 	<div class="col-sm-12">
 	<div class="row">
-	<div class="col col-sm-12"><h2>Latest cats in hats</h2><p>The most recent cats in hats are placed here. Click on them and let everyone know what you think of their masterpiece.</p></div>
+	<div class="col col-sm-12"><h2>{{ .Heading }}</h2><p>{{ .Text }}</p></div>
           </div>
         	<hr>
     <div class="well">
