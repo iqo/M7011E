@@ -149,43 +149,22 @@ func (l *loginDB) newUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 
 func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Println("GET getUser")
+    var rows []mysql.Row
+    var res mysql.Result
+    var err error
 	db := l.connectToDB()
+    input := ps.ByName("id")
 
-	id, err := strconv.Atoi(ps.ByName("id"))
-	checkError(w, err)
+    if len(input) < 12 {
+        id, err := strconv.Atoi(ps.ByName("id"))
+        checkError(w, err)
+        rows, res, err = db.Query("select * from hat4cat.users where uid=%d", id)
+        checkError(w, err)
+    } else {
+        rows, res, err = db.Query("select * from hat4cat.users where googletoken=%s", input)
+        checkError(w, err)
+    }
 
-	rows, res, err := db.Query("select * from hat4cat.users where uid=%d", id)
-	checkError(w, err)
-
-	if rows == nil {
-		w.WriteHeader(404)
-	} else {
-		for _, row := range rows {
-			id := res.Map("uid")
-			firstname := res.Map("firstname")
-			lastname := res.Map("lastname")
-			googletoken := res.Map("googletoken")
-			authtoken := ""
-			usr := &User{row.Int(id), row.Str(firstname), row.Str(lastname), row.Str(googletoken), authtoken}
-
-			jsonBody, err := json.Marshal(usr)
-			w.WriteHeader(200) // is ok
-			w.Write(jsonBody)
-			checkError(w, err)
-		}
-	}
-
-}
-
-func (l *loginDB) getGoogleToken(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	fmt.Println("GET Token")
-	db := l.connectToDB()
-
-	id, err := strconv.Atoi(ps.ByName("token"))
-	checkError(w, err)
-
-	rows, res, err := db.Query("select * from hat4cat.users where googletoken=%d", id)
-	checkError(w, err)
 
 	if rows == nil {
 		w.WriteHeader(404)
