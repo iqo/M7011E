@@ -16,7 +16,7 @@ function onSignIn(googleUser) {
 		xhr.setRequestHeader('Content-Type', 'application/json');
 		xhr.onload = function() {
 			console.log('Signed in as: ' + xhr.responseText);
-      getCurrentUserId();
+      //getCurrentUserId();
 		};
 		xhr.send(JSON.stringify(user));
 	}
@@ -25,7 +25,7 @@ function onSignIn(googleUser) {
 function logOut() {
 	var auth2 = gapi.auth2.getAuthInstance();
 	auth2.signOut().then(function() {
-    document.cookie
+    document.cookie = "id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 		console.log('User signed out.');
     location.reload();
   });
@@ -48,6 +48,7 @@ function onLoad() {
             });
 
           } else {
+            document.getElementById("logout").innerHTML = '<button href="#" onclick="logOut();">Sign out</button>'
            //document.getElementById("id").innerHTML = getUser(profile.getId());
 
          }
@@ -57,10 +58,6 @@ function onLoad() {
 
 
 function getUser(token) {
-  if (token == null){
-    token = document.cookie.split("; ")[1].split("=")[1];
-    console.log(token)
-  }
   var xhr = new XMLHttpRequest();
   xhr.onload = function(event) {
     //console.log("console log: " + xhr.status);
@@ -90,13 +87,10 @@ function getUser(token) {
       auth2.then(function() {
           // Current values
           var isSignedIn = auth2.isSignedIn.get();
-          if (!isSignedIn) {
-
-            location.href       
+          if (!isSignedIn) {       
           } else {
             var profile = auth2.currentUser.get().getBasicProfile();
-           getCurrentUserId(profile.getId());
-         }
+                       getCurrentUserId(profile.getId());}
        });
   });
     }
@@ -110,9 +104,15 @@ function getUser(token) {
           usr = JSON.parse(usr);
           //return the usertoken of currently logged in user 
           //returnUserId(usr.Id);
-          document.cookie = "id="+usr.Id;
+          //cookies expires after a certain time 
+          var oldDateObj = new Date();
+          // diff is the time in minutes before cookie expires 
+          var diff = 30;
+          var newDateObj = new Date(oldDateObj.getTime() + diff*60000);
+          document.cookie = "id="+usr.Id + "; expires=" + newDateObj.toUTCString() +"; path=/;";  
           //returnUserId
           console.log(document.cookie)
+          console.log(newDateObj.toUTCString())
         } else {
           alert("Error! Get user id failed");
         }
@@ -128,7 +128,8 @@ function getUser(token) {
     }
 //return the user token
 function returnUserId(userId){
-  token = document.cookie.split("; ")[1].split("=")[1];
+  //token = document.cookie.split("; ")[1].split("=")[1];
+  token = document.cookie.split("id=")[1][0]
   console.log(token)
   return token;
 } 
