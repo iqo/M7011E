@@ -209,10 +209,12 @@ func (l *loginDB) savePhoto(w http.ResponseWriter, r *http.Request, ps httproute
 
 func (l *loginDB) deletePhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
     fmt.Println("DELETE deletePhoto")
+    db := l.connectToDB()
     pid, err := strconv.Atoi(ps.ByName("pid"))
-    db := l.connectToDB()
+    checkError(w, err)
+
     uid, err := strconv.Atoi(ps.ByName("uid"))
-    db := l.connectToDB()
+    checkError(w, err)
     
     rows, res, err := db.Query("delete from hat4cat.photos where photoId=%d and uid=%d", pid, uid)
     checkError(w, err)
