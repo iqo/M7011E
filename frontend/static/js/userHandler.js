@@ -16,13 +16,8 @@ function onSignIn(googleUser) {
 		xhr.setRequestHeader('Content-Type', 'application/json');
 		xhr.onload = function() {
 			console.log('Signed in as: ' + xhr.responseText);
-<<<<<<< HEAD
-      //getCurrentUserId();
-		};
-=======
-        var uid = getCurrentUserId();
+
         };
->>>>>>> 1956254462ecc0bf4e9ced8551f30f65b65addc0
 		xhr.send(JSON.stringify(user));
 	}
 }
@@ -135,7 +130,7 @@ function getUser(token) {
 //return the user token
 function returnUserId(userId){
   //token = document.cookie.split("; ")[1].split("=")[1];
-  token = document.cookie.split("id=")[1][0]
-  console.log(token)
+  token = document.cookie.split("id=")[1][0];
+  console.log(token);
   return token;
 } 

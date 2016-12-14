@@ -97,7 +97,7 @@ function rate(photoId, rate) {
     r.rate = parseInt(rate);
 
     
-    r.uid = photo.uid = parseInt(returnUserId());
+    r.uid = parseInt(returnUserId());
 
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {
