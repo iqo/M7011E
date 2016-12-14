@@ -199,6 +199,7 @@ function placeLatestPhotos(thumbnails){
                                                 + "></a></div>";
     }); 
   }
+  console.log(getCurrentUserId());
 }
 
 

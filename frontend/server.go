@@ -55,6 +55,11 @@ type ToplistView struct {
 
 }
 
+type TextView struct {
+    Heading     string `json="heading"`
+    Text        string `json="text"`
+}
+
 type ThumbnailList struct {
     Thumbnails []*Thumbnail `json="thumbnails"`
 }
@@ -78,13 +83,21 @@ type RateSum struct {
 *** Adds content on website            ***
 *****************************************/
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	template.Must(template.ParseFiles("static/index.html", "static/templates/latestCats.tmp")).Execute(w, nil)
+    heading := "Welcome to Hats for cats!"
+    text := "On this page you can put funny hats on your cat pictures! Create an account and upload your favorite pictures of your (or someone else's) cat today. Get some inspiration from the latest cats below."
+	tv := &TextView{heading, text}
+    template.Must(template.ParseFiles("static/index.html", "static/templates/latestCats.tmp")).Execute(w, tv)
 }
 
-func TopListHandler(w http.ResponseWriter, r *http.Request) {
+func LatestPhotosHandler(w http.ResponseWriter, r *http.Request) {
+    heading := "Latest cats in hats"
+    text := "The most recent cats in hats are placed here. Click on them and let everyone know what you think of their masterpiece."
+    tv := &TextView{heading, text}
+    template.Must(template.ParseFiles("static/index.html", "static/templates/latestCats.tmp")).Execute(w, tv)
 
-	template.Must(template.ParseFiles("static/index.html", "static/templates/toplist.tmp")).Execute(w, nil)
 }
+
+
 
 func ToplistRateHandler(w http.ResponseWriter, r *http.Request) {
     var topL []*Thumbnail
@@ -229,6 +242,7 @@ func startWebserver(input string) {
 	http.HandleFunc("/catmagic", CatMagicHandler)
     http.HandleFunc("/toplist/rate", ToplistRateHandler)
     http.HandleFunc("/toplist/comment", ToplistCommentHandler)
+    http.HandleFunc("/toplist/latest", LatestPhotosHandler)
 	//http.HandleFunc("/toplist", TopListHandler)
 	http.HandleFunc("/photo/", PhotoHandler)
 	http.HandleFunc("/login", LoginHandler)

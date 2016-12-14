@@ -1,5 +1,4 @@
 function placeUserPhotos(data){
-    console.log("placePhotos");
     myPhotos = data.Thumbnails;
   
     if (myPhotos != null) {
