@@ -109,11 +109,11 @@ func (l *loginDB) startBackend() {
 	//handler := cors.Default().Handler(router)
 
 	c := cors.New(cors.Options{
-    	AllowMethods: []string{"POST", "GET", "DELETE"},
+    	AllowedMethods: []string{"POST", "GET", "DELETE"},
 	})
 
 	// Insert the middleware
-	handler := c.Handler(handler)
+	handler := c.Handler(router)
 
 	log.Fatal(http.ListenAndServe("130.240.170.62:1026", handler))
 	fmt.Println("running on 130.240.170.62:1026")
