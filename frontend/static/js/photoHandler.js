@@ -116,8 +116,8 @@ function savePhoto(img, thumbnail) {
     photo.imgDesc = document.getElementById("imgDesc").value;
     photo.image = img;//img;
     photo.thumbnail = thumbnail;
-    
-    photo.uid = getCurrentUserId();
+
+    photo.uid = parseInt(returnUserId());
 
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {
@@ -157,7 +157,7 @@ function getPhoto(pid, canvas) {
         alert("Error! Get file failed. Cannot connect to server.");
       };
         
-      xhr.open('GET', 'http://130.240.170.62:1026/photo/get/' + pid, false);
+      xhr.open('GET', 'http://130.240.170.62:1026/photo/get/' + pid, true);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(null);
 }
@@ -180,7 +180,7 @@ function getLatestPhotos(page) {
         alert("Error! Get file failed. Cannot connect to server.");
       };
         
-      xhr.open('GET', 'http://130.240.170.62:1026/photo/latest/' + page, false);
+      xhr.open('GET', 'http://130.240.170.62:1026/photo/latest/' + page, true);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(null);
 }
@@ -199,7 +199,6 @@ function placeLatestPhotos(thumbnails){
                                                 + "></a></div>";
     }); 
   }
-  console.log(getCurrentUserId());
 }
 
 

@@ -6,7 +6,7 @@ function addComment(photoId) {
     comment.comment = document.getElementById("userComment").value;
     
     /********* CHANGE TO ACTUAL USERID **********/
-    comment.uid = 1;
+    comment.uid = parseInt(returnUserId());
 
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {
@@ -97,8 +97,7 @@ function rate(photoId, rate) {
     r.rate = parseInt(rate);
 
     
-    /********* CHANGE TO ACTUAL USERID **********/
-    r.uid = 1;
+    r.uid = photo.uid = parseInt(returnUserId());
 
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {

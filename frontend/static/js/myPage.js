@@ -28,7 +28,7 @@ function placeUserPhotos(data){
 
 function deletePhoto(pid) {
     console.log(pid);
-    var uid = 1;        //CHANGE USERID
+    var uid = parseInt(returnUserId());
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {
         if (xhr.status == 200) {

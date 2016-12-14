@@ -4,7 +4,8 @@
 
 {{define "Body"}}
 <html>
-<body onload="placeToplist({{ .Toplist }}, {{ .DivId }})">
+<script src="/static/js/photoHandler.js"></script>
+<body>
 	<div class="col-sm-12">
 	<div class="row">
 	<div class="col col-sm-12"><h2>Top 9 {{ .Heading }}</h2><p> {{ .Text }}</p></div>
@@ -17,6 +18,10 @@
 	</div>
 </div>
 </body>
+<script type="text/javascript">
+	document.onload = placeToplist({{ .Toplist }}, {{ .DivId }});
+</script>
+
 </html>
 
 {{end}}

@@ -16,8 +16,13 @@ function onSignIn(googleUser) {
 		xhr.setRequestHeader('Content-Type', 'application/json');
 		xhr.onload = function() {
 			console.log('Signed in as: ' + xhr.responseText);
+<<<<<<< HEAD
       //getCurrentUserId();
 		};
+=======
+        var uid = getCurrentUserId();
+        };
+>>>>>>> 1956254462ecc0bf4e9ced8551f30f65b65addc0
 		xhr.send(JSON.stringify(user));
 	}
 }
@@ -48,9 +53,12 @@ function onLoad() {
             });
 
           } else {
-            document.getElementById("logout").innerHTML = '<button href="#" onclick="logOut();">Sign out</button>'
-           //document.getElementById("id").innerHTML = getUser(profile.getId());
 
+            var uid = returnUserId();
+           //document.getElementById("id").innerHTML = getUser(profile.getId());
+            document.getElementById("logout").innerHTML = '<button href="#" onclick="logOut();">Sign out</button>';
+            document.getElementById('mypageMenu').innerHTML = "<a href='/mypage/" + uid + "''>My page</a>";
+        
          }
        });
 	});
@@ -111,8 +119,6 @@ function getUser(token) {
           var newDateObj = new Date(oldDateObj.getTime() + diff*60000);
           document.cookie = "id="+usr.Id + "; expires=" + newDateObj.toUTCString() +"; path=/;";  //path makes sure where to save cookies 
           //returnUserId
-          console.log(document.cookie)
-          console.log(newDateObj.toUTCString())
         } else {
           alert("Error! Get user id failed");
         }

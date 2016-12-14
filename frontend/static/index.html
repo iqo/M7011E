@@ -28,7 +28,7 @@
 
 </head>
 
-<body onload="checkAuth();" id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+<body onload="checkAuth()" id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
 
 <!-- Header-image -->
 <div class="wide">
@@ -62,9 +62,7 @@
     </ul>
     <ul class="nav navbar-nav navbar-right">
 
-      <li><a href="/mypage/1">My page</a></li>
-
-      <li><a href="/login">Test mypage</a></li>
+      <li id= 'mypageMenu'></li>
       <li><div id="google-signin-button"></div></li>
       <li><p id = "logout"></p></li>
     </ul>
@@ -93,9 +91,6 @@
     <script src="/static/js/photoHandler.js"></script>
     <script src="/static/js/canvasDrag.js"></script>
 
-    <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
 
     <!-- Bootstrap Core JavaScript -->

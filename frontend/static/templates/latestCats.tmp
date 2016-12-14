@@ -4,7 +4,8 @@ Latest Cats
 
 {{define "Body"}}
 <html>
-<body onload="getLatestPhotos(1)">
+<script src="/static/js/photoHandler.js"></script>
+<body>
 	<div class="col-sm-12">
 	<div class="row">
 	<div class="col col-sm-12"><h2>{{ .Heading }}</h2><p>{{ .Text }}</p></div>
@@ -12,11 +13,13 @@ Latest Cats
         	<hr>
     <div class="well">
 		<div id="latestPhotos" class="row"> 
-
 		</div>
 	</div>
 </div>
 </body>
+<script type="text/javascript">
+	document.onload = getLatestPhotos(1);
+</script>
 </html>
 
 {{end}}
