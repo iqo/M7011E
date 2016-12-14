@@ -109,7 +109,7 @@ func (l *loginDB) startBackend() {
 	//handler := cors.Default().Handler(router)
 
 	c := cors.New(cors.Options{
-    AllowMethods: []string{"POST", "GET", "DELETE"}
+    	AllowMethods: []string{"POST", "GET", "DELETE"},
 	})
 
 	// Insert the middleware
