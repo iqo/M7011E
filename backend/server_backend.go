@@ -216,7 +216,7 @@ func (l *loginDB) deletePhoto(w http.ResponseWriter, r *http.Request, ps httprou
     uid, err := strconv.Atoi(ps.ByName("uid"))
     checkError(w, err)
     
-    rows, res, err := db.Query("delete from hat4cat.photos where photoId=%d and uid=%d", pid, uid)
+    _, _, err := db.Query("delete from hat4cat.photos where photoId=%d and uid=%d", pid, uid)
     checkError(w, err)
 }
 
