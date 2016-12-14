@@ -22,7 +22,7 @@ type User struct {
 type UserView struct {
     Firstname   string `json="firstname"`
     Lastname    string `json="lastname"`
-    Toplist   *Toplist `json="toplist"`
+    Thumbnails   *ThumbnailList `json="thumbnails"`
 }
 
 type Photo struct {
@@ -53,6 +53,10 @@ type ToplistView struct {
     DivId       string `json="divId"`
     Toplist     *Toplist `json="toplist"`
 
+}
+
+type ThumbnailList struct {
+    Thumbnails []*Thumbnail `json="thumbnails"`
 }
 
 type Toplist struct {
@@ -172,21 +176,18 @@ func MyPageHandler(w http.ResponseWriter, r *http.Request) {
     uid := strings.Split(r.URL.Path, "/")
     var topL []*Thumbnail
     response, err := http.Get("http://130.240.170.62:1026/photo/user/" + uid[2])
-    fmt.Println("http://130.240.170.62:1026/photo/user/" + uid[2])
     checkError(w, err)
     defer response.Body.Close()
     dec := json.NewDecoder(response.Body)
-    fmt.Println(dec)
-    toplist := Toplist{}
-    err = dec.Decode(&toplist)
-    fmt.Println(toplist)
+    thumbnail := ThumbnailList{}
+    //thumbnail := Thumbnail{}
+    err = dec.Decode(&thumbnail)
     checkError(w, err)
-    for _, t := range toplist.Toplist {
+    for _, t := range thumbnail.Thumbnails {
         tn := &Thumbnail{t.Id, t.ImgName, t.Thumbnail}
         topL = append(topL, tn)
     }
-    pl := &Toplist{Toplist: topL}
-
+    pl := &ThumbnailList{Thumbnails: topL}
 
     checkError(w, err)
     uResponse, err := http.Get("http://130.240.170.62:1026/user/" + uid[2])
@@ -197,7 +198,8 @@ func MyPageHandler(w http.ResponseWriter, r *http.Request) {
     err = dec.Decode(&user)
 
     checkError(w, err)
-    userV := &UserView{user.Firstname, user.Lastname, pl}
+    userV := &UserView{Firstname: user.Firstname, Lastname: user.Lastname, Thumbnails: pl}
+    fmt.Println(userV)
     t := template.Must(template.ParseFiles("static/index.html", "static/templates/mypage.tmp"))
     t.Execute(w, userV)
 }

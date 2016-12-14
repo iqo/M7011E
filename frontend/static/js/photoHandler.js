@@ -3,18 +3,30 @@ function uploadPhoto(){
     
     var file = document.getElementById("catFile").files[0];
     var readFile = new FileReader();
-    //console.log(file);
+    if (checkFileType(file.type)){
 
-    function success(e){
-        var img = e.target.result;
-        loadCanvas(img);
-        displayHats();
-        addSaveButton();
-    };
+        function success(e){
+            var img = e.target.result;
+            loadCanvas(img);
+            displayHats();
+            addSaveButton();
+        };
 
-  readFile.readAsDataURL(file);
-  // function call to success after file is read, no () needed
-  readFile.onload = success;
+      readFile.readAsDataURL(file);
+      // function call to success after file is read, no () needed
+      readFile.onload = success;
+    } else {
+        alert("Not a valid file format");
+    }
+}
+
+function checkFileType(fileType){
+    type = fileType.split("/")[0];
+    if (type == 'image'){
+        return true;
+    } else {
+        return false;
+    }
 }
 
 
@@ -105,8 +117,7 @@ function savePhoto(img, thumbnail) {
     photo.image = img;//img;
     photo.thumbnail = thumbnail;
     
-    /********* CHANGE TO ACTUAL USERID **********/
-    photo.uid = 1;
+    photo.uid = getCurrentUserId();
 
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {

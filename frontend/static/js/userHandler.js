@@ -89,7 +89,6 @@ function getUser(token) {
       var profile = auth2.currentUser.get().getBasicProfile();
       //get the idd of currently logged in user 
       var token = profile.getId();
-      console.log(token);
       var xhr = new XMLHttpRequest();
       xhr.onload = function(event) {
         console.log(xhr.status);
