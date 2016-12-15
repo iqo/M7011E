@@ -90,7 +90,6 @@ type Toplist struct {
 
 func (l *loginDB) startBackend() {
 	router := httprouter.New()
-	router.GET("/", testpage)
 	router.GET("/user/:id", l.getUser)
 	router.POST("/user", l.newUser)
 	router.POST("/photo", l.savePhoto)
@@ -119,12 +118,6 @@ func (l *loginDB) startBackend() {
 	fmt.Println("running on 130.240.170.62:1026")
 }
 
-func testpage(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	form := "<html><body><form action='/user' method='POST'><p>Firstname: <input type='text' name='firstname' id='fname'/></p><p>Lastname: <input type='text' name='lastname' id='lname' /></p><p><input type='button' onclick = 'testfunc()' value='Testa'/></p></form><script>function testfunc() {var xhr = new XMLHttpRequest(); var fname = document.getElementById('fname').value; var lname = document.getElementById('lname').value;  var user = {}; user.firstname = fname; user.lastname = lname; xhr.open('POST', 'http://localhost:1026/user', true); xhr.setRequestHeader('Content-Type', 'application/json'); xhr.send(JSON.stringify(user))}</script></body></html>"
-	t, _ := template.New("webpage").Parse(form)
-
-	t.Execute(w, nil)
-}
 
 /*******************************************************
 *************** USER HANDLERS *************************

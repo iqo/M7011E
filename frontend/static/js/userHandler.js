@@ -6,7 +6,7 @@ function onSignIn(googleUser) {
 	var profile = auth2.currentUser.get().getBasicProfile();
 	var xhr = new XMLHttpRequest();
 	if (auth2.isSignedIn.get()) {
-    location.reload();
+        
 		//get basic info and the google token 
 		user.firstname = profile.getGivenName();
 		user.lastname = profile.getFamilyName();
@@ -15,6 +15,7 @@ function onSignIn(googleUser) {
 		xhr.open('POST', 'http://130.240.170.62:1026/user');
 		xhr.setRequestHeader('Content-Type', 'application/json');
 		xhr.onload = function() {
+            location.reload();
 			console.log('Signed in as: ' + xhr.responseText);
 
         };
@@ -48,8 +49,8 @@ function onLoad() {
             });
 
           } else {
-
             var uid = returnUserId();
+
            //document.getElementById("id").innerHTML = getUser(profile.getId());
             document.getElementById("logout").innerHTML = '<button href="#" onclick="logOut();">Sign out</button>';
             document.getElementById('mypageMenu').innerHTML = "<a href='/mypage/" + uid + "''>My page</a>";

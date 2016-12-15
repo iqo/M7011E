@@ -4,6 +4,7 @@ Hat4urCat
 
 {{define "Body"}}
 <html>
+<script src="/static/js/userHandler.js"></script>
 <script src="/static/js/photoHandler.js"></script>
 <script src="/static/js/commentRateHandler.js"></script>
 

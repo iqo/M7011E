@@ -5,7 +5,6 @@ function addComment(photoId) {
     comment.photoId = parseInt(photoId);
     comment.comment = document.getElementById("userComment").value;
     
-    /********* CHANGE TO ACTUAL USERID **********/
     comment.uid = parseInt(returnUserId());
 
     var xhr = new XMLHttpRequest();
@@ -64,6 +63,7 @@ function displayComments(comments){
 
 function getRate(pid) {
     var xhr = new XMLHttpRequest();
+    var uid = parseInt(returnUserId());
     xhr.onload = function(event) {
 
         if (xhr.status == 200) {
@@ -85,7 +85,7 @@ function getRate(pid) {
             alert("Error! Get rate failed. Cannot connect to server.");
       };
     /////////////////////////////// CHANGE USERID vvvvvvvvvvvvv //////////
-      xhr.open('GET', 'http://130.240.170.62:1026/rating/' + pid + "/1", true);
+      xhr.open('GET', 'http://130.240.170.62:1026/rating/' + pid + "/" + uid, true);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(null);
 }
@@ -98,7 +98,7 @@ function rate(photoId, rate) {
 
     
     r.uid = parseInt(returnUserId());
-
+    console.log(r);
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {
     if (xhr.status == 200) {
@@ -132,8 +132,9 @@ function updateVote(rate){
         var sum = document.getElementById("sum").innerHTML;
         sum = parseInt(sum) + rate;
         if (sum == 0) {sum = sum + rate;};
-        document.getElementById("sum").innerHTML = sum;
-        changeColor(rate);
+          voted = true;
+          document.getElementById("sum").innerHTML = sum;
+          changeColor(rate);
     }
 
 function checkIfVoted(vote, id){
