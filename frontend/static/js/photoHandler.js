@@ -46,7 +46,6 @@ function downloadPhoto(text, name, type) {
 
 function displayHats(){
     var hats = document.getElementsByClassName('draggable');
-
     document.getElementById('hatHolder').style.display = "block";
     imgs = document.getElementById('hatHolder').getElementsByTagName('img');
     for(var i =0; i<imgs.length; i++){
@@ -140,7 +139,6 @@ function savePhoto(img, thumbnail) {
 function getPhoto(pid, canvas) {
     var xhr = new XMLHttpRequest();
     xhr.onload = function(event) {
-        console.log(xhr.status);
         if (xhr.status == 200) {
           var photo = event.target.response;
 
@@ -165,7 +163,6 @@ function getPhoto(pid, canvas) {
 function getLatestPhotos(page) {
     var xhr = new XMLHttpRequest();
     xhr.onload = function(event) {
-        console.log(xhr.status);
         if (xhr.status == 200) {
           var thumbnail = event.target.response;
           
@@ -206,7 +203,11 @@ function placeLatestPhotos(thumbnails){
 function addSaveButton(){
     var div = document.getElementById('buttonHolder');
     if (div.childNodes.length == 3) {
-        div.innerHTML += "<div id='savePhoto'><button type='button' class='btn btn-sm btn-primary' id='saveCat' data-toggle='modal' data-target='#saveImageModal'>Save cat</button></div>";
+        if (isSignedIn()) {
+            div.innerHTML += "<div id='savePhoto'><button type='button' class='btn btn-sm btn-primary' id='saveCat' data-toggle='modal' data-target='#saveImageModal'>Save cat</button></div>";
+        } else {
+            div.innerHTML += "You need to sign in to save cat";
+        }
     };
 }
 
@@ -230,7 +231,6 @@ function getThumbnail(src, width, height) {
 
 function placeToplist(data, div){
     toplist = data.Toplist;
-    
     if (toplist != null) {
         for (i = 0; i < toplist.length; i++){
                 document.getElementById(div).innerHTML += "<div class='col-lg-4 col-sm-4 col-xs-4'><a title="

@@ -133,7 +133,7 @@ func (l *loginDB) newUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 		log.Fatal(err)
 	}
 	if statusCheck(user.AuthToken) {
-		rows, _, err := db.Query("select count(*) from hat4cat.users where googletoken=%d", user.GoogleToken)
+		rows, _, err := db.Query("select count(*) from hat4cat.users where googletoken=%s", user.GoogleToken)
 		checkError(w, err)
 		fmt.Println("rows: ", len(rows))
 		if len(rows) == 0 {
@@ -525,7 +525,7 @@ func (l *loginDB) connectToDB() mysql.Conn {
 	return db
 }
 
-//ceck the status code of the loged in user
+//check the status code of the loged in user
 func statusCheck(token string) bool {
 	auth_token := "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" + token
 	resp, err := http.Get(auth_token)
