@@ -6,7 +6,6 @@ import (
 	//"encoding/json"
 	//"time"
 	"github.com/julienschmidt/httprouter" //https://github.com/julienschmidt/httprouter
-	"html/template"
 	"net/http"
 	"strconv"
 	//"github.com/ziutek/mymysql"
