@@ -522,7 +522,7 @@ func (l *loginDB) addFavorite(w http.ResponseWriter, r *http.Request, ps httprou
 	res, err := db.Prepare("insert into hat4cat.favorite (pid, uid) values (?, ?)")
 	checkError(w, err)
 
-	_, err = res.Run(fav.PhotoId, rating.Uid)
+	_, err = res.Run(fav.PhotoId, fav.Uid)
 	checkError(w, err)
 }
 
