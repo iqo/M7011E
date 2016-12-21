@@ -23,11 +23,11 @@ Hat4urCat
 
 	<div class="row">
 
-			<div id="upvote" class="col col-sm-1 col-lg-offset-3 rate-arrow upvote" onclick="checkIfVoted('up', '{{ .Id }}')">
-				<span > &#8670; </span>
+			<div id="upvote" class="col col-sm-1 col-lg-offset-3 rate-arrow upvote">
+				<span onclick="checkIfVoted('up', '{{ .Id }}')"> &#8670; </span>
 			</div>
-			<div id="downvote" class="col col-sm-1 rate-arrow downvote" onclick="checkIfVoted('down', '{{ .Id }}')">
-				<span> &#8671; </span>
+			<div id="downvote" class="col col-sm-1 rate-arrow downvote">
+				<span onclick="checkIfVoted('down', '{{ .Id }}')"> &#8671; </span>
 			</div>
 
 			<div id="rate" class="col col-sm-3 rate">
@@ -39,15 +39,8 @@ Hat4urCat
 
 <div class="well comment">
 
-<div class="row">
-	<div class="col-sm-10 col-xs-6 col-lg-offset-1">
-    <div class="input-group">
-        <input type="text" id="userComment" class="form-control" placeholder="Write your comment here..." />
-	    <span class="input-group-btn" onclick="addComment('{{ .Id }}')">     
-            <a href="#" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-comment"></span> Add Comment</a>
-        </span>
-    </div>
-</div>
+<div class="row" id="insertComment">
+
 </div>
 <hr>
 
@@ -65,6 +58,7 @@ Hat4urCat
 	document.onload=photoToCanvas('{{ .Image }}', 'photoCanvas');
 	document.onload = getComments('{{ .Id }}');
 	document.onload=getRate('{{ .Id }}');
+	document.onload=addInsertComments('{{ .Id }}');
 
 	</script>
 </html>

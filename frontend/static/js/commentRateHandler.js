@@ -16,14 +16,14 @@ function addComment(photoId) {
       } else {
           alert("Error! Comment failed");
       }
-  };
-  xhr.onerror = function() {
-    alert("Error! Comment failed." + xhr.status);
-};
+    };
+    xhr.onerror = function() {
+        alert("Error! Comment failed." + xhr.status);
+    };
 
-xhr.open('POST', 'http://130.240.170.62:1026/comment', true);
-xhr.setRequestHeader("Content-Type", "application/json");
-xhr.send(JSON.stringify(comment));
+    xhr.open('POST', 'http://130.240.170.62:1026/comment', true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify(comment));
 }
 
 
@@ -36,15 +36,15 @@ function getComments(photoId) {
             return;
         };
           
-          c = JSON.parse(c);
-          displayComments(c.Comments);
+        c = JSON.parse(c);
+        displayComments(c.Comments);
 
         } else if (xhr.status == 404){
             console.log ("No comments found")
         } else {}
-      };
-      xhr.onerror = function() {
-        alert("Error! Get comments failed. Cannot connect to server.");
+        };
+        xhr.onerror = function() {
+            alert("Error! Get comments failed. Cannot connect to server.");
       };
         
       xhr.open('GET', 'http://130.240.170.62:1026/comments/' + photoId, true);
@@ -84,7 +84,6 @@ function getRate(pid) {
       xhr.onerror = function() {
             alert("Error! Get rate failed. Cannot connect to server.");
       };
-    /////////////////////////////// CHANGE USERID vvvvvvvvvvvvv //////////
       xhr.open('GET', 'http://130.240.170.62:1026/rating/' + pid + "/" + uid, true);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(null);
@@ -138,21 +137,26 @@ function updateVote(rate){
     }
 
 function checkIfVoted(vote, id){
-    if (vote == "up") {
-        if (document.getElementById("upvote").style.color == "green") {
-            return;
-        } else {
-            rate(id, 1);
-        }
-    };
-    if (vote == "down") {
-        if (document.getElementById("downvote").style.color == "red") {
-            return;
-        } else {
-            rate(id, -1);
-        }
-    };
-    return;
+    console.log(isSignedIn());
+    if (isSignedIn()) {
+        if (vote == "up") {
+            if (document.getElementById("upvote").style.color == "green") {
+                return;
+            } else {
+                rate(id, 1);
+            }
+        };
+        if (vote == "down") {
+            if (document.getElementById("downvote").style.color == "red") {
+                return;
+            } else {
+                rate(id, -1);
+            }
+        };
+        return;
+    } else {
+        alert("You must be signed in to vote!");
+    }
 }
 
 function changeColor(rate){
@@ -164,3 +168,16 @@ function changeColor(rate){
         document.getElementById("downvote").style.color = "red";
     }
 }
+
+function addInsertComments(id){
+    console.log(isSignedIn());
+    if (isSignedIn()) {
+        document.getElementById("insertComment").innerHTML = "<div class='col-sm-10 col-xs-6 col-lg-offset-1'>"
+                                                            + "<div class='input-group'>"
+                                                            + "<input type='text' id='userComment' class='form-control' placeholder='Write your comment here...' />"
+                                                            + "<span class='input-group-btn' onclick='addComment('"+id+"')''>"
+                                                            + "<a href='#'' class='btn btn-primary btn-sm'><span class='glyphicon glyphicon-comment'></span> Add Comment</a>"
+                                                            + "</span></div></div>";
+    };
+}
+

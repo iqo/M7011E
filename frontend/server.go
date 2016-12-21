@@ -9,7 +9,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	//"io/ioutil"
+	"io"
 	//"github.com/julienschmidt/httprouter" //https://github.com/julienschmidt/httprouter
 )
 
@@ -20,6 +20,7 @@ type User struct {
 }
 
 type UserView struct {
+    Id        int    `json="id"`
     Firstname   string `json="firstname"`
     Lastname    string `json="lastname"`
     Thumbnails   *ThumbnailList `json="thumbnails"`
@@ -155,66 +156,81 @@ func ToplistCommentHandler(w http.ResponseWriter, r *http.Request) {
 
 func PhotoHandler(w http.ResponseWriter, r *http.Request) {
 	id := strings.Split(r.URL.Path, "/")
-	pResponse, err := http.Get("http://130.240.170.62:1026/photo/get/" + id[2])
-	checkError(w, err)
-	defer pResponse.Body.Close()
-	dec := json.NewDecoder(pResponse.Body)
-	photo := Photo{}
-	err = dec.Decode(&photo)
+    if id[2] == "" {
+        http.Redirect(w, r, "/", 301)
+    } else {
+    	pResponse, err := http.Get("http://130.240.170.62:1026/photo/get/" + id[2])
+    	checkError(w, err)
+    	defer pResponse.Body.Close()
+    	dec := json.NewDecoder(pResponse.Body)
+    	photo := Photo{}
+    	err = dec.Decode(&photo)
+        if !checkEOF(err, w, r){
 
-	checkError(w, err)
-	uResponse, err := http.Get("http://130.240.170.62:1026/user/" + strconv.Itoa(photo.Uid))
-	checkError(w, err)
-	defer uResponse.Body.Close()
-	dec = json.NewDecoder(uResponse.Body)
-	user := User{}
-	err = dec.Decode(&user)
+        	checkError(w, err)
+        	uResponse, err := http.Get("http://130.240.170.62:1026/user/" + strconv.Itoa(photo.Uid))
+        	checkError(w, err)
+        	defer uResponse.Body.Close()
+        	dec = json.NewDecoder(uResponse.Body)
+        	user := User{}
+        	err = dec.Decode(&user)
 
-	checkError(w, err)
-	rResponse, err := http.Get("http://130.240.170.62:1026/rating/" + id[2])
-	checkError(w, err)
-	defer rResponse.Body.Close()
-	dec = json.NewDecoder(rResponse.Body)
-	rate := RateSum{}
-	err = dec.Decode(&rate)
+        	checkError(w, err)
+        	rResponse, err := http.Get("http://130.240.170.62:1026/rating/" + id[2])
+        	checkError(w, err)
+        	defer rResponse.Body.Close()
+        	dec = json.NewDecoder(rResponse.Body)
+        	rate := RateSum{}
+        	err = dec.Decode(&rate)
 
-	checkError(w, err)
-	photoV := &PhotoView{photo.Id, photo.ImgName, photo.ImgDesc, photo.Image, photo.Created, photo.Uid, user.Firstname, user.Lastname, rate.RateSum}
-	t := template.Must(template.ParseFiles("static/index.html", "static/templates/photo.tmp"))
-	t.Execute(w, photoV)
+        	checkError(w, err)
+        	photoV := &PhotoView{photo.Id, photo.ImgName, photo.ImgDesc, photo.Image, photo.Created, photo.Uid, user.Firstname, user.Lastname, rate.RateSum}
+        	t := template.Must(template.ParseFiles("static/index.html", "static/templates/photo.tmp"))
+        	t.Execute(w, photoV)
+        }
+    }
 }
 
 
 func MyPageHandler(w http.ResponseWriter, r *http.Request) {
     uid := strings.Split(r.URL.Path, "/")
-    var topL []*Thumbnail
-    response, err := http.Get("http://130.240.170.62:1026/photo/user/" + uid[2])
-    checkError(w, err)
-    defer response.Body.Close()
-    dec := json.NewDecoder(response.Body)
-    thumbnail := ThumbnailList{}
-    //thumbnail := Thumbnail{}
-    err = dec.Decode(&thumbnail)
-    checkError(w, err)
-    for _, t := range thumbnail.Thumbnails {
-        tn := &Thumbnail{t.Id, t.ImgName, t.Thumbnail}
-        topL = append(topL, tn)
+    if uid[2] == "" {
+        // if no input
+        http.Redirect(w, r, "/", 301)
+    } else {
+        var topL []*Thumbnail
+        var pl *ThumbnailList
+
+        response, err := http.Get("http://130.240.170.62:1026/photo/user/" + uid[2])
+        checkError(w, err)
+        defer response.Body.Close()
+        dec := json.NewDecoder(response.Body)
+        thumbnail := ThumbnailList{}
+        //thumbnail := Thumbnail{}
+        err = dec.Decode(&thumbnail)
+        if err != io.EOF {
+            checkError(w, err)
+            for _, t := range thumbnail.Thumbnails {
+                tn := &Thumbnail{t.Id, t.ImgName, t.Thumbnail}
+                topL = append(topL, tn)
+            }
+            pl = &ThumbnailList{Thumbnails: topL}
+        } else {
+            pl = &ThumbnailList{Thumbnails: nil}
+        }
+
+        uResponse, err := http.Get("http://130.240.170.62:1026/user/" + uid[2])
+        checkError(w, err)
+        defer uResponse.Body.Close()
+        dec = json.NewDecoder(uResponse.Body)
+        user := User{}
+        err = dec.Decode(&user)
+
+        checkError(w, err)
+        userV := &UserView{Id: user.Id, Firstname: user.Firstname, Lastname: user.Lastname, Thumbnails: pl}
+        t := template.Must(template.ParseFiles("static/index.html", "static/templates/mypage.tmp"))
+        t.Execute(w, userV)
     }
-    pl := &ThumbnailList{Thumbnails: topL}
-
-    checkError(w, err)
-    uResponse, err := http.Get("http://130.240.170.62:1026/user/" + uid[2])
-    checkError(w, err)
-    defer uResponse.Body.Close()
-    dec = json.NewDecoder(uResponse.Body)
-    user := User{}
-    err = dec.Decode(&user)
-
-    checkError(w, err)
-    userV := &UserView{Firstname: user.Firstname, Lastname: user.Lastname, Thumbnails: pl}
-    fmt.Println(userV)
-    t := template.Must(template.ParseFiles("static/index.html", "static/templates/mypage.tmp"))
-    t.Execute(w, userV)
 }
 
 func AboutHandler(w http.ResponseWriter, r *http.Request) {
@@ -266,6 +282,15 @@ func checkError(w http.ResponseWriter, err error) {
 		fmt.Println(err)
 		fmt.Fprintf(w, "Bad input")
 	}
+}
+
+func checkEOF(err error, w http.ResponseWriter, r *http.Request) bool {
+    if err == io.EOF {
+        http.Redirect(w, r, "/", 301)
+        return true
+    } else {
+        return false
+    }
 }
 
 func main() {

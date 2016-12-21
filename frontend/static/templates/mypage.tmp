@@ -4,8 +4,8 @@
 
 {{define "Body"}}
 <html>
-
 <script src="/static/js/myPage.js"></script>
+<script src="/static/js/userHandler.js"></script>
 <body >
 	<div class="col-sm-12">
 	<div class="row">
@@ -20,7 +20,8 @@
 </div>
 </body>
 <script type="text/javascript">
-	document.onload = placeUserPhotos({{ .Thumbnails }});
+	document.onload = checkIfValidUser( {{ .Id }}, {{ .Thumbnails }})
+	//document.onload = placeUserPhotos({{ .Thumbnails }});
 </script>
 
 </html>

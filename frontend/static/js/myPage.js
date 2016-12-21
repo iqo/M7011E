@@ -1,3 +1,13 @@
+function checkIfValidUser(uid, thumbnails){
+    console.log(returnUserId());
+    console.log(isSignedIn());
+    if (uid == returnUserId()){
+        placeUserPhotos(thumbnails);
+    } else {
+        window.location.href = "/";
+    }
+}
+
 function placeUserPhotos(data){
     myPhotos = data.Thumbnails;
   

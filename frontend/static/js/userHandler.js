@@ -17,8 +17,8 @@ function onSignIn(googleUser) {
 		xhr.open('POST', 'http://130.240.170.62:1026/user');
 		xhr.setRequestHeader('Content-Type', 'application/json');
 		xhr.onload = function() {
-            //location.reload();
-			 console.log('Signed in as: ' + xhr.responseText);
+            location.reload();
+            loggedIn = true;
 
         };
 		xhr.send(JSON.stringify(user));
@@ -43,7 +43,7 @@ function onLoad() {
           var isSignedIn = auth2.isSignedIn.get();
           var currentUser = auth2.currentUser.get();
 
-          if (!isSignedIn) {
+        if (!isSignedIn) {
             // Rendering g-signin2 button.
             gapi.signin2.render('google-signin-button', {
             	'onsuccess': 'onSignIn', 
@@ -51,9 +51,9 @@ function onLoad() {
             	'onfailure': 'onFailure'
             });
 
-          } else {
-            var uid = returnUserId();
+        } else {
             loggedIn = true;
+            var uid = returnUserId();
            //document.getElementById("id").innerHTML = getUser(profile.getId());
             document.getElementById("logout").innerHTML = '<button href="#" onclick="logOut();">Sign out</button>';
             document.getElementById('mypageMenu').innerHTML = "<a href='/mypage/" + uid + "''>My page</a>";
@@ -133,7 +133,11 @@ function getUser(token) {
 //return the user token
 function returnUserId(userId){
   //token = document.cookie.split("; ")[1].split("=")[1];
-  token = document.cookie.split("id=")[1][0];
+  if (document.cookie.split("id=")[1] != undefined) {
+    token = document.cookie.split("id=")[1][0];
+  } else {
+    token = 0;
+  }
   return token;
 } 
 

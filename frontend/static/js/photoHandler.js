@@ -37,12 +37,6 @@ function clickUploadButton(){
     return false;
 }
 
-function downloadPhoto(text, name, type) {
-  var a = document.getElementById("a");
-  var file = new Blob([text], {type: type});
-  a.href = URL.createObjectURL(file);
-  a.download = name;
-}
 
 function displayHats(){
     var hats = document.getElementsByClassName('draggable');
@@ -108,32 +102,34 @@ function photoToCanvas(src, canvas){
 
 
 function savePhoto(img, thumbnail) {
-    var imgName = document.getElementById("imgName").value;
-    if (imgName == "") {imgName = "untitled"};
-    var photo={};
-    photo.imgName = imgName;
-    photo.imgDesc = document.getElementById("imgDesc").value;
-    photo.image = img;//img;
-    photo.thumbnail = thumbnail;
+    if (isSignedIn()) {
+        var imgName = document.getElementById("imgName").value;
+        if (imgName == "") {imgName = "untitled"};
+        var photo={};
+        photo.imgName = imgName;
+        photo.imgDesc = document.getElementById("imgDesc").value;
+        photo.image = img;//img;
+        photo.thumbnail = thumbnail;
 
-    photo.uid = parseInt(returnUserId());
+        photo.uid = parseInt(returnUserId());
 
-    var xhr = new XMLHttpRequest();
-    xhr.onload = function() {
-        if (xhr.status == 200) {
-          location.reload(); // reloads page
-          alert("Success! Upload completed");
-        } else {
-          alert("Error! Upload failed");
-        }
-      };
-      xhr.onerror = function() {
-        alert("Error! Upload failed." + xhr.status);
-      };
-        
-      xhr.open('POST', 'http://130.240.170.62:1026/photo', true);
-      xhr.setRequestHeader("Content-Type", "application/json");
-      xhr.send(JSON.stringify(photo));
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function() {
+            if (xhr.status == 200) {
+              location.reload(); // reloads page
+              alert("Success! Upload completed");
+            } else {
+              alert("Error! Upload failed");
+            }
+          };
+          xhr.onerror = function() {
+            alert("Error! Upload failed." + xhr.status);
+          };
+            
+          xhr.open('POST', 'http://130.240.170.62:1026/photo', true);
+          xhr.setRequestHeader("Content-Type", "application/json");
+          xhr.send(JSON.stringify(photo));
+      }
 }
 
 function getPhoto(pid, canvas) {
