@@ -194,7 +194,7 @@ func PhotoHandler(w http.ResponseWriter, r *http.Request) {
 
 func MyPageHandler(w http.ResponseWriter, r *http.Request) {
     uid := strings.Split(r.URL.Path, "/")
-    if uid[2] == "" {
+    if uid[2] == "" || uid[2] == "0"{
         // if no input
         http.Redirect(w, r, "/", 301)
     } else {

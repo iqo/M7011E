@@ -1,29 +1,33 @@
 var rated = false;
 
 function addComment(photoId) {
-    var comment={};
-    comment.photoId = parseInt(photoId);
-    comment.comment = document.getElementById("userComment").value;
-    
-    comment.uid = parseInt(returnUserId());
+    if (isSignedIn()) {
+        var comment={};
+        comment.photoId = parseInt(photoId);
+        comment.comment = document.getElementById("userComment").value;
+        
+        comment.uid = parseInt(returnUserId());
 
-    var xhr = new XMLHttpRequest();
-    xhr.onload = function() {
-        if (xhr.status == 200) {
-            console.log("new comment added")
-            location.reload(); // reloads page
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function() {
+            if (xhr.status == 200) {
+                console.log("new comment added")
+                location.reload(); // reloads page
 
-      } else {
-          alert("Error! Comment failed");
-      }
-    };
-    xhr.onerror = function() {
-        alert("Error! Comment failed." + xhr.status);
-    };
+          } else {
+              alert("Error! Comment failed");
+          }
+        };
+        xhr.onerror = function() {
+            alert("Error! Comment failed." + xhr.status);
+        };
 
-    xhr.open('POST', 'http://130.240.170.62:1026/comment', true);
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(JSON.stringify(comment));
+        xhr.open('POST', 'http://130.240.170.62:1026/comment', true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(JSON.stringify(comment));
+    } else {
+        alert("You need to be signed in to add a comment!")
+    }
 }
 
 
@@ -71,12 +75,9 @@ function getRate(pid) {
         if (r.length == 0) {
             return;
         };
-          
           r = JSON.parse(r);
           rated = true;
           changeColor(r.Rate);
-          console.log(r);
-
         } else {
 
         }
@@ -137,7 +138,6 @@ function updateVote(rate){
     }
 
 function checkIfVoted(vote, id){
-    console.log(isSignedIn());
     if (isSignedIn()) {
         if (vote == "up") {
             if (document.getElementById("upvote").style.color == "green") {
@@ -155,9 +155,10 @@ function checkIfVoted(vote, id){
         };
         return;
     } else {
-        alert("You must be signed in to vote!");
+        alert("You need to be signed in to vote!");
     }
 }
+
 
 function changeColor(rate){
     if (rate == 1) {
@@ -169,15 +170,4 @@ function changeColor(rate){
     }
 }
 
-function addInsertComments(id){
-    console.log(isSignedIn());
-    if (isSignedIn()) {
-        document.getElementById("insertComment").innerHTML = "<div class='col-sm-10 col-xs-6 col-lg-offset-1'>"
-                                                            + "<div class='input-group'>"
-                                                            + "<input type='text' id='userComment' class='form-control' placeholder='Write your comment here...' />"
-                                                            + "<span class='input-group-btn' onclick='addComment('"+id+"')''>"
-                                                            + "<a href='#'' class='btn btn-primary btn-sm'><span class='glyphicon glyphicon-comment'></span> Add Comment</a>"
-                                                            + "</span></div></div>";
-    };
-}
 

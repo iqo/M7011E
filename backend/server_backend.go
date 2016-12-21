@@ -68,6 +68,11 @@ type RateSum struct {
 	RateSum int `json="rateSum"`
 }
 
+type Favorite struct {
+	PhotoId int `json="photoId"`
+	Uid     int `json="uid"`
+}
+
 type Thumbnail struct {
 	Id        int    `json="id"`
 	ImgName   string `json="imgName"`
@@ -103,6 +108,9 @@ func (l *loginDB) startBackend() {
 	router.POST("/rating/update", l.updateRating)
 	router.GET("/rating/:pid/:uid", l.getRating)
 	router.GET("/rating/:pid", l.getRatingSum)
+	router.POST("/favorite", l.addFavorite)
+	router.DELETE("/favorite/:pid/:uid", l.removeFavorite)
+	router.GET("/favorite/:pid/:uid", l.getFavorite)
 
 	//handler := cors.Default().Handler(router)
 
@@ -495,6 +503,69 @@ func (l *loginDB) getRatingSum(w http.ResponseWriter, r *http.Request, ps httpro
 			w.Write(jsonBody)
 			checkError(w, err)
 		}
+	}
+}
+
+/*******************************************************
+**************** FAVORITE HANDLERS ***********************
+*******************************************************/
+
+func (l *loginDB) addFavorite(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	fmt.Println("POST addFavorite")
+	db := l.connectToDB()
+	dec := json.NewDecoder(r.Body)
+	fav := Favorite{}
+	err := dec.Decode(&fav)
+	if err != nil {
+		log.Fatal(err)
+	}
+	res, err := db.Prepare("insert into hat4cat.favorite (pid, uid) values (?, ?)")
+	checkError(w, err)
+
+	_, err = res.Run(fav.PhotoId, rating.Uid)
+	checkError(w, err)
+}
+
+
+func (l *loginDB) removeFavorite(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+    fmt.Println("DELETE removeFavorite")
+    db := l.connectToDB()
+    pid, err := strconv.Atoi(ps.ByName("pid"))
+    checkError(w, err)
+
+    uid, err := strconv.Atoi(ps.ByName("uid"))
+    checkError(w, err)
+    
+    _, _, err = db.Query("delete from hat4cat.favorite where pid=%d and uid=%d", pid, uid)
+    checkError(w, err)
+}
+
+func (l *loginDB) getFavorite(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	fmt.Println("GET getFavorite")
+	db := l.connectToDB()
+
+	pid, err := strconv.Atoi(ps.ByName("pid"))
+	checkError(w, err)
+
+	uid, err := strconv.Atoi(ps.ByName("uid"))
+	checkError(w, err)
+
+	rows, res, err := db.Query("select pid, uid from hat4cat.favorite where pid=%d and uid=%d", pid, uid)
+	checkError(w, err)
+
+	if rows == nil {
+		fmt.Println("User", uid, "has not picture", pid, "as favorite")
+	} else {
+		for _, row := range rows {
+			photoId := res.Map("pid")
+			uid := res.Map("uid")
+			fav := &Favorite{row.Int(photoId), row.Int(uid)}
+			jsonBody, err := json.Marshal(fav)
+			w.WriteHeader(200) // is ok
+			w.Write(jsonBody)
+			checkError(w, err)
+		}
+
 	}
 }
 

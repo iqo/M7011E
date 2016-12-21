@@ -7,6 +7,7 @@ Hat4urCat
 <script src="/static/js/userHandler.js"></script>
 <script src="/static/js/photoHandler.js"></script>
 <script src="/static/js/commentRateHandler.js"></script>
+<script src="/static/js/favoriteHandler.js"></script>
 
 <body>
 <div class="col-sm-12">
@@ -30,6 +31,10 @@ Hat4urCat
 				<span onclick="checkIfVoted('down', '{{ .Id }}')"> &#8671; </span>
 			</div>
 
+			<div id="favorite" class="col col-sm-1 rate-arrow downvote">
+				<span onclick="changeFavorite('{{ .Id }}')"> &#10084; </span>
+			</div>
+
 			<div id="rate" class="col col-sm-3 rate">
 				<span id="sum"> {{ .RatingSum }} </span> Mjaows
 			</div>
@@ -40,7 +45,14 @@ Hat4urCat
 <div class="well comment">
 
 <div class="row" id="insertComment">
-
+	<div class="col-sm-10 col-xs-6 col-lg-offset-1">
+    <div class="input-group">
+        <input type="text" id="userComment" class="form-control" placeholder="Write your comment here..." />
+	    <span class="input-group-btn" onclick="addComment('{{ .Id }}')">     
+            <a href="#" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-comment"></span> Add Comment</a>
+        </span>
+    </div>
+</div>
 </div>
 <hr>
 
@@ -58,7 +70,6 @@ Hat4urCat
 	document.onload=photoToCanvas('{{ .Image }}', 'photoCanvas');
 	document.onload = getComments('{{ .Id }}');
 	document.onload=getRate('{{ .Id }}');
-	document.onload=addInsertComments('{{ .Id }}');
 
 	</script>
 </html>

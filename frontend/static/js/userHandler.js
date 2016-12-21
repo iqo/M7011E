@@ -97,7 +97,10 @@ function getUser(token) {
           if (!isSignedIn) {       
           } else {
             var profile = auth2.currentUser.get().getBasicProfile();
-                       getCurrentUserId(profile.getId());}
+                       getCurrentUserId(profile.getId());
+
+                }
+
        });
   });
     }
