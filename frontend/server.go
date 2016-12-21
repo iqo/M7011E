@@ -236,11 +236,11 @@ func MyPageHandler(w http.ResponseWriter, r *http.Request) {
         err = dec.Decode(&thumbnail)
         pl = thumbnailLoop(&thumbnail, w, err)
 
-        response, err := http.Get("http://130.240.170.62:1026/photo/favorite/" + uid[2])
+        fresponse, err := http.Get("http://130.240.170.62:1026/photo/favorite/" + uid[2])
         checkError(w, err)
-        defer response.Body.Close()
-        dec := json.NewDecoder(response.Body)
-        thumbnail := ThumbnailList{}
+        defer fresponse.Body.Close()
+        dec = json.NewDecoder(fresponse.Body)
+        thumbnail = ThumbnailList{}
         err = dec.Decode(&thumbnail)
         userFav = thumbnailLoop(&thumbnail, w, err)
 

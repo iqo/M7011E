@@ -39,7 +39,7 @@ function placeUserFavorites(data){
   
     if (myPhotos != null) {
         for (i = 0; i < myPhotos.length; i++){
-            document.getElementById("userFavorites").innerHTML += "<div class='col-lg-2 col-sm-4 col-xs-6 well'><a title="
+            document.getElementById("userFavorites").innerHTML += "<div class='col-lg-2 col-sm-4 col-xs-6'><a title="
                                             + myPhotos[i].ImgName 
                                             + " href='/photo/" 
                                             + myPhotos[i].Id 

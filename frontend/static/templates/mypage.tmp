@@ -21,13 +21,14 @@
 
     <div class="well">
     	<h4> Your own mjaowsterpieces </h4>
+    	<hr>
 		<div id="userPhotos" class="row"> 
 		</div>
 	</div>
 </div>
 </body>
 <script type="text/javascript">
-	document.onload = checkIfValidUser( {{ .Id }}, {{ .Thumbnails }})
+	document.onload = checkIfValidUser( {{ .Id }}, {{ .Thumbnails }}, {{ .Favorites }});
 	//document.onload = placeUserPhotos({{ .Thumbnails }});
 </script>
 
