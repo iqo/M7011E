@@ -100,6 +100,7 @@ func (l *loginDB) startBackend() {
 	router.GET("/photo/get/:pid", l.getPhoto)
     router.DELETE("/photo/:pid/:uid", l.deletePhoto)
 	router.GET("/photo/user/:uid", l.getUserPhotos)
+	router.GET("/photo/favorite/:uid", l.getUserFavoritePhotos)
 	router.GET("/photo/latest/:page", l.getLatestPhotos)
 	router.GET("/photo/top/:list", l.getToplist)
 	router.GET("/comments/:id", l.getComments)
@@ -111,6 +112,7 @@ func (l *loginDB) startBackend() {
 	router.POST("/favorite", l.addFavorite)
 	router.DELETE("/favorite/:pid/:uid", l.removeFavorite)
 	router.GET("/favorite/:pid/:uid", l.getFavorite)
+
 
 	//handler := cors.Default().Handler(router)
 
@@ -320,6 +322,35 @@ func (l *loginDB) getUserPhotos(w http.ResponseWriter, r *http.Request, ps httpr
 	}
 }
 
+func (l *loginDB) getUserFavoritePhotos(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	fmt.Println("GET getUserFavoritePhotos")
+	var thumbnails []*Thumbnail
+	db := l.connectToDB()
+	uid, err := strconv.Atoi(ps.ByName("uid"))
+	checkError(w, err)
+
+	rows, res, err := db.Query("select photoId, name, thumbnail from hat4cat.photos as p right join hat4cat.favorite as f on f.pid = p.photoId where f.uid=%d order by photoId desc", uid)
+	checkError(w, err)
+
+	if rows == nil {
+		w.WriteHeader(404)
+	} else {
+		for _, row := range rows {
+			id := res.Map("photoId")
+			imgName := res.Map("name")
+			thumbnail := res.Map("thumbnail")
+			tn := &Thumbnail{row.Int(id), row.Str(imgName), row.Str(thumbnail)}
+			thumbnails = append(thumbnails, tn)
+
+		}
+		tnList := &ThumbnailList{Thumbnails: thumbnails}
+
+		jsonBody, err := json.Marshal(tnList)
+		w.Write(jsonBody)
+		checkError(w, err)
+	}
+}
+
 func (l *loginDB) getToplist(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Println("GET getToplist")
 	var rows []mysql.Row
@@ -334,6 +365,9 @@ func (l *loginDB) getToplist(w http.ResponseWriter, r *http.Request, ps httprout
 		checkError(w, err)
 	} else if list == "comment" {
 		rows, res, err = db.Query("select p.photoId, p.name, p.thumbnail, count(comment) as noComments from hat4cat.comment as c right join hat4cat.photos as p on p.photoId=c.photoId group by photoId order by noComments desc limit 0,9")
+		checkError(w, err)
+	} else if list == "favorite" {
+		rows, res, err = db.Query("select p.photoId, p.name, p.thumbnail, count(*) as noFavorites from hat4cat.favorite as f left join hat4cat.photos as p on p.photoId=f.pid group by photoId order by noFavorites desc limit 0,9")
 		checkError(w, err)
 	} else {
 		fmt.Println("Forbidden getToplist request")

@@ -12,9 +12,16 @@
 	<div class="col col-sm-12"><h2>Hello {{ .Firstname }}!</h2></p>This is your own page where all your masterpieces are stored!</div>
           </div>
         	<hr>
-    <div class="well">
-		<div id="userPhotos" class="row"> 
 
+    <div class="favorites">
+    	<h4> Your favorite cats </h4>
+		<div id="userFavorites" class="row"> 
+		</div>
+	</div>
+
+    <div class="well">
+    	<h4> Your own mjaowsterpieces </h4>
+		<div id="userPhotos" class="row"> 
 		</div>
 	</div>
 </div>

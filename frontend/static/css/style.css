@@ -127,5 +127,13 @@
 
 .downvote {
   color:black;
+}
 
+.favorites {
+    margin-bottom: 30px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border: 1px solid #FFC0CB;
+    border-radius: 5px;
+    background-color: #FFE4E1;
 }

@@ -70,6 +70,7 @@ Hat4urCat
 	document.onload=photoToCanvas('{{ .Image }}', 'photoCanvas');
 	document.onload = getComments('{{ .Id }}');
 	document.onload=getRate('{{ .Id }}');
+	document.onload=getFavorite('{{ .Id }}');
 
 	</script>
 </html>

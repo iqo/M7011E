@@ -20,10 +20,11 @@ type User struct {
 }
 
 type UserView struct {
-    Id        int    `json="id"`
+    Id          int    `json="id"`
     Firstname   string `json="firstname"`
     Lastname    string `json="lastname"`
-    Thumbnails   *ThumbnailList `json="thumbnails"`
+    Thumbnails  *ThumbnailList `json="thumbnails"`
+    Favorites   *ThumbnailList `json="favorites"`
 }
 
 type Photo struct {
@@ -152,6 +153,32 @@ func ToplistCommentHandler(w http.ResponseWriter, r *http.Request) {
     t.Execute(w, toplistV)
 }
 
+func ToplistFavoriteHandler(w http.ResponseWriter, r *http.Request) {
+    var topL []*Thumbnail
+    response, err := http.Get("http://130.240.170.62:1026/photo/top/favorite")
+    checkError(w, err)
+    defer response.Body.Close()
+    dec := json.NewDecoder(response.Body)
+    toplist := Toplist{}
+    //thumbnail := Thumbnail{}
+    err = dec.Decode(&toplist)
+    checkError(w, err)
+    for _, t := range toplist.Toplist {
+        tn := &Thumbnail{t.Id, t.ImgName, t.Thumbnail}
+        topL = append(topL, tn)
+    }
+    tl := &Toplist{Toplist: topL}
+
+    heading := "Most lovable cats"
+    text := "These are the cats that most people have added as one of their favorites. Why top 9 instead of 10 you ask? That's because cats have 9 lives silly and this makes sence!"
+    divId := "toplist-favorite"
+
+    toplistV := &ToplistView{Heading: heading, Text: text, DivId: divId, Toplist: tl}
+
+    t := template.Must(template.ParseFiles("static/index.html", "static/templates/toplist.tmp"))
+    t.Execute(w, toplistV)
+}
+
 
 
 func PhotoHandler(w http.ResponseWriter, r *http.Request) {
@@ -198,26 +225,24 @@ func MyPageHandler(w http.ResponseWriter, r *http.Request) {
         // if no input
         http.Redirect(w, r, "/", 301)
     } else {
-        var topL []*Thumbnail
         var pl *ThumbnailList
+        var userFav *ThumbnailList
 
         response, err := http.Get("http://130.240.170.62:1026/photo/user/" + uid[2])
         checkError(w, err)
         defer response.Body.Close()
         dec := json.NewDecoder(response.Body)
         thumbnail := ThumbnailList{}
-        //thumbnail := Thumbnail{}
         err = dec.Decode(&thumbnail)
-        if err != io.EOF {
-            checkError(w, err)
-            for _, t := range thumbnail.Thumbnails {
-                tn := &Thumbnail{t.Id, t.ImgName, t.Thumbnail}
-                topL = append(topL, tn)
-            }
-            pl = &ThumbnailList{Thumbnails: topL}
-        } else {
-            pl = &ThumbnailList{Thumbnails: nil}
-        }
+        pl = thumbnailLoop(&thumbnail, w, err)
+
+        response, err := http.Get("http://130.240.170.62:1026/photo/favorite/" + uid[2])
+        checkError(w, err)
+        defer response.Body.Close()
+        dec := json.NewDecoder(response.Body)
+        thumbnail := ThumbnailList{}
+        err = dec.Decode(&thumbnail)
+        userFav = thumbnailLoop(&thumbnail, w, err)
 
         uResponse, err := http.Get("http://130.240.170.62:1026/user/" + uid[2])
         checkError(w, err)
@@ -227,10 +252,26 @@ func MyPageHandler(w http.ResponseWriter, r *http.Request) {
         err = dec.Decode(&user)
 
         checkError(w, err)
-        userV := &UserView{Id: user.Id, Firstname: user.Firstname, Lastname: user.Lastname, Thumbnails: pl}
+        userV := &UserView{Id: user.Id, Firstname: user.Firstname, Lastname: user.Lastname, Thumbnails: pl, Favorites: userFav}
         t := template.Must(template.ParseFiles("static/index.html", "static/templates/mypage.tmp"))
         t.Execute(w, userV)
     }
+}
+
+func thumbnailLoop(thumbnail *ThumbnailList, w http.ResponseWriter, err error) *ThumbnailList {
+    var topL []*Thumbnail
+    var pl *ThumbnailList
+    if err != io.EOF {
+            checkError(w, err)
+            for _, t := range thumbnail.Thumbnails {
+                tn := &Thumbnail{t.Id, t.ImgName, t.Thumbnail}
+                topL = append(topL, tn)
+            }
+            pl = &ThumbnailList{Thumbnails: topL}
+        } else {
+            pl = &ThumbnailList{Thumbnails: nil}
+        }
+        return pl
 }
 
 func AboutHandler(w http.ResponseWriter, r *http.Request) {
@@ -258,6 +299,7 @@ func startWebserver(input string) {
 	http.HandleFunc("/catmagic", CatMagicHandler)
     http.HandleFunc("/toplist/rate", ToplistRateHandler)
     http.HandleFunc("/toplist/comment", ToplistCommentHandler)
+    http.HandleFunc("/toplist/favorite", ToplistFavoriteHandler)
     http.HandleFunc("/toplist/latest", LatestPhotosHandler)
 	//http.HandleFunc("/toplist", TopListHandler)
 	http.HandleFunc("/photo/", PhotoHandler)
