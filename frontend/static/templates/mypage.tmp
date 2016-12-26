@@ -9,7 +9,7 @@
 <body >
 	<div class="col-sm-12">
 	<div class="row">
-	<div class="col col-sm-12"><h2>Hello {{ .Firstname }}!</h2></p>This is your own page where all your masterpieces are stored!</div>
+	<div class="col col-sm-12"><h2>Hello {{ .Firstname }}!</h2></p>Did you know that a group of cats is called a “clowder”? Anyways, this page is filled with your favorite cats and also the cats you've created.</div>
           </div>
         	<hr>
 

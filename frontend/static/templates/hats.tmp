@@ -7,6 +7,9 @@
 <img draggable='true' class='draggable' onmousedown=mousedown ondragstart=dragstart src='/static/img/hats/yellow_hat.png' id='yellow_hat' width='10%' height='5%'>
 <img draggable='true' class='draggable' onmousedown=mousedown ondragstart=dragstart src='/static/img/hats/pirate.png' id='pirate' width='10%' height='5%'>
 <img draggable='true' class='draggable' onmousedown=mousedown ondragstart=dragstart src='/static/img/hats/propeller.png' id='propeller' width='10%' height='5%'>
+<img draggable='true' class='draggable' onmousedown=mousedown ondragstart=dragstart src='/static/img/hats/winter.png' id='winter' width='10%' height='5%'>
+<img draggable='true' class='draggable' onmousedown=mousedown ondragstart=dragstart src='/static/img/hats/viking.png' id='viking' width='10%' height='5%'>
+<img draggable='true' class='draggable' onmousedown=mousedown ondragstart=dragstart src='/static/img/hats/wizard.png' id='wizard' width='10%' height='5%'>
 </div> 
 </html>
 {{end}}
