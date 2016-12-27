@@ -10,7 +10,7 @@ function addComment(photoId) {
 
         var xhr = new XMLHttpRequest();
         xhr.onload = function() {
-            if (xhr.status == 200) {
+            if (xhr.status == 200 && newComment) {
                 console.log("new comment added")
                 location.reload(); // reloads page
 
@@ -25,6 +25,7 @@ function addComment(photoId) {
         xhr.open('POST', 'http://130.240.170.62:1026/comment', true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(JSON.stringify(comment));
+
     } else {
         alert("You need to be signed in to add a comment!")
     }
@@ -44,7 +45,7 @@ function getComments(photoId) {
         displayComments(c.Comments);
 
         } else if (xhr.status == 404){
-            console.log ("No comments found")
+            console.log ("No comments found");
         } else {}
         };
         xhr.onerror = function() {
@@ -69,16 +70,16 @@ function getRate(pid) {
     var xhr = new XMLHttpRequest();
     var uid = parseInt(returnUserId());
     xhr.onload = function(event) {
-
         if (xhr.status == 200) {
-          var r = event.target.response;
-        if (r.length == 0) {
-            return;
-        };
-          r = JSON.parse(r);
-          rated = true;
-          changeColor(r.Rate);
-        } else {
+            var r = event.target.response;
+            console.log(r);
+            if (r.length == 0) {
+                return;
+            };
+            r = JSON.parse(r);
+            rated = true;
+            changeColor(r.Rate);
+            } else {
 
         }
       };
@@ -161,12 +162,18 @@ function checkIfVoted(vote, id){
 
 
 function changeColor(rate){
-    if (rate == 1) {
-        document.getElementById("upvote").style.color = "green";
-        document.getElementById("downvote").style.color = "black";
-    } else {
-        document.getElementById("upvote").style.color = "black";
-        document.getElementById("downvote").style.color = "red";
+    console.log(isSignedIn());
+    if (isSignedIn() || parseInt(returnUserId()) != 0) {
+        if (rate == 1) {
+            document.getElementById("upvote").style.color = "green";
+            document.getElementById("downvote").style.color = "black";
+        } else if (rate == -1) {
+            document.getElementById("upvote").style.color = "black";
+            document.getElementById("downvote").style.color = "red";
+        } else {
+            document.getElementById("upvote").style.color = "black";
+            document.getElementById("downvote").style.color = "black";
+        }
     }
 }
 

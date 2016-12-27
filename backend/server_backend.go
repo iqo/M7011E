@@ -3,21 +3,14 @@ package main
 import (
 	"fmt"
 	"github.com/rs/cors"
-	//"encoding/json"
-	//"time"
 	"github.com/julienschmidt/httprouter" //https://github.com/julienschmidt/httprouter
 	"net/http"
 	"strconv"
-	//"github.com/ziutek/mymysql"
 	"github.com/ziutek/mymysql/mysql"
 	_ "github.com/ziutek/mymysql/native" // Native engine
-	// _ "github.com/ziutek/mymysql/thrsafe" // Thread safe engine
-	//"database/sql"
-	//"bufio"
 	"encoding/json"
 	"log"
 	"os"
-	//b64 "encoding/base64"
 )
 
 type loginDB struct {
@@ -261,7 +254,7 @@ func (l *loginDB) getPhoto(w http.ResponseWriter, r *http.Request, ps httprouter
 func (l *loginDB) getLatestPhotos(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Println("GET getLatestPhotos")
 	var thumbnails []*Thumbnail
-	limit := 23
+	limit := 47
 	db := l.connectToDB()
 	page, err := strconv.Atoi(ps.ByName("page"))
 	checkError(w, err)
