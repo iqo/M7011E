@@ -12,7 +12,7 @@ import (
 	"log"
 	"os"
 )
-type Error struct {
+type ErrorMsg struct {
 	Error string	`json="error"`
 }
 
@@ -176,7 +176,7 @@ func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 	if rows == nil {
 		w.WriteHeader(404)
 		m := "get user"
-		e := &Error{m}
+		e := &ErrorMsg{m}
 		w.Write(e)
 	} else {
 		for _, row := range rows {
