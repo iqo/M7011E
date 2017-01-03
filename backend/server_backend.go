@@ -12,6 +12,9 @@ import (
 	"log"
 	"os"
 )
+type Error struct {
+	error string
+}
 
 type loginDB struct {
 	usr  string
@@ -145,6 +148,7 @@ func (l *loginDB) newUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 			checkError(w, err)
 		}
 	} else {
+		w.Write([]byte("{error : new user, Google token not valid}"))
 		//	fmt.Println("token is not valid")
 	}
 
@@ -171,7 +175,9 @@ func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 
 	if rows == nil {
 		w.WriteHeader(404)
-		w.Write([]byte("{error : get user}"))
+		m := "get user"
+		error := &Error{m}
+		w.Write(m)
 	} else {
 		for _, row := range rows {
 			id := res.Map("uid")
@@ -234,6 +240,7 @@ func (l *loginDB) getPhoto(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	if rows == nil {
 		w.WriteHeader(404)
+		w.Write([]byte("{error : get photo}"))
 	} else {
 		for _, row := range rows {
 			id := res.Map("photoId")
@@ -270,6 +277,7 @@ func (l *loginDB) getLatestPhotos(w http.ResponseWriter, r *http.Request, ps htt
 
 	if rows == nil {
 		w.WriteHeader(404)
+		w.Write([]byte("{error : get latest photos}"))
 	} else {
 		for _, row := range rows {
 			id := res.Map("photoId")
@@ -299,6 +307,7 @@ func (l *loginDB) getUserPhotos(w http.ResponseWriter, r *http.Request, ps httpr
 
 	if rows == nil {
 		w.WriteHeader(404)
+		w.Write([]byte("{error : get user photos}"))
 	} else {
 		for _, row := range rows {
 			id := res.Map("photoId")
@@ -328,6 +337,7 @@ func (l *loginDB) getUserFavoritePhotos(w http.ResponseWriter, r *http.Request, 
 
 	if rows == nil {
 		w.WriteHeader(404)
+		w.Write([]byte("{error : get user favorite photos}"))
 	} else {
 		for _, row := range rows {
 			id := res.Map("photoId")
@@ -354,6 +364,10 @@ func (l *loginDB) getToplist(w http.ResponseWriter, r *http.Request, ps httprout
 	var top []*Thumbnail
 	db := l.connectToDB()
 
+	if list == "" {
+		list = "rate"
+	}
+
 	if list == "rate" {
 		rows, res, err = db.Query("select p.photoId, p.name, p.thumbnail, sum(case when rate is null then 0 else rate end) as ratingSum from hat4cat.rating as r right join hat4cat.photos as p on p.photoId=r.photoId group by photoId order by ratingsum desc limit 0,9")
 		checkError(w, err)
@@ -365,11 +379,13 @@ func (l *loginDB) getToplist(w http.ResponseWriter, r *http.Request, ps httprout
 		checkError(w, err)
 	} else {
 		fmt.Println("Forbidden getToplist request")
+		w.Write([]byte("{error : not valid toplist}"))
 		return
 	}
 
 	if rows == nil {
 		w.WriteHeader(404)
+		w.Write([]byte("{error : get toplist}"))
 	} else {
 		for _, row := range rows {
 			id := res.Map("photoId")
@@ -420,6 +436,8 @@ func (l *loginDB) getComments(w http.ResponseWriter, r *http.Request, ps httprou
 
 	if rows == nil {
 		fmt.Println("No comments found for photoId:", id)
+		w.WriteHeader(404)
+		w.Write([]byte("{error : get comments}"))
 	} else {
 		for _, row := range rows {
 			cid := res.Map("cid")
@@ -606,6 +624,9 @@ func checkError(w http.ResponseWriter, err error) {
 		w.WriteHeader(500) // error
 		fmt.Println(err)
 		fmt.Fprintf(w, "Bad input")
+		m := "bad input"
+		error := &Error{m}
+		w.Write(m)
 	}
 }
 
