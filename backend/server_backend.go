@@ -171,6 +171,7 @@ func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 
 	if rows == nil {
 		w.WriteHeader(404)
+		w.Write("{error : get user}")
 	} else {
 		for _, row := range rows {
 			id := res.Map("uid")
