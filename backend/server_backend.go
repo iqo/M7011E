@@ -13,7 +13,7 @@ import (
 	"os"
 )
 type Error struct {
-	error string
+	Error string	`json="error"`
 }
 
 type loginDB struct {
@@ -626,11 +626,6 @@ func checkError(w http.ResponseWriter, err error) {
 		w.WriteHeader(500) // error
 		fmt.Println(err)
 		fmt.Fprintf(w, "Bad input")
-		m := "bad input"
-		error := &Error{m}
-		e, err := json.Marshal(error)
-		w.Write(e)
-		checkError(w, err)
 	}
 }
 
