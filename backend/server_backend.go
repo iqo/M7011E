@@ -176,10 +176,8 @@ func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 	if rows == nil {
 		w.WriteHeader(404)
 		m := "get user"
-		error := &Error{m}
-		e, err := json.Marshal(error)
+		e := &Error{m}
 		w.Write(e)
-		checkError(w, err)
 	} else {
 		for _, row := range rows {
 			id := res.Map("uid")
