@@ -177,7 +177,7 @@ func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 		w.WriteHeader(404)
 		m := "get user"
 		error := &Error{m}
-		w.Write(m)
+		w.Write(error)
 	} else {
 		for _, row := range rows {
 			id := res.Map("uid")
@@ -626,7 +626,7 @@ func checkError(w http.ResponseWriter, err error) {
 		fmt.Fprintf(w, "Bad input")
 		m := "bad input"
 		error := &Error{m}
-		w.Write(m)
+		w.Write(error)
 	}
 }
 
