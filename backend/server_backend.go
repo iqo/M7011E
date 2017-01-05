@@ -263,7 +263,7 @@ func (l *loginDB) getLatestPhotos(w http.ResponseWriter, r *http.Request, ps htt
 	var thumbnails []*Thumbnail
 	page := ps.ByName("page")
 	if page == "" {
-		page = 1
+		page = "1"
 	}
 	limit := 47
 	db := l.connectToDB()
