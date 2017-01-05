@@ -261,13 +261,13 @@ func (l *loginDB) getPhoto(w http.ResponseWriter, r *http.Request, ps httprouter
 func (l *loginDB) getLatestPhotos(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Println("GET getLatestPhotos")
 	var thumbnails []*Thumbnail
-	page := ps.ByName("page")
-	if page == "" {
-		page = "1"
+	p := ps.ByName("page")
+	if p == "" {
+		p = "1"
 	}
 	limit := 47
 	db := l.connectToDB()
-	page, err := strconv.Atoi(page)
+	page, err := strconv.Atoi(p)
 	checkError(w, err)
 
 
