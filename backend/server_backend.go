@@ -98,10 +98,10 @@ func (l *loginDB) startBackend() {
 	router.GET("/photo/latest/:page", l.getLatestPhotos)
 	router.GET("/photo/latest/", l.getLatestPhotos)
 	router.GET("/photo/top/:list", l.getToplist)
-	router.GET("/comments/:id", l.getComments)
+	router.GET("/comments/:pid", l.getComments)
 	router.POST("/comment", l.newComment)
 	router.POST("/rating", l.newRating)
-	router.POST("/rating/update", l.updateRating)
+	router.PUT("/rating/update", l.updateRating)
 	router.GET("/rating/:pid/:uid", l.getRating)
 	router.GET("/rating/:pid", l.getRatingSum)
 	router.POST("/favorite", l.addFavorite)
@@ -112,7 +112,7 @@ func (l *loginDB) startBackend() {
 	//handler := cors.Default().Handler(router)
 
 	c := cors.New(cors.Options{
-    	AllowedMethods: []string{"POST", "GET", "DELETE"},
+    	AllowedMethods: []string{"POST", "GET", "DELETE", "PUT"},
 	})
 
 	// Insert the middleware
@@ -263,7 +263,6 @@ func (l *loginDB) getLatestPhotos(w http.ResponseWriter, r *http.Request, ps htt
 	fmt.Println("GET getLatestPhotos")
 	var thumbnails []*Thumbnail
 	p := ps.ByName("page")
-	fmt.Println(p)
 	if len(p) == 0 {
 		p = "1"
 	}
@@ -371,10 +370,6 @@ func (l *loginDB) getToplist(w http.ResponseWriter, r *http.Request, ps httprout
 	var top []*Thumbnail
 	db := l.connectToDB()
 
-	if list == "" {
-		list = "rate"
-	}
-
 	if list == "rate" {
 		rows, res, err = db.Query("select p.photoId, p.name, p.thumbnail, sum(case when rate is null then 0 else rate end) as ratingSum from hat4cat.rating as r right join hat4cat.photos as p on p.photoId=r.photoId group by photoId order by ratingsum desc limit 0,9")
 		checkError(w, err)
@@ -428,6 +423,7 @@ func (l *loginDB) newComment(w http.ResponseWriter, r *http.Request, ps httprout
 
 	_, err = res.Run(comment.PhotoId, comment.Comment, comment.Uid)
 	checkError(w, err)
+	w.Write([]byte("{ success }"))
 }
 
 func (l *loginDB) getComments(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -435,7 +431,7 @@ func (l *loginDB) getComments(w http.ResponseWriter, r *http.Request, ps httprou
 	var comments []*Comment
 	db := l.connectToDB()
 
-	id, err := strconv.Atoi(ps.ByName("id"))
+	id, err := strconv.Atoi(ps.ByName("pid"))
 	checkError(w, err)
 
 	rows, res, err := db.Query("select cid, photoId, comment, c.uid, firstname, lastname, timestamp  from hat4cat.comment as c join hat4cat.users as u on c.uid = u.uid where photoId=%d order by cid desc", id)

@@ -121,7 +121,7 @@ function rate(photoId, rate) {
 
     } 
     if (rated) {
-        xhr.open('POST', 'http://130.240.170.62:1026/rating/update', true);
+        xhr.open('PUT', 'http://130.240.170.62:1026/rating/update', true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(JSON.stringify(r));
     }
