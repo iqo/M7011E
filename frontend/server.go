@@ -246,6 +246,7 @@ func MyPageHandler(w http.ResponseWriter, r *http.Request) {
 
         uResponse, err := http.Get("http://130.240.170.62:1026/user/" + uid[2])
         checkError(w, err)
+
         defer uResponse.Body.Close()
         dec = json.NewDecoder(uResponse.Body)
         user := User{}
@@ -261,14 +262,15 @@ func MyPageHandler(w http.ResponseWriter, r *http.Request) {
 func thumbnailLoop(thumbnail *ThumbnailList, w http.ResponseWriter, err error) *ThumbnailList {
     var topL []*Thumbnail
     var pl *ThumbnailList
-    if err != io.EOF {
+    if err != io.EOF && len(thumbnail.Thumbnails) != 0 {
+            fmt.Println(thumbnail.Thumbnails)
             checkError(w, err)
             for _, t := range thumbnail.Thumbnails {
                 tn := &Thumbnail{t.Id, t.ImgName, t.Thumbnail}
                 topL = append(topL, tn)
             }
             pl = &ThumbnailList{Thumbnails: topL}
-        } else {
+    } else {
             pl = &ThumbnailList{Thumbnails: nil}
         }
         return pl

@@ -484,7 +484,7 @@ func (l *loginDB) newRating(w http.ResponseWriter, r *http.Request, ps httproute
 }
 
 func (l *loginDB) updateRating(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	fmt.Println("POST updateRating")
+	fmt.Println("PUT updateRating")
 	db := l.connectToDB()
 	dec := json.NewDecoder(r.Body)
 	rating := Rating{}

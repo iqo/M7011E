@@ -40,12 +40,12 @@ function getComments(photoId) {
           if (c.length == 0) {
             return;
         };
-          
         c = JSON.parse(c);
         displayComments(c.Comments);
 
         } else if (xhr.status == 404){
             console.log ("No comments found");
+            return;
         } else {}
         };
         xhr.onerror = function() {
