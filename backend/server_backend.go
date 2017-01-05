@@ -145,6 +145,8 @@ func (l *loginDB) newUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 			_, err = res.Run(user.Firstname, user.Lastname, user.GoogleToken)
 			checkError(w, err)
 		}
+		w.Write([]byte("{ success }"))
+
 	} else {
 		w.Write([]byte("{error : new user, Google token not valid}"))
 		//	fmt.Println("token is not valid")
@@ -210,6 +212,7 @@ func (l *loginDB) savePhoto(w http.ResponseWriter, r *http.Request, ps httproute
 
 	_, err = res.Run(photo.ImgName, photo.ImgDesc, photo.Image, photo.Uid, photo.Thumbnail)
 	checkError(w, err)
+	w.Write([]byte("{ success }"))
 }
 
 func (l *loginDB) deletePhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -258,10 +261,15 @@ func (l *loginDB) getPhoto(w http.ResponseWriter, r *http.Request, ps httprouter
 func (l *loginDB) getLatestPhotos(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Println("GET getLatestPhotos")
 	var thumbnails []*Thumbnail
+
 	limit := 47
 	db := l.connectToDB()
 	page, err := strconv.Atoi(ps.ByName("page"))
 	checkError(w, err)
+	if page == "" {
+		page = 1
+	}
+
 	l1 := page*limit - limit
 	if l1 < 0 {
 		l1 = 0
@@ -620,6 +628,7 @@ func checkError(w http.ResponseWriter, err error) {
 		w.WriteHeader(500) // error
 		fmt.Println(err)
 		fmt.Fprintf(w, "Bad input")
+		w.Write([]byte("{ error: bad input }"))
 	}
 }
 
