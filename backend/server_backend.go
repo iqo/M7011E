@@ -262,6 +262,7 @@ func (l *loginDB) getLatestPhotos(w http.ResponseWriter, r *http.Request, ps htt
 	fmt.Println("GET getLatestPhotos")
 	var thumbnails []*Thumbnail
 	p := ps.ByName("page")
+	fmt.Println(p)
 	if len(p) == 0 {
 		p = "1"
 	}
