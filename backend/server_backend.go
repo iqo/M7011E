@@ -606,7 +606,6 @@ func (l *loginDB) getFavorite(w http.ResponseWriter, r *http.Request, ps httprou
 
 	if rows == nil {
 		fmt.Println("User", uid, "has not picture", pid, "as favorite")
-		w.Write([]byte("{error : get favorite}"))
 	} else {
 		for _, row := range rows {
 			photoId := res.Map("pid")
