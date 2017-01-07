@@ -140,8 +140,9 @@ func (l *loginDB) newUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 	if statusCheck(user.AuthToken) {
 		rows, res, err := db.Query("select count(*) from hat4cat.users where googletoken=%d", token)
 		checkError(w, err)
+		fmt.Println("token: ", token)
 		fmt.Println("rows: ", len(rows))
-		fmt.Println("res: ", len(res))
+		fmt.Println("res: ", res)
 		if len(rows) == 0 {
 			res, err := db.Prepare("insert into hat4cat.users (firstname, lastname, googletoken) values (?, ?, ?)")
 			checkError(w, err)
