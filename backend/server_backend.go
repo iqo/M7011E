@@ -140,9 +140,6 @@ func (l *loginDB) newUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 	if statusCheck(user.AuthToken) {
 		rows, res, err := db.Query("select count(*) as noUsers from hat4cat.users where googletoken=%d", token)
 		checkError(w, err)
-		fmt.Println("token: ", token)
-		fmt.Println("rows: ", len(rows))
-		fmt.Println("res: ", res)
 		n := res.Map("noUsers")
 		fmt.Println(n)
 		if n == 0 {

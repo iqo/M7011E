@@ -268,7 +268,6 @@ func thumbnailLoop(thumbnail *ThumbnailList, w http.ResponseWriter, err error) *
     var topL []*Thumbnail
     var pl *ThumbnailList
     if err != io.EOF && len(thumbnail.Thumbnails) != 0 {
-            fmt.Println(thumbnail.Thumbnails)
             checkError(w, err)
             for _, t := range thumbnail.Thumbnails {
                 tn := &Thumbnail{t.Id, t.ImgName, t.Thumbnail}

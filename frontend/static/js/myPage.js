@@ -1,6 +1,4 @@
 function checkIfValidUser(uid, thumbnails, favorites){
-    console.log(returnUserId());
-    console.log(isSignedIn());
     if (uid == returnUserId()){
         placeUserPhotos(thumbnails);
         placeUserFavorites(favorites);
@@ -58,7 +56,6 @@ function placeUserFavorites(data){
 
 
 function deletePhoto(pid) {
-    console.log(pid);
     var uid = parseInt(returnUserId());
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {

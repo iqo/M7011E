@@ -98,7 +98,6 @@ function rate(photoId, rate) {
 
     
     r.uid = parseInt(returnUserId());
-    console.log(r);
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {
     if (xhr.status == 200) {
