@@ -10,7 +10,7 @@ function addComment(photoId) {
 
         var xhr = new XMLHttpRequest();
         xhr.onload = function() {
-            if (xhr.status == 200 && newComment) {
+            if (xhr.status == 200) {
                 console.log("new comment added")
                 location.reload(); // reloads page
 
@@ -45,7 +45,6 @@ function getComments(photoId) {
 
         } else if (xhr.status == 404){
             console.log ("No comments found");
-            return;
         } else {}
         };
         xhr.onerror = function() {

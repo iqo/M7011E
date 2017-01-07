@@ -439,7 +439,6 @@ func (l *loginDB) getComments(w http.ResponseWriter, r *http.Request, ps httprou
 
 	if rows == nil {
 		fmt.Println("No comments found for photoId:", id)
-		w.WriteHeader(404)
 		w.Write([]byte("{error : get comments}"))
 	} else {
 		for _, row := range rows {
@@ -481,6 +480,7 @@ func (l *loginDB) newRating(w http.ResponseWriter, r *http.Request, ps httproute
 
 	_, err = res.Run(rating.PhotoId, rating.Rate, rating.Uid)
 	checkError(w, err)
+	w.Write([]byte("{ success }"))
 }
 
 func (l *loginDB) updateRating(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -497,6 +497,7 @@ func (l *loginDB) updateRating(w http.ResponseWriter, r *http.Request, ps httpro
 
 	_, err = res.Run(rating.Rate, rating.PhotoId, rating.Uid)
 	checkError(w, err)
+	w.Write([]byte("{ success }"))
 }
 
 func (l *loginDB) getRating(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -513,6 +514,7 @@ func (l *loginDB) getRating(w http.ResponseWriter, r *http.Request, ps httproute
 	checkError(w, err)
 
 	if rows == nil {
+		w.Write([]byte("{error : get rating}"))
 		fmt.Println("No ratings found for photoId:", pid)
 	} else {
 		for _, row := range rows {
@@ -540,7 +542,7 @@ func (l *loginDB) getRatingSum(w http.ResponseWriter, r *http.Request, ps httpro
 	checkError(w, err)
 
 	if rows == nil {
-		w.WriteHeader(404)
+		w.Write([]byte("{error : get ratesum}"))
 	} else {
 		for _, row := range rows {
 			photoId := res.Map("photoId")
@@ -573,6 +575,7 @@ func (l *loginDB) addFavorite(w http.ResponseWriter, r *http.Request, ps httprou
 
 	_, err = res.Run(fav.PhotoId, fav.Uid)
 	checkError(w, err)
+	w.Write([]byte("{ success }"))
 }
 
 
@@ -587,6 +590,7 @@ func (l *loginDB) removeFavorite(w http.ResponseWriter, r *http.Request, ps http
     
     _, _, err = db.Query("delete from hat4cat.favorite where pid=%d and uid=%d", pid, uid)
     checkError(w, err)
+    w.Write([]byte("{ success }"))
 }
 
 func (l *loginDB) getFavorite(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -604,6 +608,7 @@ func (l *loginDB) getFavorite(w http.ResponseWriter, r *http.Request, ps httprou
 
 	if rows == nil {
 		fmt.Println("User", uid, "has not picture", pid, "as favorite")
+		w.Write([]byte("{error : get favorite}"))
 	} else {
 		for _, row := range rows {
 			photoId := res.Map("pid")
