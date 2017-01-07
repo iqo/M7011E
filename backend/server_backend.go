@@ -138,7 +138,7 @@ func (l *loginDB) newUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 	}
 	token, err := strconv.Atoi(user.GoogleToken)
 	if statusCheck(user.AuthToken) {
-		rows, res, err := db.Query("select count(*) as noUsers from hat4cat.users where googletoken=%d", token)
+		_, res, err := db.Query("select count(*) as noUsers from hat4cat.users where googletoken=%d", token)
 		checkError(w, err)
 		n := res.Map("noUsers")
 		fmt.Println(n)
