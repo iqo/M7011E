@@ -146,10 +146,8 @@ func (l *loginDB) newUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 			_, err = res.Run(user.Firstname, user.Lastname, user.GoogleToken)
 			checkError(w, err)
 		}
-		w.Write([]byte("{ success }"))
 
 	} else {
-		w.Write([]byte("{error : new user, Google token not valid}"))
 		//	fmt.Println("token is not valid")
 	}
 
@@ -176,7 +174,6 @@ func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 
 	if rows == nil {
 		w.WriteHeader(404)
-		w.Write([]byte("{error : get user}"))
 	} else {
 		for _, row := range rows {
 			id := res.Map("uid")
@@ -213,7 +210,6 @@ func (l *loginDB) savePhoto(w http.ResponseWriter, r *http.Request, ps httproute
 
 	_, err = res.Run(photo.ImgName, photo.ImgDesc, photo.Image, photo.Uid, photo.Thumbnail)
 	checkError(w, err)
-	w.Write([]byte("{ success }"))
 }
 
 func (l *loginDB) deletePhoto(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
