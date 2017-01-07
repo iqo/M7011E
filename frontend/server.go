@@ -155,6 +155,7 @@ func ToplistCommentHandler(w http.ResponseWriter, r *http.Request) {
 
 func ToplistFavoriteHandler(w http.ResponseWriter, r *http.Request) {
     var topL []*Thumbnail
+    var tl *ThumbnailList
     response, err := http.Get("http://130.240.170.62:1026/photo/top/favorite")
     checkError(w, err)
     defer response.Body.Close()
@@ -162,12 +163,16 @@ func ToplistFavoriteHandler(w http.ResponseWriter, r *http.Request) {
     toplist := Toplist{}
     //thumbnail := Thumbnail{}
     err = dec.Decode(&toplist)
-    checkError(w, err)
-    for _, t := range toplist.Toplist {
-        tn := &Thumbnail{t.Id, t.ImgName, t.Thumbnail}
-        topL = append(topL, tn)
+    if err != io.EOF && len(toplist.Toplist) != 0 {
+        checkError(w, err)
+        for _, t := range toplist.Toplist {
+            tn := &Thumbnail{t.Id, t.ImgName, t.Thumbnail}
+            topL = append(topL, tn)
+        }
+        tl = &Toplist{Toplist: topL}
+    } else {
+        tl = &Toplist{Toplist: nil}
     }
-    tl := &Toplist{Toplist: topL}
 
     heading := "Most lovable cats"
     text := "These are the cats that most people have added as one of their favorites. Why top 9 instead of 10 you ask? That's because cats have 9 lives silly and this makes sence!"

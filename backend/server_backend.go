@@ -588,7 +588,6 @@ func (l *loginDB) removeFavorite(w http.ResponseWriter, r *http.Request, ps http
     
     _, _, err = db.Query("delete from hat4cat.favorite where pid=%d and uid=%d", pid, uid)
     checkError(w, err)
-    w.Write([]byte("{ success }"))
 }
 
 func (l *loginDB) getFavorite(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
