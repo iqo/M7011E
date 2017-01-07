@@ -144,7 +144,7 @@ func (l *loginDB) newUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 		fmt.Println("rows: ", len(rows))
 		fmt.Println("res: ", res)
 		n := res.Map("noUsers")
-		fmt.Println(n))
+		fmt.Println(n)
 		if n == 0 {
 			res, err := db.Prepare("insert into hat4cat.users (firstname, lastname, googletoken) values (?, ?, ?)")
 			checkError(w, err)
