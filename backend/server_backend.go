@@ -439,7 +439,6 @@ func (l *loginDB) getComments(w http.ResponseWriter, r *http.Request, ps httprou
 
 	if rows == nil {
 		fmt.Println("No comments found for photoId:", id)
-		w.Write([]byte("{error : get comments}"))
 	} else {
 		for _, row := range rows {
 			cid := res.Map("cid")
@@ -514,7 +513,6 @@ func (l *loginDB) getRating(w http.ResponseWriter, r *http.Request, ps httproute
 	checkError(w, err)
 
 	if rows == nil {
-		w.Write([]byte("{error : get rating}"))
 		fmt.Println("No ratings found for photoId:", pid)
 	} else {
 		for _, row := range rows {

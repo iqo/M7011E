@@ -58,14 +58,13 @@ function getFavorite(pid) {
 
         if (xhr.status == 200) {
           	var f = event.target.response;
-        if (f.length == 0) {
-            return;
-        };
+            if (f.length == 0) {
+                return;
+            }
 	        f = JSON.parse(f);
 	        hasFavorite = true;
 	        changeFavoriteColor(pid);
-        } else {
-        }
+        } else {}
       };
       xhr.onerror = function() {
             alert("Error! Get rate failed. Cannot connect to server.");
