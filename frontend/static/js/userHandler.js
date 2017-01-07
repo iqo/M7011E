@@ -19,6 +19,7 @@ function onSignIn(googleUser) {
 		xhr.onload = function() {
             location.reload();
             loggedIn = true;
+            console.log(user);
 
         };
 		xhr.send(JSON.stringify(user));
