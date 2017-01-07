@@ -138,12 +138,14 @@ func (l *loginDB) newUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 	}
 	token, err := strconv.Atoi(user.GoogleToken)
 	if statusCheck(user.AuthToken) {
-		rows, res, err := db.Query("select count(*) from hat4cat.users where googletoken=%d", token)
+		rows, res, err := db.Query("select count(*) as noUsers from hat4cat.users where googletoken=%d", token)
 		checkError(w, err)
 		fmt.Println("token: ", token)
 		fmt.Println("rows: ", len(rows))
 		fmt.Println("res: ", res)
-		if len(rows) == 0 {
+		n := res.Map("noUsers")
+		fmt.Println(n))
+		if n == 0 {
 			res, err := db.Prepare("insert into hat4cat.users (firstname, lastname, googletoken) values (?, ?, ?)")
 			checkError(w, err)
 			_, err = res.Run(user.Firstname, user.Lastname, user.GoogleToken)
