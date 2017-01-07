@@ -155,7 +155,7 @@ func ToplistCommentHandler(w http.ResponseWriter, r *http.Request) {
 
 func ToplistFavoriteHandler(w http.ResponseWriter, r *http.Request) {
     var topL []*Thumbnail
-    var tl *ThumbnailList
+    var tl *Toplist
     response, err := http.Get("http://130.240.170.62:1026/photo/top/favorite")
     checkError(w, err)
     defer response.Body.Close()
