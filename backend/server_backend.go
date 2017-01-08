@@ -238,7 +238,6 @@ func (l *loginDB) getPhoto(w http.ResponseWriter, r *http.Request, ps httprouter
 
 	if rows == nil {
 		w.WriteHeader(404)
-		w.Write([]byte("{error : get photo}"))
 	} else {
 		for _, row := range rows {
 			id := res.Map("photoId")
@@ -281,7 +280,6 @@ func (l *loginDB) getLatestPhotos(w http.ResponseWriter, r *http.Request, ps htt
 
 	if rows == nil {
 		w.WriteHeader(404)
-		w.Write([]byte("{error : get latest photos}"))
 	} else {
 		for _, row := range rows {
 			id := res.Map("photoId")
@@ -311,7 +309,6 @@ func (l *loginDB) getUserPhotos(w http.ResponseWriter, r *http.Request, ps httpr
 
 	if rows == nil {
 		w.WriteHeader(404)
-		w.Write([]byte("{error : get user photos}"))
 	} else {
 		for _, row := range rows {
 			id := res.Map("photoId")
@@ -341,7 +338,6 @@ func (l *loginDB) getUserFavoritePhotos(w http.ResponseWriter, r *http.Request, 
 
 	if rows == nil {
 		w.WriteHeader(404)
-		w.Write([]byte("{error : get user favorite photos}"))
 	} else {
 		for _, row := range rows {
 			id := res.Map("photoId")
@@ -379,13 +375,12 @@ func (l *loginDB) getToplist(w http.ResponseWriter, r *http.Request, ps httprout
 		checkError(w, err)
 	} else {
 		fmt.Println("Forbidden getToplist request")
-		w.Write([]byte("{error : not valid toplist}"))
+		w.WriteHeader(404)
 		return
 	}
 
 	if rows == nil {
 		w.WriteHeader(404)
-		w.Write([]byte("{error : get toplist}"))
 	} else {
 		for _, row := range rows {
 			id := res.Map("photoId")
@@ -421,7 +416,6 @@ func (l *loginDB) newComment(w http.ResponseWriter, r *http.Request, ps httprout
 
 	_, err = res.Run(comment.PhotoId, comment.Comment, comment.Uid)
 	checkError(w, err)
-	w.Write([]byte("{ success }"))
 }
 
 func (l *loginDB) getComments(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -477,7 +471,6 @@ func (l *loginDB) newRating(w http.ResponseWriter, r *http.Request, ps httproute
 
 	_, err = res.Run(rating.PhotoId, rating.Rate, rating.Uid)
 	checkError(w, err)
-	w.Write([]byte("{ success }"))
 }
 
 func (l *loginDB) updateRating(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -494,7 +487,6 @@ func (l *loginDB) updateRating(w http.ResponseWriter, r *http.Request, ps httpro
 
 	_, err = res.Run(rating.Rate, rating.PhotoId, rating.Uid)
 	checkError(w, err)
-	w.Write([]byte("{ success }"))
 }
 
 func (l *loginDB) getRating(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -538,7 +530,7 @@ func (l *loginDB) getRatingSum(w http.ResponseWriter, r *http.Request, ps httpro
 	checkError(w, err)
 
 	if rows == nil {
-		w.Write([]byte("{error : get ratesum}"))
+		w.WriteHeader(404)
 	} else {
 		for _, row := range rows {
 			photoId := res.Map("photoId")
@@ -571,7 +563,6 @@ func (l *loginDB) addFavorite(w http.ResponseWriter, r *http.Request, ps httprou
 
 	_, err = res.Run(fav.PhotoId, fav.Uid)
 	checkError(w, err)
-	w.Write([]byte("{ success }"))
 }
 
 
@@ -602,7 +593,6 @@ func (l *loginDB) getFavorite(w http.ResponseWriter, r *http.Request, ps httprou
 	checkError(w, err)
 
 	if rows == nil {
-		fmt.Println("User", uid, "has not picture", pid, "as favorite")
 	} else {
 		for _, row := range rows {
 			photoId := res.Map("pid")

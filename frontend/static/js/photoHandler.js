@@ -54,22 +54,24 @@ function loadCanvas(src) {
             div = document.getElementById('catPhotoHolder');
         var img = new Image();
         var context = canvas.getContext('2d');
+        console.log(div.firstElementChild);
 
         img.onload = function() {
-            context.loop = true;
+            
             canvas.id = "catCanvas";
             canvas.width=window.innerHeight*(2/3)*(16/9);
             canvas.height=window.innerHeight *(2/3);          
             //canvas.style.width  = div.width; 
-
-
             if (div.firstElementChild != null) {
                 context.loop = false;
                 img.name = "if";
                 div.removeChild(div.getElementsByTagName('canvas')[0]);
                 context.backgroundImg = img;
                 context.imageList = [];
+                context.loop = true;
+
             } 
+            context.loop = true;
             div.appendChild(canvas);
 
             canvasInit(img);
@@ -197,14 +199,12 @@ function placeLatestPhotos(thumbnails){
 
 
 function addSaveButton(){
-    var div = document.getElementById('buttonHolder');
-    if (div.childNodes.length == 3) {
-        if (isSignedIn()) {
-            div.innerHTML += "<div id='savePhoto'><button type='button' class='btn btn-sm btn-primary' id='saveCat' data-toggle='modal' data-target='#saveImageModal'>Save cat</button></div>";
-        } else {
-            div.innerHTML += "You need to sign in to save cat";
-        }
-    };
+    var div = document.getElementById('saveCheck');
+    if (isSignedIn()) {
+        div.innerHTML = "<div id='savePhoto'><button type='button' class='btn btn-sm btn-primary' id='saveCat' data-toggle='modal' data-target='#saveImageModal'>Save cat</button></div>";
+    } else {
+        div.innerHTML = "You need to sign in to save cat";
+    }
 }
 
 function getThumbnail(src, width, height) {

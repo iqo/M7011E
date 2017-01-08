@@ -138,9 +138,7 @@ function getUser(token) {
 function returnUserId(userId){
   //token = document.cookie.split("; ")[1].split("=")[1];
   if (document.cookie.split("id=")[1] != undefined) {
-    console.log(document.cookie.split("id="));
     token = document.cookie.split("id=")[1];
-    console.log(token);
   } else {
     token = 0;
   }

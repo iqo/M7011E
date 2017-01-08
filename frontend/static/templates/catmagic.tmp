@@ -27,9 +27,8 @@ Cat Magic
 
                     <input type="button" class="btn btn-sm btn-primary" id="catUploadButton" value="Upload image to start new project" onclick="clickUploadButton()"/>
                     <input type="file" id="catFile" class="fileUpload"/>
-                    </div>
-
-                    
+                    </div>  
+                    <div id="saveCheck"></div>
                     
                 </div>
             </div>
