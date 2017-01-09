@@ -1,4 +1,4 @@
-//document.getElementById("catFile").onchange = uploadPhoto;
+
 function uploadPhoto(){
     
     var file = document.getElementById("catFile").files[0];
