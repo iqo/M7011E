@@ -296,6 +296,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 *** different commands (get, post etc) ***
 *****************************************/
 func startWebserver(input string) {
+    ip := "130.240.170.62:1025"
 	//router := httprouter.New()
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 	//router.GET("/", IndexHandler)
@@ -314,8 +315,8 @@ func startWebserver(input string) {
 	//var input int
 	//fmt.Scan(&input)
 	if input == "1" {
-		fmt.Println("running on 130.240.170.62:1025")
-		log.Fatal(http.ListenAndServe("130.240.170.62:1025", nil))
+		fmt.Println("running on", ip)
+		log.Fatal(http.ListenAndServe(ip, nil))
 	} else {
 		fmt.Println("running on localhost:1025")
 		log.Fatal(http.ListenAndServe("localhost:1025", nil))
