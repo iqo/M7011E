@@ -87,6 +87,8 @@ type Toplist struct {
 *****************************************/
 
 func (l *loginDB) startBackend() {
+	ip := "130.240.170.62:1026"
+
 	router := httprouter.New()
 	router.GET("/user/:id", l.getUser)
 	router.POST("/user", l.newUser)
@@ -118,8 +120,11 @@ func (l *loginDB) startBackend() {
 	// Insert the middleware
 	handler := c.Handler(router)
 
-	log.Fatal(http.ListenAndServe("130.240.170.62:1026", handler))
-	fmt.Println("running on 130.240.170.62:1026")
+	log.Fatal(http.ListenAndServe(ip, handler))
+	fmt.Println("running on", ip)
+
+	//log.Fatal(http.ListenAndServe("localhost:1026", handler))
+	//fmt.Println("running on localhost:1026")
 }
 
 
@@ -138,12 +143,12 @@ func (l *loginDB) newUser(w http.ResponseWriter, r *http.Request, ps httprouter.
 	}
 	token, err := strconv.Atoi(user.GoogleToken)
 	if statusCheck(user.AuthToken) {
-		_, res, err := db.Query("select count(*) as noUsers from hat4cat.users where googletoken=%d", token)
+		_, res, err := db.Query("select count(*) as noUsers from users where googletoken=%d", token)
 		checkError(w, err)
 		n := res.Map("noUsers")
 		fmt.Println(n)
 		if n == 0 {
-			res, err := db.Prepare("insert into hat4cat.users (firstname, lastname, googletoken) values (?, ?, ?)")
+			res, err := db.Prepare("insert into users (firstname, lastname, googletoken) values (?, ?, ?)")
 			checkError(w, err)
 			_, err = res.Run(user.Firstname, user.Lastname, user.GoogleToken)
 			checkError(w, err)
@@ -166,10 +171,10 @@ func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.
     if len(input) < 12 {
         id, err := strconv.Atoi(ps.ByName("id"))
         checkError(w, err)
-        rows, res, err = db.Query("select * from hat4cat.users where uid=%d", id)
+        rows, res, err = db.Query("select * from users where uid=%d", id)
         checkError(w, err)
     } else {
-        rows, res, err = db.Query("select * from hat4cat.users where googletoken=%s", input)
+        rows, res, err = db.Query("select * from users where googletoken=%s", input)
         checkError(w, err)
     }
 
@@ -207,7 +212,7 @@ func (l *loginDB) savePhoto(w http.ResponseWriter, r *http.Request, ps httproute
 	if err != nil {
 		log.Fatal(err)
 	}
-	res, err := db.Prepare("insert into hat4cat.photos (name, description, image, uid, thumbnail) values (?, ?, ?, ?, ?)")
+	res, err := db.Prepare("insert into photos (name, description, image, uid, thumbnail) values (?, ?, ?, ?, ?)")
 	checkError(w, err)
 
 	_, err = res.Run(photo.ImgName, photo.ImgDesc, photo.Image, photo.Uid, photo.Thumbnail)
@@ -223,7 +228,7 @@ func (l *loginDB) deletePhoto(w http.ResponseWriter, r *http.Request, ps httprou
     uid, err := strconv.Atoi(ps.ByName("uid"))
     checkError(w, err)
     
-    _, _, err = db.Query("delete from hat4cat.photos where photoId=%d and uid=%d", pid, uid)
+    _, _, err = db.Query("delete from photos where photoId=%d and uid=%d", pid, uid)
     checkError(w, err)
 }
 
@@ -233,7 +238,7 @@ func (l *loginDB) getPhoto(w http.ResponseWriter, r *http.Request, ps httprouter
 	id, err := strconv.Atoi(ps.ByName("pid"))
 	checkError(w, err)
 
-	rows, res, err := db.Query("select * from hat4cat.photos where photoId=%d", id)
+	rows, res, err := db.Query("select * from photos where photoId=%d", id)
 	checkError(w, err)
 
 	if rows == nil {
@@ -275,7 +280,7 @@ func (l *loginDB) getLatestPhotos(w http.ResponseWriter, r *http.Request, ps htt
 	}
 	l2 := l1 + limit
 
-	rows, res, err := db.Query("select photoId, name, thumbnail from hat4cat.photos order by photoId desc limit %d, %d", l1, l2)
+	rows, res, err := db.Query("select photoId, name, thumbnail from photos order by photoId desc limit %d, %d", l1, l2)
 	checkError(w, err)
 
 	if rows == nil {
@@ -304,7 +309,7 @@ func (l *loginDB) getUserPhotos(w http.ResponseWriter, r *http.Request, ps httpr
 	uid, err := strconv.Atoi(ps.ByName("uid"))
 	checkError(w, err)
 
-	rows, res, err := db.Query("select photoId, name, thumbnail from hat4cat.photos where uid=%d order by photoId desc", uid)
+	rows, res, err := db.Query("select photoId, name, thumbnail from photos where uid=%d order by photoId desc", uid)
 	checkError(w, err)
 
 	if rows == nil {
@@ -333,7 +338,7 @@ func (l *loginDB) getUserFavoritePhotos(w http.ResponseWriter, r *http.Request, 
 	uid, err := strconv.Atoi(ps.ByName("uid"))
 	checkError(w, err)
 
-	rows, res, err := db.Query("select photoId, name, thumbnail from hat4cat.photos as p right join hat4cat.favorite as f on f.pid = p.photoId where f.uid=%d order by photoId desc", uid)
+	rows, res, err := db.Query("select photoId, name, thumbnail from photos as p right join favorite as f on f.pid = p.photoId where f.uid=%d order by photoId desc", uid)
 	checkError(w, err)
 
 	if rows == nil {
@@ -365,13 +370,13 @@ func (l *loginDB) getToplist(w http.ResponseWriter, r *http.Request, ps httprout
 	db := l.connectToDB()
 
 	if list == "rate" {
-		rows, res, err = db.Query("select p.photoId, p.name, p.thumbnail, sum(case when rate is null then 0 else rate end) as ratingSum from hat4cat.rating as r right join hat4cat.photos as p on p.photoId=r.photoId group by photoId order by ratingsum desc limit 0,9")
+		rows, res, err = db.Query("select p.photoId, p.name, p.thumbnail, sum(case when rate is null then 0 else rate end) as ratingSum from rating as r right join hat4cat.photos as p on p.photoId=r.photoId group by photoId order by ratingsum desc limit 0,9")
 		checkError(w, err)
 	} else if list == "comment" {
-		rows, res, err = db.Query("select p.photoId, p.name, p.thumbnail, count(comment) as noComments from hat4cat.comment as c right join hat4cat.photos as p on p.photoId=c.photoId group by photoId order by noComments desc limit 0,9")
+		rows, res, err = db.Query("select p.photoId, p.name, p.thumbnail, count(comment) as noComments from comment as c right join photos as p on p.photoId=c.photoId group by photoId order by noComments desc limit 0,9")
 		checkError(w, err)
 	} else if list == "favorite" {
-		rows, res, err = db.Query("select p.photoId, p.name, p.thumbnail, count(*) as noFavorites from hat4cat.favorite as f left join hat4cat.photos as p on p.photoId=f.pid group by photoId order by noFavorites desc limit 0,9")
+		rows, res, err = db.Query("select p.photoId, p.name, p.thumbnail, count(*) as noFavorites from favorite as f left join photos as p on p.photoId=f.pid group by photoId order by noFavorites desc limit 0,9")
 		checkError(w, err)
 	} else {
 		fmt.Println("Forbidden getToplist request")
@@ -411,7 +416,7 @@ func (l *loginDB) newComment(w http.ResponseWriter, r *http.Request, ps httprout
 	if err != nil {
 		log.Fatal(err)
 	}
-	res, err := db.Prepare("insert into hat4cat.comment (photoId, comment, uid) values (?, ?, ?)")
+	res, err := db.Prepare("insert into comment (photoId, comment, uid) values (?, ?, ?)")
 	checkError(w, err)
 
 	_, err = res.Run(comment.PhotoId, comment.Comment, comment.Uid)
@@ -426,7 +431,7 @@ func (l *loginDB) getComments(w http.ResponseWriter, r *http.Request, ps httprou
 	id, err := strconv.Atoi(ps.ByName("pid"))
 	checkError(w, err)
 
-	rows, res, err := db.Query("select cid, photoId, comment, c.uid, firstname, lastname, timestamp  from hat4cat.comment as c join hat4cat.users as u on c.uid = u.uid where photoId=%d order by cid desc", id)
+	rows, res, err := db.Query("select cid, photoId, comment, c.uid, firstname, lastname, timestamp  from comment as c join users as u on c.uid = u.uid where photoId=%d order by cid desc", id)
 	checkError(w, err)
 
 	if rows == nil {
@@ -466,7 +471,7 @@ func (l *loginDB) newRating(w http.ResponseWriter, r *http.Request, ps httproute
 	if err != nil {
 		log.Fatal(err)
 	}
-	res, err := db.Prepare("insert into hat4cat.rating (photoId, rate, uid) values (?, ?, ?)")
+	res, err := db.Prepare("insert into rating (photoId, rate, uid) values (?, ?, ?)")
 	checkError(w, err)
 
 	_, err = res.Run(rating.PhotoId, rating.Rate, rating.Uid)
@@ -482,7 +487,7 @@ func (l *loginDB) updateRating(w http.ResponseWriter, r *http.Request, ps httpro
 	if err != nil {
 		log.Fatal(err)
 	}
-	res, err := db.Prepare("update hat4cat.rating set rate=? where photoId=? and uid=?")
+	res, err := db.Prepare("update rating set rate=? where photoId=? and uid=?")
 	checkError(w, err)
 
 	_, err = res.Run(rating.Rate, rating.PhotoId, rating.Uid)
@@ -499,7 +504,7 @@ func (l *loginDB) getRating(w http.ResponseWriter, r *http.Request, ps httproute
 	uid, err := strconv.Atoi(ps.ByName("uid"))
 	checkError(w, err)
 
-	rows, res, err := db.Query("select photoId, rate, uid from hat4cat.rating where photoId=%d and uid=%d", pid, uid)
+	rows, res, err := db.Query("select photoId, rate, uid from rating where photoId=%d and uid=%d", pid, uid)
 	checkError(w, err)
 
 	if rows == nil {
@@ -526,7 +531,7 @@ func (l *loginDB) getRatingSum(w http.ResponseWriter, r *http.Request, ps httpro
 	pid, err := strconv.Atoi(ps.ByName("pid"))
 	checkError(w, err)
 
-	rows, res, err := db.Query("select photoId, sum(rate) as ratingSum from hat4cat.rating where photoId=%d", pid)
+	rows, res, err := db.Query("select photoId, sum(rate) as ratingSum from rating where photoId=%d", pid)
 	checkError(w, err)
 
 	if rows == nil {
@@ -558,7 +563,7 @@ func (l *loginDB) addFavorite(w http.ResponseWriter, r *http.Request, ps httprou
 	if err != nil {
 		log.Fatal(err)
 	}
-	res, err := db.Prepare("insert into hat4cat.favorite (pid, uid) values (?, ?)")
+	res, err := db.Prepare("insert into favorite (pid, uid) values (?, ?)")
 	checkError(w, err)
 
 	_, err = res.Run(fav.PhotoId, fav.Uid)
@@ -575,7 +580,7 @@ func (l *loginDB) removeFavorite(w http.ResponseWriter, r *http.Request, ps http
     uid, err := strconv.Atoi(ps.ByName("uid"))
     checkError(w, err)
     
-    _, _, err = db.Query("delete from hat4cat.favorite where pid=%d and uid=%d", pid, uid)
+    _, _, err = db.Query("delete from favorite where pid=%d and uid=%d", pid, uid)
     checkError(w, err)
 }
 
@@ -589,7 +594,7 @@ func (l *loginDB) getFavorite(w http.ResponseWriter, r *http.Request, ps httprou
 	uid, err := strconv.Atoi(ps.ByName("uid"))
 	checkError(w, err)
 
-	rows, res, err := db.Query("select pid, uid from hat4cat.favorite where pid=%d and uid=%d", pid, uid)
+	rows, res, err := db.Query("select pid, uid from favorite where pid=%d and uid=%d", pid, uid)
 	checkError(w, err)
 
 	if rows == nil {
@@ -625,7 +630,9 @@ func checkError(w http.ResponseWriter, err error) {
 *******************************************************/
 
 func (l *loginDB) connectToDB() mysql.Conn {
-	db := mysql.New("tcp", "", "130.240.170.62:3306", l.usr, l.pswd, "hat4cat")
+	ip_db := "130.240.170.62:3306"
+	db_name := "hat4cat"
+	db := mysql.New("tcp", "", ip_db, l.usr, l.pswd, db_name)
 	err := db.Connect()
 	if err != nil {
 		log.Fatal(err)
