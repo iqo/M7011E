@@ -87,8 +87,8 @@ type Toplist struct {
 *****************************************/
 
 func (l *loginDB) startBackend() {
-	//ip := "130.240.170.62:1026"
-	ip := "localhost:1026"
+	ip := "130.240.170.62:1026"
+	//ip := "localhost:1026"
 	router := httprouter.New()
 	router.GET("/user/:id", l.getUser)
 	router.POST("/user", l.newUser)
