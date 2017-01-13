@@ -168,9 +168,7 @@ func (l *loginDB) getUser(w http.ResponseWriter, r *http.Request, ps httprouter.
     input := ps.ByName("id")
 
     if len(input) < 12 {
-        id, err := strconv.Atoi(ps.ByName("id"))
-        checkError(w, err)
-        rows, res, err = db.Query("select * from users where uid=%d", id)
+        rows, res, err = db.Query("select * from users where uid=%s", input)
         checkError(w, err)
     } else {
         rows, res, err = db.Query("select * from users where googletoken=%s", input)
