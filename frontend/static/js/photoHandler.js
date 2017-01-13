@@ -1,3 +1,4 @@
+var ip = getIP();
 
 function uploadPhoto(){
     
@@ -128,7 +129,7 @@ function savePhoto(img, thumbnail) {
             alert("Error! Upload failed." + xhr.status);
           };
             
-          xhr.open('POST', 'http://130.240.170.62:1026/photo', true);
+          xhr.open('POST', ip + '/photo', true);
           xhr.setRequestHeader("Content-Type", "application/json");
           xhr.send(JSON.stringify(photo));
       }
@@ -153,7 +154,7 @@ function getPhoto(pid, canvas) {
         alert("Error! Get file failed. Cannot connect to server.");
       };
         
-      xhr.open('GET', 'http://130.240.170.62:1026/photo/get/' + pid, true);
+      xhr.open('GET', ip + '/photo/get/' + pid, true);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(null);
 }
@@ -175,7 +176,7 @@ function getLatestPhotos(page) {
         alert("Error! Get file failed. Cannot connect to server.");
       };
         
-      xhr.open('GET', 'http://130.240.170.62:1026/photo/latest/' + page, true);
+      xhr.open('GET', ip + '/photo/latest/' + page, true);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(null);
 }

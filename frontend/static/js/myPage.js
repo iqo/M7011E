@@ -1,3 +1,5 @@
+var ip = getIP();
+
 function checkIfValidUser(uid, thumbnails, favorites){
     if (uid == returnUserId()){
         placeUserPhotos(thumbnails);
@@ -70,7 +72,7 @@ function deletePhoto(pid) {
         alert("Error! Delete failed." + xhr.status);
       };
         
-      xhr.open('DELETE', 'http://130.240.170.62:1026/photo/' + pid + "/" + uid, true);
+      xhr.open('DELETE', ip + '/photo/' + pid + "/" + uid, true);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(JSON.stringify(null));
 }

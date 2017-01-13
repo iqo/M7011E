@@ -4,6 +4,7 @@
 
 {{define "Body"}}
 <html>
+<script src="/static/js/getIP.js"></script>
 <script src="/static/js/myPage.js"></script>
 <script src="/static/js/userHandler.js"></script>
 <body >

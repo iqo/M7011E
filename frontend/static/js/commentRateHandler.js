@@ -1,4 +1,5 @@
 var rated = false;
+var ip = getIP();
 
 function addComment(photoId) {
     if (isSignedIn()) {
@@ -22,7 +23,7 @@ function addComment(photoId) {
             alert("Error! Comment failed." + xhr.status);
         };
 
-        xhr.open('POST', 'http://130.240.170.62:1026/comment', true);
+        xhr.open('POST', ip + '/comment', true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(JSON.stringify(comment));
 
@@ -51,7 +52,7 @@ function getComments(photoId) {
             alert("Error! Get comments failed. Cannot connect to server.");
       };
         
-      xhr.open('GET', 'http://130.240.170.62:1026/comments/' + photoId, true);
+      xhr.open('GET', ip + '/comments/' + photoId, true);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(null);
 }
@@ -85,7 +86,7 @@ function getRate(pid) {
       xhr.onerror = function() {
             alert("Error! Get rate failed. Cannot connect to server.");
       };
-      xhr.open('GET', 'http://130.240.170.62:1026/rating/' + pid + "/" + uid, true);
+      xhr.open('GET', ip + '/rating/' + pid + "/" + uid, true);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(null);
 }
@@ -113,13 +114,13 @@ function rate(photoId, rate) {
     };
 
     if (!rated) {
-        xhr.open('POST', 'http://130.240.170.62:1026/rating', true);
+        xhr.open('POST', ip + '/rating', true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(JSON.stringify(r));
 
     } 
     if (rated) {
-        xhr.open('PUT', 'http://130.240.170.62:1026/rating/update', true);
+        xhr.open('PUT', ip + '/rating/update', true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(JSON.stringify(r));
     }

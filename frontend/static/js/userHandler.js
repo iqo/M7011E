@@ -1,5 +1,6 @@
 //handels googlesing in and send auth token and first //last name on succefull login 
 var loggedIn = false;
+var ip = getIP();
 
 
 function onSignIn(googleUser) {
@@ -14,7 +15,7 @@ function onSignIn(googleUser) {
 		user.lastname = profile.getFamilyName();
 		user.googletoken = profile.getId();
 		user.authtoken = googleUser.getAuthResponse().id_token;
-		xhr.open('POST', 'http://130.240.170.62:1026/user');
+		xhr.open('POST', ip + '/user');
 		xhr.setRequestHeader('Content-Type', 'application/json');
 		xhr.onload = function() {
             location.reload();
@@ -83,7 +84,7 @@ function getUser(token) {
         alert("Error! Get user token failed. Cannot connect to server.");
       };
 
-      xhr.open('GET', 'http://130.240.170.62:1026/user/' + token, false);
+      xhr.open('GET', ip + '/user/' + token, false);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(null);
 
@@ -129,7 +130,7 @@ function getUser(token) {
         alert("Error! Get user id failed. Cannot connect to server.");
       };
 
-      xhr.open('GET', 'http://130.240.170.62:1026/user/' + token, false);
+      xhr.open('GET', ip + '/user/' + token, false);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(null);
 

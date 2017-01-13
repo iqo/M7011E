@@ -1,4 +1,5 @@
 var hasFavorite = false;
+var ip = getIP();
 
 function changeFavoriteColor(id){
     if (document.getElementById("favorite").style.color == "red") {
@@ -38,13 +39,13 @@ function updateFavorite(photoId) {
     };
 
     if (!hasFavorite) {
-        xhr.open('POST', 'http://130.240.170.62:1026/favorite', true);
+        xhr.open('POST', ip + '/favorite', true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(JSON.stringify(f));
 
     } 
     if (hasFavorite) {
-        xhr.open('DELETE', 'http://130.240.170.62:1026/favorite/' + photoId + '/' + f.uid, true);
+        xhr.open('DELETE', ip + '/favorite/' + photoId + '/' + f.uid, true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(JSON.stringify(null));
     }
@@ -69,7 +70,7 @@ function getFavorite(pid) {
       xhr.onerror = function() {
             alert("Error! Get rate failed. Cannot connect to server.");
       };
-      xhr.open('GET', 'http://130.240.170.62:1026/favorite/' + pid + "/" + uid, true);
+      xhr.open('GET', ip + '/favorite/' + pid + "/" + uid, true);
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.send(null);
 }

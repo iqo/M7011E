@@ -4,6 +4,7 @@ Latest Cats
 
 {{define "Body"}}
 <html>
+<script src="/static/js/getIP.js"></script>
 <script src="/static/js/photoHandler.js"></script>
 <body>
 	<div class="col-sm-12">
